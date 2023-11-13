@@ -14,7 +14,7 @@
 * 🔒 Gestión completa de cuentas.
    * Agregue varias cuentas y cambie fácilmente entre ellas.
    * Autenticación de Microsoft (OAuth 2.0) + Mojang (Yggdrasil) totalmente compatible.
-   * Las credenciales nunca se almacenan ni se transmiten directamente a Mojang.
+   * Las credenciales nunca se almacenan, se transmiten directamente a Mojang.
 * 📂 Gestión eficiente de activos.
    * Reciba actualizaciones de clientes tan pronto como las publiquemos.
    * Los archivos se validan antes del lanzamiento. Se volverán a descargar los archivos corruptos o incorrectos.
@@ -26,15 +26,19 @@
 * Soporta todos nuestros servidores.
    * Cambie entre configuraciones de servidor con facilidad.
    * Ver el recuento de jugadores del servidor seleccionado.
-* Actualizaciones automáticas. Así es, el lanzador se actualiza solo.
+* Actualizaciones automáticas.
 * Ver el estado de los servicios de Mojang.
 
 Esta no es una lista exhaustiva. ¡Descarga e instala el lanzador para evaluar todo lo que puede hacer!
 
-#### ¿Necesitas ayuda? [Consulta la wiki.][wiki]
+#### ¿Necesitas ayuda? [Consulta la wiki.][https://vi-software.gitbook.io/vi-software/vis-launcher]
 
 #### ¿Te gusta el proyecto? ¡Deja una estrella ⭐ en el repositorio!
 
 ## Descargas
 
 Puede descargar desde [Versiones de GitHub](https://github.com/VI-Software/vis-launcher)
+
+## Bugs
+
+Para informar respecto a un bug dirígete [aquí](https://github.com/VI-Software/vis-launcher/issues)
