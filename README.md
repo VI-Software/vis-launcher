@@ -31,7 +31,7 @@
 
 Esta no es una lista exhaustiva. ¡Descarga e instala el lanzador para evaluar todo lo que puede hacer!
 
-#### ¿Necesitas ayuda? [Consulta la wiki.][https://vi-software.gitbook.io/vi-software/vis-launcher]
+#### ¿Necesitas ayuda? [Consulta la wiki](https://vi-software.gitbook.io/vi-software/vis-launcher)
 
 #### ¿Te gusta el proyecto? ¡Deja una estrella ⭐ en el repositorio!
 
