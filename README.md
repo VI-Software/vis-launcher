@@ -4,7 +4,7 @@
 
 <em><h5 align="center">(Basado en el proyecto "dscalzi/HeliosLauncher")</h5></em>
 
-[<p align="center"><img src="https://img.shields.io/github/actions/workflow/status/dscalzi/HeliosLauncher/build.yml?branch=master&style=for-the-badge" alt="gh acciones">](https://github.com/dscalzi/HeliosLauncher/actions) [<img src="https://img.shields.io/github/downloads/dscalzi/HeliosLauncher/total.svg ?style=for-the-badge" alt="descargas">](https://github.com/dscalzi/HeliosLauncher/releases) <img src="https://forthebadge.com/images/badges/winter- se-proxima.svg" height="28px" alt="se-proxima-el-invierno"></p>
+[<p align="center"><img src="https://img.shields.io/github/actions/workflow/status/dscalzi/HeliosLauncher/build.yml?branch=master&style=for-the-badge" alt="gh acciones">](https://github.com/VI-Software/vis-launcher/actions) [<img src="https://img.shields.io/github/downloads/dscalzi/HeliosLauncher/total.svg ?style=for-the-badge" alt="descargas">](https://github.com/VI-Software/vis-launcher/releases)
 
 <p align="center">Únase a servidores con mods sin preocuparse por instalar Java, Forge u otras modificaciones. Nosotros nos encargaremos de eso por usted.</p>
 

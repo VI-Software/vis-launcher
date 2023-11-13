@@ -21,14 +21,14 @@ process.traceDeprecation = true
 // Disable eval function.
 // eslint-disable-next-line
 window.eval = global.eval = function () {
-    throw new Error('Sorry, this app does not support window.eval().')
+    throw new Error('Lo sentimos, esta aplicación no es compatible con window.eval().')
 }
 
 // Display warning when devtools window is opened.
 remote.getCurrentWebContents().on('devtools-opened', () => {
-    console.log('%cThe console is dark and full of terrors.', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
-    console.log('%cIf you\'ve been told to paste something here, you\'re being scammed.', 'font-size: 16px')
-    console.log('%cUnless you know exactly what you\'re doing, close this window.', 'font-size: 16px')
+    console.log('%cLa consola está oscura y llena de terrores..', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
+    console.log('%cSi te han dicho que pegues algo aquí, estás siendo estafado.', 'font-size: 16px')
+    console.log('%cA menos que sepa exactamente lo que está haciendo, cierre esta ventana', 'font-size: 16px')
 })
 
 // Disable zoom, needed for darwin.
@@ -48,15 +48,15 @@ if(!isDev){
                 loggerAutoUpdater.info('New update available', info.version)
                 
                 if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/dscalzi/HeliosLauncher/releases/download/v${info.version}/Helios-Launcher-setup-${info.version}${process.arch === 'arm64' ? '-arm64' : '-x64'}.dmg`
+                    info.darwindownload = `https://github.com/VI-Software/vis-launcher/releases/download/v${info.version}/VI-Software-Launcher-${info.version}${process.arch === 'arm64' ? '-arm64' : '-x64'}.dmg`
                     showUpdateUI(info)
                 }
                 
                 populateSettingsUpdateInformation(info)
                 break
             case 'update-downloaded':
-                loggerAutoUpdater.info('Update ' + info.version + ' ready to be installed.')
-                settingsUpdateButtonStatus('Install Now', false, () => {
+                loggerAutoUpdater.info('Update ' + info.version + ' Lista para ser instalada.')
+                settingsUpdateButtonStatus('Instalar ahora', false, () => {
                     if(!isDev){
                         ipcRenderer.send('autoUpdateAction', 'installUpdateNow')
                     }
@@ -65,7 +65,7 @@ if(!isDev){
                 break
             case 'update-not-available':
                 loggerAutoUpdater.info('No new update found.')
-                settingsUpdateButtonStatus('Check for Updates')
+                settingsUpdateButtonStatus('Buscar actualizaciones')
                 break
             case 'ready':
                 updateCheckListener = setInterval(() => {
@@ -134,7 +134,7 @@ $(function(){
 
 document.addEventListener('readystatechange', function () {
     if (document.readyState === 'interactive'){
-        loggerUICore.info('UICore Initializing..')
+        loggerUICore.info('Inicialización de UICore..')
 
         // Bind close button.
         Array.from(document.getElementsByClassName('fCb')).map((val) => {
