@@ -58,9 +58,8 @@ function getCurrentView(){
     return currentView
 }
 
-async function showMainUI(data){
-
-    if(!isDev){
+async function showMainUI(data) {
+    if (!isDev) {
         loggerAutoUpdater.info('Initializing..')
         ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
     }
@@ -68,47 +67,58 @@ async function showMainUI(data){
     await prepareSettings(true)
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
-    setTimeout(() => {
-        document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        document.body.style.backgroundImage = `url('assets/images/backgrounds/${document.body.getAttribute('bkid')}.jpg')`
-        $('#main').show()
 
-        const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
+    // Hacer una solicitud al servidor para obtener una imagen aleatoria
+    fetch('https://vis.galnod.com/launcher/image.php')
+        .then(response => response.json())
+        .then(data => {
+            var imagenAleatoria = data.imagen;
 
-        // If this is enabled in a development environment we'll get ratelimited.
-        // The relaunch frequency is usually far too high.
-        if(!isDev && isLoggedIn){
-            validateSelectedAccount()
-        }
+            // Establecer la imagen aleatoria como fondo
+            document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/images/backgrounds/${imagenAleatoria}')`;
 
-        if(ConfigManager.isFirstLaunch()){
-            currentView = VIEWS.welcome
-            $(VIEWS.welcome).fadeIn(1000)
-        } else {
-            if(isLoggedIn){
-                currentView = VIEWS.landing
-                $(VIEWS.landing).fadeIn(1000)
-            } else {
-                loginOptionsCancelEnabled(false)
-                loginOptionsViewOnLoginSuccess = VIEWS.landing
-                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                currentView = VIEWS.loginOptions
-                $(VIEWS.loginOptions).fadeIn(1000)
+            // Mostrar el elemento con id 'main'
+            $('#main').show();
+
+            const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
+
+            // If this is enabled in a development environment we'll get ratelimited.
+            // The relaunch frequency is usually far too high.
+            if(!isDev && isLoggedIn){
+                validateSelectedAccount()
             }
-        }
 
-        setTimeout(() => {
-            $('#loadingContainer').fadeOut(500, () => {
-                $('#loadSpinnerImage').removeClass('rotating')
-            })
-        }, 250)
-        
-    }, 750)
+            if(ConfigManager.isFirstLaunch()){
+                currentView = VIEWS.welcome
+                $(VIEWS.welcome).fadeIn(1000)
+            } else {
+                if(isLoggedIn){
+                    currentView = VIEWS.landing
+                    $(VIEWS.landing).fadeIn(1000)
+                } else {
+                    loginOptionsCancelEnabled(false)
+                    loginOptionsViewOnLoginSuccess = VIEWS.landing
+                    loginOptionsViewOnLoginCancel = VIEWS.loginOptions
+                    currentView = VIEWS.loginOptions
+                    $(VIEWS.loginOptions).fadeIn(1000)
+                }
+            }
+
+            setTimeout(() => {
+                $('#loadingContainer').fadeOut(500, () => {
+                    $('#loadSpinnerImage').removeClass('rotating')
+                })
+            }, 250)
+            
+        }) // Cierre del then de fetch
+
     // Disable tabbing to the news container.
     initNews().then(() => {
         $('#newsContainer *').attr('tabindex', '-1')
     })
 }
+
 
 function showFatalStartupError(){
     setTimeout(() => {

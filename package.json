@@ -1,18 +1,17 @@
 {
   "name": "vis-launcher",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "productName": "VI Software Launcher",
   "description": "VI Software Launcher",
   "author": "VI Software",
   "license": "MIT",
   "private": true,
+  "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
   "scripts": {
     "start": "electron .",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- -w",
-    "dist:mac": "npm run dist -- -m",
-    "dist:linux": "npm run dist -- -l",
     "lint": "eslint --config .eslintrc.json ."
   },
   "engines": {
