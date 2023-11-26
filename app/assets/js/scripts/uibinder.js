@@ -76,7 +76,7 @@ async function showMainUI(data) {
 
             // Establecer la imagen aleatoria como fondo
             document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/images/backgrounds/${imagenAleatoria}')`;
+            document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/backgrounds/${imagenAleatoria}')`;
 
             // Mostrar el elemento con id 'main'
             $('#main').show();
