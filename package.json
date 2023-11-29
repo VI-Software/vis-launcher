@@ -12,6 +12,7 @@
     "start": "electron .",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- -w",
+    "dist:linux": "npm run dist -- -l",
     "lint": "eslint --config .eslintrc.json ."
   },
   "engines": {
