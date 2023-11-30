@@ -84,7 +84,7 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Lanzar en pantalla completa.</span>
+                    <span class="settingsFieldTitle">Lanzar el juego en pantalla completa.</span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -95,7 +95,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Automáticamente conectar al servidor al lanzar el juego.</span>
+                    <span class="settingsFieldTitle">Automáticamente conectar al servidor al lanzar el juego si disponible.</span>
+                    <span class="settingsFieldDesc">Se conecta automáticamente al servidor si la funcionalidad está disponible en el servidor seleccionado. (Debe de haber sido activado por la administradora de la experiencia)</span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -106,8 +107,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle">Proceso de inicio del juego separado del iniciador.</span>
-                    <span class="settingsFieldDesc">Si el juego no está desconectado, cerrar el iniciador también cerrará el juego.</span>
+                    <span class="settingsFieldTitle">(Avanzado) Separar el proceso del juego respecto al proceso del launcher</span>
+                    <span class="settingsFieldDesc">Si los procesos del launcher y el juego no están separados, cerrar el launcher supondrá que el juego también se cierre.</span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -276,8 +277,8 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"> Permitir la auto descarga de versiones beta del launcher.</span>
-                    <span class="settingsFieldDesc">Las versiones preliminares incluyen nuevas características que pueden no haber sido completamente probadas o integradas.<br>Esto siempre será cierto si está utilizando una versión preliminar.</span>
+                    <span class="settingsFieldTitle">Canal de versiones betas</span>
+                    <span class="settingsFieldDesc">Las versiones betas del launcher incluyen nuevas características que pueden no funcionar como esperado o no haber sido probadas completamente.<br>Esta opción no puede ser alterada si la instalación actual es una versión beta.</span>
                 </div>
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
@@ -303,7 +304,7 @@
                         <button class="settingsFileSelButton" dialogTitle="Select Data Directory" dialogDirectory="true">Elegir la carpeta</button>
                     </div>
                 </div>
-                <div class="settingsFileSelDesc">Todos los archivos del juego y las instalaciones locales de Java se almacenarán en el directorio de datos...<br>Las capturas de pantalla y los guardados mundiales se almacenan en la carpeta de la instancia para la configuración del servidor correspondiente.</div>
+                <div class="settingsFileSelDesc">Todos los archivos del juego y las instalaciones locales de Java se almacenarán en el directorio de datos.<br>Las capturas de pantalla y los guardados mundiales se almacenan en la carpeta de la instancia para la configuración del servidor correspondiente.</div>
             </div>
         </div>
         <div id="settingsTabAbout" class="settingsTab" style="display: none;">
@@ -343,7 +344,7 @@
                         <div class="settingsChangelogTitle">Changelog</div>
                     </div>
                     <div class="settingsChangelogText">
-                        No Release Notes
+                        Si notas de la relase
                     </div>
                 </div>
                 <div class="settingsChangelogActions">
@@ -380,7 +381,7 @@
                 <div class="settingsChangelogContent">
                     <div class="settingsChangelogHeadline">
                         <div class="settingsChangelogLabel">¿Qué hay nuevo?</div>
-                        <div class="settingsChangelogTitle">Actualizar Release Notes</div>
+                        <div class="settingsChangelogTitle">Actualizar notas de la relase</div>
                     </div>
                     <div class="settingsChangelogText">
                         Sin notas de versión
