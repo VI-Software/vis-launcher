@@ -70,55 +70,105 @@ async function showMainUI(data) {
 
     // Hacer una solicitud al servidor para obtener una imagen aleatoria
     fetch('https://vis.galnod.com/launcher/image.php')
-        .then(response => response.json())
-        .then(data => {
-            var imagenAleatoria = data.imagen;
+    .then(response => response.json())
+    .then(data => {
+        var randomImg = data.imagen;
 
-            // Establecer la imagen aleatoria como fondo
-            document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
-            document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/backgrounds/${imagenAleatoria}')`;
+        // Establecer la imagen aleatoria como fondo
+        document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+        document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/backgrounds/${randomImg}')`;
 
-            // Mostrar el elemento con id 'main'
-            $('#main').show();
+        // Mostrar el elemento con id 'main'
+        $('#main').show();
 
-            const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
+        const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0;
 
-            // If this is enabled in a development environment we'll get ratelimited.
-            // The relaunch frequency is usually far too high.
-            if(!isDev && isLoggedIn){
-                validateSelectedAccount()
-            }
+        // If this is enabled in a development environment we'll get ratelimited.
+        // The relaunch frequency is usually far too high.
+        if (!isDev && isLoggedIn) {
+            validateSelectedAccount();
+        }
 
-            if(ConfigManager.isFirstLaunch()){
-                currentView = VIEWS.welcome
-                $(VIEWS.welcome).fadeIn(1000)
+        if (ConfigManager.isFirstLaunch()) {
+            currentView = VIEWS.welcome;
+            $(VIEWS.welcome).fadeIn(1000);
+        } else {
+            if (isLoggedIn) {
+                currentView = VIEWS.landing;
+                $(VIEWS.landing).fadeIn(1000);
             } else {
-                if(isLoggedIn){
-                    currentView = VIEWS.landing
-                    $(VIEWS.landing).fadeIn(1000)
-                } else {
-                    loginOptionsCancelEnabled(false)
-                    loginOptionsViewOnLoginSuccess = VIEWS.landing
-                    loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                    currentView = VIEWS.loginOptions
-                    $(VIEWS.loginOptions).fadeIn(1000)
-                }
+                loginOptionsCancelEnabled(false);
+                loginOptionsViewOnLoginSuccess = VIEWS.landing;
+                loginOptionsViewOnLoginCancel = VIEWS.loginOptions;
+                currentView = VIEWS.loginOptions;
+                $(VIEWS.loginOptions).fadeIn(1000);
             }
+        }
 
-            setTimeout(() => {
-                $('#loadingContainer').fadeOut(500, () => {
-                    $('#loadSpinnerImage').removeClass('rotating')
-                })
-            }, 250)
-            
-        }) // Cierre del then de fetch
+        setTimeout(() => {
+            $('#loadingContainer').fadeOut(500, () => {
+                $('#loadSpinnerImage').removeClass('rotating');
+            });
+
+            // Continue with the rest of the logic
+            continueMainUILogic();
+        }, 250);
+
+    })
+    .catch(error => {
+        // Handle fetch error or timeout
+        console.error('Fatal error: Cannot connect to VI Software servers')
+        console.error('There was a fetch error while attempting to resolve the background: ', error);
+        console.error('Is the client connected to the internet?\nIs there a firewall that prevents the launcher from connecting to the VI Software services?\nIs this just an occasional timeout? Maybe try relaunching.\nAre VI Software\'s servers down?\nIs this build up-to-date?')
+        console.error('Can\'t proceed with boot progress. Exit code is -3')
+
+        // If there's an error, load '0.jpg' from assets
+        document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+
+        document.body.style.backgroundImage = `url('assets/images/backgrounds/0.jpg')`;
+
+        // Continue with the rest of the logic
+        continueMainUILogic();
+  })};
+
+
+
+function continueMainUILogic() {
+    const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0;
+
+    // If this is enabled in a development environment we'll get ratelimited.
+    // The relaunch frequency is usually far too high.
+    if (!isDev && isLoggedIn) {
+        validateSelectedAccount();
+    }
+
+    if (ConfigManager.isFirstLaunch()) {
+        currentView = VIEWS.welcome;
+        $(VIEWS.welcome).fadeIn(1000);
+    } else {
+        if (isLoggedIn) {
+            currentView = VIEWS.landing;
+            $(VIEWS.landing).fadeIn(1000);
+        } else {
+            loginOptionsCancelEnabled(false);
+            loginOptionsViewOnLoginSuccess = VIEWS.landing;
+            loginOptionsViewOnLoginCancel = VIEWS.loginOptions;
+            currentView = VIEWS.loginOptions;
+            $(VIEWS.loginOptions).fadeIn(1000);
+        }
+    }
+
+    setTimeout(() => {
+        $('#loadingContainer').fadeOut(500, () => {
+            $('#loadSpinnerImage').removeClass('rotating');
+        });
+    }, 250);
 
     // Disable tabbing to the news container.
     initNews().then(() => {
-        $('#newsContainer *').attr('tabindex', '-1')
-    })
+        $('#newsContainer *').attr('tabindex', '-1');
+    });
 }
-
 
 function showFatalStartupError(){
     setTimeout(() => {
