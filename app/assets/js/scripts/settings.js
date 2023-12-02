@@ -1344,9 +1344,9 @@ async function populateJavaExecDetails(execPath){
     const details = await validateSelectedJvm(ensureJavaDirIsRoot(execPath), server.effectiveJavaOptions.supported)
 
     if(details != null) {
-        settingsJavaExecDetails.innerHTML = `Selected: Java ${details.semverStr} (${details.vendor})`
+        settingsJavaExecDetails.innerHTML = `Seleccionado: Java ${details.semverStr} (${details.vendor})`
     } else {
-        settingsJavaExecDetails.innerHTML = 'Invalid Selection'
+        settingsJavaExecDetails.innerHTML = 'Selección de java inválida'
     }
 }
 

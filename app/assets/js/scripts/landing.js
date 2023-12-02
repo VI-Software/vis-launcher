@@ -541,7 +541,7 @@ async function dlAsync(login = true) {
 
     fullRepairModule.destroyReceiver()
 
-    setLaunchDetails('Preparándose para el lanzamiento...')
+    setLaunchDetails('Finalizando...')
 
     const mojangIndexProcessor = new MojangIndexProcessor(
         ConfigManager.getCommonDirectory(),
@@ -594,9 +594,9 @@ async function dlAsync(login = true) {
         const gameStateChange = function(data){
             data = data.trim()
             if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Exploring the Realm!')
+                DiscordWrapper.updateDetails('Dentro de una experiencia')
             } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails('Sailing to Westeros!')
+                DiscordWrapper.updateDetails('En el menú principal')
             }
         }
 
@@ -616,7 +616,7 @@ async function dlAsync(login = true) {
             proc.stdout.on('data', tempListener)
             proc.stderr.on('data', gameErrorListener)
 
-            setLaunchDetails('Hecho. ¡Disfruta de la experiencia!')
+            setLaunchDetails('Hecho. ¡Disfruta!')
 
             // Init Discord Hook
             if(distro.rawDistribution.discord != null && serv.rawServerdiscord != null){
