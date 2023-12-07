@@ -24,6 +24,7 @@ nsis:
   oneClick: false
   perMachine: false
   allowElevation: true
+  license: "LICENSE"
   allowToChangeInstallationDirectory: true
 
 # macOS Configuration
