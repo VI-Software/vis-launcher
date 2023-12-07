@@ -1,10 +1,6 @@
 {
   "name": "vis-launcher",
-<<<<<<< Updated upstream
-  "version": "1.7.0",
-=======
   "version": "1.8.0",
->>>>>>> Stashed changes
   "productName": "VI Software Launcher",
   "description": "VI Software Launcher",
   "author": "VI Software",
