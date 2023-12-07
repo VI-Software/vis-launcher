@@ -1,10 +1,10 @@
-<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="aventium softworks"></p>
+<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="vi software"></p>
 
 <h1 align="center">VI Software Launcher</h1>
 
 <em><h5 align="center">(Basado en el proyecto "dscalzi/HeliosLauncher")</h5></em>
 
-[<p align="center"><img src="https://img.shields.io/github/actions/workflow/status/dscalzi/HeliosLauncher/build.yml?branch=master&style=for-the-badge" alt="gh acciones">](https://github.com/VI-Software/vis-launcher/actions) [<img src="https://img.shields.io/github/downloads/dscalzi/HeliosLauncher/total.svg ?style=for-the-badge" alt="descargas">](https://github.com/VI-Software/vis-launcher/releases)
+[<p align="center"><img src="https://img.shields.io/github/actions/workflow/status/VI-Software/vis-launcher//build.yml?branch=master&style=for-the-badge" alt="gh acciones">](https://github.com/VI-Software/vis-launcher/actions) [<img src="https://img.shields.io/github/downloads/VI-Software/vis-launcher/total.svg ?style=for-the-badge" alt="descargas">](https://github.com/VI-Software/vis-launcher/releases)
 
 <p align="center">Únase a servidores con mods sin preocuparse por instalar Java, Forge u otras modificaciones. Nosotros nos encargaremos de eso por usted.</p>
 

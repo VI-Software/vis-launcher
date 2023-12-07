@@ -1,3 +1,21 @@
+/*
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+                         
+    Copyright 2023 © 2023 VI Software y contribuidores. Todos los derechos reservados.
+    
+    GitHub: https://github.com/VI-Software
+    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Web: https://vis.galnod.com
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
+*/
+
 const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
@@ -11,6 +29,10 @@ const path                              = require('path')
 const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
+const LangLoader                        = require('./app/assets/js/langloader')
+
+// Setup Lang
+LangLoader.setupLanguage()
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -121,7 +143,7 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGIN, (ipcEvent, ...arguments_) => {
     msftAuthViewSuccess = arguments_[0]
     msftAuthViewOnClose = arguments_[1]
     msftAuthWindow = new BrowserWindow({
-        title: 'Inicio de sesión con Microsoft',
+        title: LangLoader.queryJS('index.microsoftLoginTitle'),
         backgroundColor: '#222222',
         width: 520,
         height: 600,
@@ -174,7 +196,7 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
     msftLogoutSuccess = false
     msftLogoutSuccessSent = false
     msftLogoutWindow = new BrowserWindow({
-        title: 'Gestor de sesiones con Microsoft',
+        title: LangLoader.queryJS('index.microsoftLogoutTitle'),
         backgroundColor: '#222222',
         width: 520,
         height: 600,
@@ -236,7 +258,11 @@ function createWindow() {
     })
     remoteMain.enable(win.webContents)
 
-    ejse.data('bkid', Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)))
+    const data = {
+        bkid: Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)),
+        lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders)
+    }
+    Object.entries(data).forEach(([key, val]) => ejse.data(key, val))
 
     win.loadURL(pathToFileURL(path.join(__dirname, 'app', 'app.ejs')).toString())
 

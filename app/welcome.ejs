@@ -1,3 +1,22 @@
+<!--
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+                         
+    Copyright 2023 © 2023 VI Software y contribuidores. Todos los derechos reservados.
+    
+    GitHub: https://github.com/VI-Software
+    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Web: https://vis.galnod.com
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
+-->
+
+
 <div id="welcomeContainer" style="display: none;">
     <!--<div class="cloudDiv">
         <div class="cloudTop"></div>
@@ -5,13 +24,13 @@
     </div>-->
     <div id="welcomeContent">
         <img id="welcomeImageSeal" src="assets/images/SealCircle.png"/>
-        <span id="welcomeHeader">Bienvenido a VI Software Launcher</span>
-        <span id="welcomeDescription">Este launcher fue desarrollado por el equipo de VI Software para facilitar la gestión de modpacks en las experiencias VIS. Al utilizar este launcher, aceptas la <a href="https://vi-software.gitbook.io/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://vi-software.gitbook.io/vi-software/vis-launcher/terminos-de-uso">términos de servicio</a> de VI Software</span>
+        <span id="welcomeHeader"><%- lang('welcome.welcomeHeader') %></span>
+        <span id="welcomeDescription"><%- lang('welcome.welcomeDescription') %></span>
         <br>
-        <span id="welcomeDescCTA">¡La diversión está a la vuelta de la esquina!</span>
+        <span id="welcomeDescCTA"><%- lang('welcome.welcomeDescCTA') %></span>
         <button id="welcomeButton">
             <div id="welcomeButtonContent">
-                CONTINUAR
+                <%- lang('welcome.continueButton') %>
                 <svg id="welcomeSVG" viewBox="0 0 24.87 13.97">
                     <defs>
                         <style>.arrowLine{fill:none;stroke:#FFF;stroke-width:2px;transition: 0.25s ease;}</style>

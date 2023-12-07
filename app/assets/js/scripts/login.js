@@ -1,3 +1,22 @@
+/*
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+                         
+    Copyright 2023 © 2023 VI Software y contribuidores. Todos los derechos reservados.
+    
+    GitHub: https://github.com/VI-Software
+    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Web: https://vis.galnod.com
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
+*/
+
+
 /**
  * Script for login.ejs
  */
@@ -220,10 +239,7 @@ loginButton.addEventListener('click', () => {
         } else {
             // Uh oh.
             msftLoginLogger.error('Unhandled error during login.', displayableError)
-            actualDisplayableError = {
-                title: 'Error desconocido durante el inicio de sesión',
-                desc: 'Un error desconocido a ocurrido. Consulte la consola para obtener más detalles..'
-            }
+            actualDisplayableError = Lang.queryJS('login.error.unknown')
         }
 
         setOverlayContent(actualDisplayableError.title, actualDisplayableError.desc, Lang.queryJS('login.tryAgain'))
