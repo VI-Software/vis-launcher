@@ -1,19 +1,38 @@
-// Work in progress
+/*
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+                         
+    Copyright 2023 © 2023 VI Software y contribuidores. Todos los derechos reservados.
+    
+    GitHub: https://github.com/VI-Software
+    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Web: https://vis.galnod.com
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
+*/
+
 const { LoggerUtil } = require('helios-core')
 
 const logger = LoggerUtil.getLogger('DiscordWrapper')
 
 const { Client } = require('discord-rpc-patch')
 
+const Lang = require('./langloader')
+
 let client
 let activity
 
-exports.initRPC = function(genSettings, servSettings, initialDetails = 'Esperando a la clienta...'){
+exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.queryJS('discord.waiting')){
     client = new Client({ transport: 'ipc' })
 
     activity = {
         details: initialDetails,
-        state: 'Server: ' + servSettings.shortId,
+        state: Lang.queryJS('discord.state', {shortId: servSettings.shortId}),
         largeImageKey: servSettings.largeImageKey,
         largeImageText: servSettings.largeImageText,
         smallImageKey: genSettings.smallImageKey,
