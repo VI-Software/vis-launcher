@@ -46,9 +46,10 @@ window.eval = global.eval = function () {
 
 // Display warning when devtools window is opened.
 remote.getCurrentWebContents().on('devtools-opened', () => {
-    console.log('%cThe console is dark and full of terrors.', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
-    console.log('%cIf you\'ve been told to paste something here, you\'re being scammed.', 'font-size: 16px')
-    console.log('%cUnless you know exactly what you\'re doing, close this window.', 'font-size: 16px')
+    console.log('%cLa consola es oscura y repleta de terrores', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
+    console.log('%cSi alguien te ha dicho que pegues / arrastres un objeto aquí te están estafando.', 'font-size: 16px')
+    console.log('%cProseguir podría proporcionar acceso al atacante a las cuentas vinculadas al launcher.', 'font-size: 16px')
+    console.log('%cA no ser que sepas exactamente lo que estás haciendo, cierra esta pestaña.', 'font-size: 16px')
 })
 
 // Disable zoom, needed for darwin.
