@@ -37,6 +37,8 @@ function loginOptionsCancelEnabled(val){
     }
 }
 
+
+/*
 loginOptionMicrosoft.onclick = (e) => {
     switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
         ipcRenderer.send(
@@ -46,7 +48,7 @@ loginOptionMicrosoft.onclick = (e) => {
         )
     })
 }
-
+*/
 loginOptionMojang.onclick = (e) => {
     switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
         loginViewOnSuccess = loginOptionsViewOnLoginSuccess

@@ -17,7 +17,7 @@
 */
 
 
-const { DistributionAPI } = require('helios-core/common')
+const { DistributionAPI } = require('vis-launcher-core/common')
 
 const ConfigManager = require('./configmanager')
 
