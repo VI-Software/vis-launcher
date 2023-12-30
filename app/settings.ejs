@@ -53,28 +53,6 @@
             <div class="settingsAuthAccountTypeContainer">
                 <div class="settingsAuthAccountTypeHeader">
                     <div class="settingsAuthAccountTypeHeaderLeft">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 23 23">
-                            <path fill="#f35325" d="M1 1h10v10H1z" />
-                            <path fill="#81bc06" d="M12 1h10v10H12z" />
-                            <path fill="#05a6f0" d="M1 12h10v10H1z" />
-                            <path fill="#ffba08" d="M12 12h10v10H12z" />
-                        </svg>
-                        <span><%- lang('settings.microsoftAccount') %></span>
-                    </div>
-                    <div class="settingsAuthAccountTypeHeaderRight">
-                        <button class="settingsAddAuthAccount" id="settingsAddMicrosoftAccount"><%-
-                                lang('settings.addMicrosoftAccount') %></button>
-                    </div>
-                </div>
-
-                <div class="settingsCurrentAccounts" id="settingsCurrentMicrosoftAccounts">
-                    <!-- Microsoft auth accounts populated here. -->
-                </div>
-            </div>
-
-            <div class="settingsAuthAccountTypeContainer">
-                <div class="settingsAuthAccountTypeHeader">
-                    <div class="settingsAuthAccountTypeHeaderLeft">
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 9.677 9.667">
                             <path d="M-26.332-12.098h2.715c-1.357.18-2.574 1.23-2.715 2.633z" fill="#fff" />
                             <path
@@ -94,6 +72,27 @@
 
                 <div class="settingsCurrentAccounts" id="settingsCurrentMojangAccounts">
                     <!-- Mojang auth accounts populated here. -->
+                </div>
+            </div>
+            <div class="settingsAuthAccountTypeContainer">
+                <div class="settingsAuthAccountTypeHeader">
+                    <div class="settingsAuthAccountTypeHeaderLeft">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 23 23">
+                            <path fill="#f35325" d="M1 1h10v10H1z" />
+                            <path fill="#81bc06" d="M12 1h10v10H12z" />
+                            <path fill="#05a6f0" d="M1 12h10v10H1z" />
+                            <path fill="#ffba08" d="M12 12h10v10H12z" />
+                        </svg>
+                        <span><%- lang('settings.microsoftAccount') %></span>
+                    </div>
+                    <div class="settingsAuthAccountTypeHeaderRight">
+                        <button class="settingsAddAuthAccount" id="settingsAddMicrosoftAccount"><%-
+                                lang('settings.addMicrosoftAccount') %></button>
+                    </div>
+                </div>
+
+                <div class="settingsCurrentAccounts" id="settingsCurrentMicrosoftAccounts">
+                    <!-- Microsoft auth accounts populated here. -->
                 </div>
             </div>
         </div>

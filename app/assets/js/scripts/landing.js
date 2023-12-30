@@ -25,18 +25,18 @@ const { URL }                 = require('url')
 const {
     MojangRestAPI,
     getServerStatus
-}                             = require('helios-core/mojang')
+}                             = require('vis-launcher-core/mojang')
 const {
     RestResponseStatus,
     isDisplayableError,
     validateLocalFile
-}                             = require('helios-core/common')
+}                             = require('vis-launcher-core/common')
 const {
     FullRepair,
     DistributionIndexProcessor,
     MojangIndexProcessor,
     downloadFile
-}                             = require('helios-core/dl')
+}                             = require('vis-launcher-core/dl')
 const {
     validateSelectedJvm,
     ensureJavaDirIsRoot,
@@ -44,7 +44,7 @@ const {
     discoverBestJvmInstallation,
     latestOpenJDK,
     extractJdk
-}                             = require('helios-core/java')
+}                             = require('vis-launcher-core/java')
 
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')

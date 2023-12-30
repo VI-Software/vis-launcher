@@ -16,7 +16,7 @@
 
 */
 
-const { LoggerUtil } = require('helios-core')
+const { LoggerUtil } = require('vis-launcher-core')
 
 const logger = LoggerUtil.getLogger('DiscordWrapper')
 
