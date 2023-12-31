@@ -15,7 +15,7 @@
 * 🔒 Gestión completa de cuentas.
    * Agregue varias cuentas y cambie fácilmente entre ellas.
    * Autenticación de [VI Software](https://authserver-vis.galnod.com) (Yggdrasil) totalmente compatible.
-   * Las credenciales nunca se almacenan, se transmiten directamente a Mojang.
+   * Las credenciales nunca se almacenan, se transmiten directamente al servidor de VI Software.
 * 📂 Gestión eficiente de activos.
    * Reciba actualizaciones de clientes tan pronto como las publiquemos.
    * Los archivos se validan antes del lanzamiento. Se volverán a descargar los archivos corruptos o incorrectos.
