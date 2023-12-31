@@ -227,9 +227,9 @@ checkConsoleForDetails = "Por favor, revisa la consola (CTRL + Shift + i) para o
 checking = "Verificando Noticias"
 
 [js.landing.discord]
-loading = "Cargando juego.."
-joining = "Navegando hacia Westeros!"
-joined = "Explorando el Reino!"
+loading = "Cargando juego..."
+joining = "Conectado con el servidor..."
+joined = "En un servidor multijugador."
 
 [js.overlay]
 dismiss = "Descartar"
