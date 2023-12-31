@@ -14,7 +14,7 @@
 
 * 🔒 Gestión completa de cuentas.
    * Agregue varias cuentas y cambie fácilmente entre ellas.
-   * Autenticación de Microsoft (OAuth 2.0) + Mojang (Yggdrasil) totalmente compatible.
+   * Autenticación de [VI Software](https://authserver-vis.galnod.com) (Yggdrasil) totalmente compatible.
    * Las credenciales nunca se almacenan, se transmiten directamente a Mojang.
 * 📂 Gestión eficiente de activos.
    * Reciba actualizaciones de clientes tan pronto como las publiquemos.
