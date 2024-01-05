@@ -11,23 +11,23 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
-      - name: Check out Git repository
+      - name: Revisar el repositorio Git
         uses: actions/checkout@v3
 
-      - name: Set up Node
+      - name: Instalar y preparar Node
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Set up Python
+      - name: Instalar y preparar Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.x
 
-      - name: Install Dependencies
+      - name: Instalar dependencias
         run: npm ci
         shell: bash
 
