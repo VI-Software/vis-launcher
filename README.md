@@ -5,7 +5,7 @@
 
 <em><h5 align="center">(Basado en el proyecto "[HeliosLauncher](https://github.com/dscalzi/helioslauncher)")</h5></em>
 
-[Build Status](https://github.com/VI-Software/vis-launcher/actions/workflows/build.yml/badge.svg)
+(https://github.com/VI-Software/vis-launcher/actions/workflows/build.yml/badge.svg)
 [<p align="center"><img src="https://img.shields.io/github/actions/workflow/status/VI-Software/vis-launcher/build.yml?branch=master&style=for-the-badge" alt="gh actions">](https://github.com/VI-Software/vis-launcher/actions) [<img src="https://img.shields.io/github/downloads/VI-Software/vis-launcher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/VI-Software/vis-launcher/releases)
 
 <p align="center">Conéctate a los servidores de VI Software sin preocupaciones, permite al VIS Launcher actualizar, pre configurar tus instalaciones de mods de las experiencias VIS por ti.</p>
