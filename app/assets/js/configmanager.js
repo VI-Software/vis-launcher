@@ -7,7 +7,7 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2023 © 2023 VI Software y contribuidores. Todos los derechos reservados.
+    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
@@ -15,7 +15,6 @@
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
-
 
 const fs   = require('fs-extra')
 const { LoggerUtil } = require('vis-launcher-core')
