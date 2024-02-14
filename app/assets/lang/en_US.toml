@@ -7,7 +7,7 @@
 #                         \/                                 \/            \/ 
 #                         
 #                         
-#    Copyright 2023 © 2023 VI Software y contribuidores. Todos los derechos reservados.
+#    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
 #    
 #    GitHub: https://github.com/VI-Software
 #    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
@@ -36,7 +36,7 @@ newsErrorNoneSpan = "Sin Noticias"
 
 [ejs.login]
 loginCancelText = "Cancelar"
-loginSubheader = "INICIO DE SESIÓN DE MINECRAFT"
+loginSubheader = "Iniciando sesión con VI Software Yggdrasil"
 loginEmailError = "* Valor Inválido"
 loginEmailPlaceholder = "CORREO ELECTRÓNICO O NOMBRE DE USUARIO"
 loginPasswordError = "* Requerido"
@@ -51,16 +51,16 @@ loginPasswordDisclaimer1 = "Tu contraseña se envía directamente al servidor de
 loginPasswordDisclaimer2 = "&copy {appName}. Este servicio es independiente al sistema de autentificación de Mojang."
 
 [ejs.loginOptions]
-loginOptionsTitle = "Opciones de Inicio de Sesión"
-loginWithMicrosoft = "Iniciar Sesión con Microsoft"
-loginWithVIS = "Iniciar Sesión con VI Software"
+loginOptionsTitle = "Opciones de inicio de sesión"
+loginWithMicrosoft = "Iniciar sesión con Microsoft"
+loginWithVIS = "Iniciar sesión con VI Software"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
-serverSelectHeader = "Servidores Disponibles"
+serverSelectHeader = "Servidores disponibles"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancelar"
-accountSelectHeader = "Selecciona una Cuenta"
+accountSelectHeader = "Selecciona una cuenta"
 accountSelectConfirm = "Seleccionar"
 accountSelectCancel = "Cancelar"
 
