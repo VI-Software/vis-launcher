@@ -1,5 +1,5 @@
 
-<p align="center"><img src="./app/assets/images/SealCircle.png" width="150px" height="150px" alt="vi software"></p>
+<p align="center"><img src="./app/assets/images/vis-icon.png" width="150px" height="150px" alt="vi software"></p>
 
 <h1 align="center">VI Software Launcher</h1>
 

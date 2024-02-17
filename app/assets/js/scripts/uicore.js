@@ -44,12 +44,14 @@ window.eval = global.eval = function () {
     throw new Error('Sorry, this app does not support window.eval().')
 }
 
+
 // Display warning when devtools window is opened.
 remote.getCurrentWebContents().on('devtools-opened', () => {
-    console.log('%cLa consola es oscura y repleta de terrores', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 60px; font-weight: bold')
-    console.log('%cSi alguien te ha dicho que pegues / arrastres un objeto aquí te están estafando.', 'font-size: 16px')
+    console.log('%cSTOP', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 180px; font-weight: bold')
+    console.log('%c¡Mantén tus cuentas seguras! No envíes ninguna información de aquí a cualquiera y no pegues cualquier texto aquí.', 'font-size: 16px')
+    console.log('%cSi se te ha solicitado que pegues o envíes cualquier información, aquí estás siendo estafado/a', 'color: red; font-size: 16px; font-weight: bold')
     console.log('%cProseguir podría proporcionar acceso al atacante a las cuentas vinculadas al launcher.', 'font-size: 16px')
-    console.log('%cA no ser que sepas exactamente lo que estás haciendo, cierra esta pestaña.', 'font-size: 16px')
+    console.log('%cA no ser que sepas exactamente lo que estás haciendo, cierra esta pestaña de inmediato.', 'font-size: 16px')
 })
 
 // Disable zoom, needed for darwin.
@@ -69,7 +71,7 @@ if(!isDev){
                 loggerAutoUpdater.info('New update available', info.version)
                 
                 if(process.platform === 'darwin'){
-                    info.darwindownload = `https://github.com/VI-Software/vis-launcher/releases/download/v${info.version}/Helios-Launcher-setup-${info.version}${process.arch === 'arm64' ? '-arm64' : '-x64'}.dmg`
+                    info.darwindownload = `https://github.com/VI-Software/vis-launcher/releases/download/v${info.version}/VI-Software-Launcher-setup-${info.version}${process.arch === 'arm64' ? '-arm64' : '-x64'}.dmg`
                     showUpdateUI(info)
                 }
                 

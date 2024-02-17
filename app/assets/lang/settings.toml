@@ -22,10 +22,10 @@ mediaGitHubURL = "https://github.com/VI-Software"
 mediaDiscordURL = "https://vis.galnod.com/discord"
 
 [ejs.settings]
-sourceGithubLink = "https://github.com/VI-Software/vis-launcher/"
+sourceGithubLink = "https://github.com/VI-Software/vis-launcher"
 supportLink = "https://github.com/VI-Software/vis-launcher/issues"
 
 [ejs.welcome]
 welcomeHeader = "Bienvenido/a a VI Software Launcher"
-welcomeDescription = 'Este launcher fue desarrollado por el equipo de VI Software para facilitar la gestión de modpacks en las experiencias VIS. Al utilizar este launcher, aceptas la <a href="https://vi-software.gitbook.io/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://vi-software.gitbook.io/vi-software/vis-launcher/terminos-de-uso">términos de servicio</a> de VI Software'
+welcomeDescription = 'Este launcher fue desarrollado por el equipo de VI Software para facilitar la gestión de modpacks en las experiencias VIS. Al utilizar este launcher, aceptas la <a style="color: purple;" href="https://docs-vis.galnod.com/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://docs-vis.galnod.com/vi-software/vis-launcher/terminos-de-uso" style="color: purple;">términos de servicio</a> de VI Software'
 welcomeDescCTA = "¡La diversión está a la vuelta de la esquina!"

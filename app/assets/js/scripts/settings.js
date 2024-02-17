@@ -371,13 +371,14 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
 }
 
 // Bind the add microsoft account button.
+
 document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
     switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
         ipcRenderer.send(MSFT_OPCODE.OPEN_LOGIN, VIEWS.settings, VIEWS.settings)
     })
 }
-
 // Bind reply for Microsoft Login.
+
 ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
     if (arguments_[0] === MSFT_REPLY_TYPE.ERROR) {
 
@@ -559,6 +560,7 @@ function processLogOut(val, isLastAccount){
 }
 
 // Bind reply for Microsoft Logout.
+
 ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
     if (arguments_[0] === MSFT_REPLY_TYPE.ERROR) {
         switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
@@ -622,6 +624,7 @@ ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
  * 
  * @param {string} uuid The UUID of the new selected account.
  */
+
 function refreshAuthAccountSelected(uuid){
     Array.from(document.getElementsByClassName('settingsAuthAccount')).map((val) => {
         const selBtn = val.getElementsByClassName('settingsAuthAccountSelect')[0]

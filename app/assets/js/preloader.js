@@ -31,7 +31,13 @@ const { HeliosDistribution } = require('vis-launcher-core/common')
 
 const logger = LoggerUtil.getLogger('Preloader')
 
-logger.info('Loading..')
+logger.info('VI Software Launcher')
+logger.info('Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.')
+logger.info('GitHub: https://github.com/VI-Software')
+logger.info('Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher')
+logger.info('Web: https://vis.galnod.com')
+logger.info('https://github.com/VI-Software/vis-launcher/blob/main/LICENSE')
+logger.info('Cargando...')
 
 // Load ConfigManager
 ConfigManager.load()
@@ -53,7 +59,7 @@ function onDistroLoad(data){
         
         // Resolve the selected server if its value has yet to be set.
         if(ConfigManager.getSelectedServer() == null || data.getServerById(ConfigManager.getSelectedServer()) == null){
-            logger.info('Determining default selected server..')
+            logger.info('Determinando el servidor predeterminado...')
             ConfigManager.setSelectedServer(data.getMainServer().rawServer.id)
             ConfigManager.save()
         }
@@ -64,13 +70,13 @@ function onDistroLoad(data){
 // Ensure Distribution is downloaded and cached.
 DistroAPI.getDistribution()
     .then(heliosDistro => {
-        logger.info('Loaded distribution index.')
+        logger.info('Índice de distribución cargado.')
 
         onDistroLoad(heliosDistro)
     })
     .catch(err => {
-        logger.info('Failed to load an older version of the distribution index.')
-        logger.info('Application cannot run.')
+        logger.info('No se pudo cargar una versión anterior del índice de distribución.')
+        logger.info('La aplicación no se puede ejecutar.')
         logger.error(err)
 
         onDistroLoad(null)
@@ -79,8 +85,8 @@ DistroAPI.getDistribution()
 // Clean up temp dir incase previous launches ended unexpectedly. 
 fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => {
     if(err){
-        logger.warn('Error while cleaning natives directory', err)
+        logger.warn('Error al limpiar el directorio de nativas', err)
     } else {
-        logger.info('Cleaned natives directory.')
+        logger.info('Directorio de nativos limpiado.')
     }
 })
