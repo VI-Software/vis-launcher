@@ -23,7 +23,7 @@ const crypto                = require('crypto')
 const fs                    = require('fs-extra')
 const { LoggerUtil }        = require('vis-launcher-core')
 const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-launcher-core/common')
-const { Type }              = require('helios-distribution-types')
+const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
 
@@ -387,7 +387,7 @@ class ProcessBuilder {
 
         // Java Arguments
         if(process.platform === 'darwin'){
-            args.push('-Xdock:name=HeliosLauncher')
+            args.push('-Xdock:name=VISoftwareLauncher')
             args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
         }
         args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
@@ -438,7 +438,7 @@ class ProcessBuilder {
 
         // Java Arguments
         if(process.platform === 'darwin'){
-            args.push('-Xdock:name=HeliosLauncher')
+            args.push('-Xdock:name=VISoftwareLauncher')
             args.push('-Xdock:icon=' + path.join(__dirname, '..', 'images', 'minecraft.icns'))
         }
         args.push('-Xmx' + ConfigManager.getMaxRAM(this.server.rawServer.id))
@@ -540,7 +540,7 @@ class ProcessBuilder {
                             val = args[i].replace(argDiscovery, tempNativePath)
                             break
                         case 'launcher_name':
-                            val = args[i].replace(argDiscovery, 'Helios-Launcher')
+                            val = args[i].replace(argDiscovery, 'VI-Software-Launcher')
                             break
                         case 'launcher_version':
                             val = args[i].replace(argDiscovery, this.launcherVersion)

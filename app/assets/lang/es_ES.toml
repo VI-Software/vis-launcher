@@ -15,7 +15,7 @@
 #    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 [ejs.landing]
-updateAvailableTooltip = "Actualización Disponible"
+updateAvailableTooltip = "Actualización disponible"
 usernamePlaceholder = "Nombre de usuario"
 usernameEditButton = "Editar"
 settingsTooltip = "Configuración"
@@ -29,10 +29,10 @@ launchButton = "JUGAR"
 launchButtonPlaceholder = "&#8226; Ningún servidor seleccionado"
 launchDetails = "Por favor espera.."
 newsNavigationStatus = "{currentPage} de {totalPages}"
-newsErrorLoadSpan = "Verificando Noticias.."
-newsErrorFailedSpan = "Error al Cargar Noticias"
-newsErrorRetryButton = "Intentar de Nuevo"
-newsErrorNoneSpan = "Sin Noticias"
+newsErrorLoadSpan = "Verificando noticias.."
+newsErrorFailedSpan = "Error al cargar noticias"
+newsErrorRetryButton = "Intentar de nuevo"
+newsErrorNoneSpan = "Sin noticias"
 
 [ejs.login]
 loginCancelText = "Cancelar"
@@ -48,7 +48,7 @@ loginButtonText = "INICIAR SESIÓN"
 loginNeedAccountLink = "https://authserver-vis.galnod.com"
 loginNeedAccountText = "¿Necesitas una cuenta?"
 loginPasswordDisclaimer1 = "Tu contraseña se envía directamente al servidor de VI Software y nunca se almacena."
-loginPasswordDisclaimer2 = "&copy {appName}. Este servicio es independiente al sistema de autentificación de Mojang."
+loginPasswordDisclaimer2 = "&copy 2024 VI Software y contribuidores. Todos los derechos reservados."
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opciones de inicio de sesión"
@@ -70,7 +70,7 @@ navAccount = "Cuenta"
 navMinecraft = "Minecraft"
 navMods = "Mods"
 navJava = "Java"
-navLauncher = "Lanzador"
+navLauncher = "Launcher"
 navAbout = "Acerca de"
 navUpdates = "Actualizaciones"
 navDone = "Hecho"
@@ -82,7 +82,7 @@ VISAccount = "VI Software"
 addVISAccount = "+ Añadir Cuenta de VI Software"
 minecraftTabHeaderText = "Configuración de Minecraft"
 minecraftTabHeaderDesc = "Opciones relacionadas con el lanzamiento del juego."
-gameResolutionTitle = "Resolución del Juego"
+gameResolutionTitle = "Resolución del juego"
 launchFullscreenTitle = "Iniciar en pantalla completa."
 autoConnectTitle = "Automáticamente conectar al servidor al lanzar el juego si disponible."
 autoConnectDesc = "Se conecta automáticamente al servidor si la funcionalidad está disponible en el servidor seleccionado. (Debe de haber sido activado por la administradora de la experiencia)"
@@ -108,16 +108,16 @@ memoryDesc = "Se recomienda un mínimo de 3 gigabytes de RAM. Establecer los val
 memoryTotalTitle = "Total"
 memoryAvailableTitle = "Disponible"
 javaExecutableTitle = "Ejecutable de Java"
-javaExecSelDialogTitle = "Seleccionar Ejecutable de Java"
-javaExecSelButtonText = "Elegir Archivo"
+javaExecSelDialogTitle = "Seleccionar ejecutable de Java"
+javaExecSelButtonText = "Elegir archivo"
 javaExecDesc = "El ejecutable de Java se valida antes del inicio del juego."
 javaPathDesc = "La ruta debe terminar con <strong>{pathSuffix}</strong>."
 jvmOptsTitle = "Opciones Adicionales de JVM"
 jvmOptsDesc = "Opciones que se proporcionarán a la JVM en tiempo de ejecución. <em>-Xms</em> y <em>-Xmx</em> no deben incluirse."
-launcherTabHeaderText = "Configuración del Lanzador"
-launcherTabHeaderDesc = "Opciones relacionadas con el lanzador en sí."
-allowPrereleaseTitle = "Permitir Actualizaciones Previas al Lanzamiento."
-allowPrereleaseDesc = "Las versiones previas al lanzamiento incluyen nuevas funciones que pueden no haber sido completamente probadas o integradas.<br>Esto siempre será cierto si estás utilizando una versión previa al lanzamiento."
+launcherTabHeaderText = "Configuración del launcher"
+launcherTabHeaderDesc = "Opciones relacionadas con el launcher en sí."
+allowPrereleaseTitle = "Canal de actualizaciones beta."
+allowPrereleaseDesc = "Las versiones beta incluyen nuevas funciones que pueden no haber sido completamente probadas o integradas.<br>Esta opción será considerada como activa siempre que se esté en una versión beta"
 dataDirectoryTitle = "Directorio de Datos"
 selectDataDirectory = "Seleccionar Directorio de Datos"
 chooseFolder = "Elegir Carpeta"
@@ -129,16 +129,16 @@ stableRelease = "Versión Estable"
 versionText = "Versión "
 sourceGithub = "Fuente (GitHub)"
 soporte = "Soporte"
-devToolsConsole = "Consola de Herramientas de Desarrollo"
-releaseNotes = "Notas de Lanzamiento"
-changelog = "Registro de Cambios"
-noReleaseNotes = "Sin Notas de Lanzamiento"
-viewReleaseNotes = "Ver Notas de Lanzamiento en GitHub"
-launcherUpdatesHeaderText = "Actualizaciones del Lanzador"
-launcherUpdatesHeaderDesc = "Descarga, instala y revisa las actualizaciones del lanzador."
-checkForUpdates = "Buscar Actualizaciones"
-whatsNew = "¿Qué Hay de Nuevo?"
-updateReleaseNotes = "Notas de Lanzamiento de la Actualización"
+devToolsConsole = "Consola de Herramientas de desarrollo"
+releaseNotes = "Notas de lanzamiento"
+changelog = "Registro de cambios"
+noReleaseNotes = "Sin notas de lanzamiento"
+viewReleaseNotes = "Ver Notas de lanzamiento en GitHub"
+launcherUpdatesHeaderText = "Actualizaciones del launcher"
+launcherUpdatesHeaderDesc = "Descarga, instala y revisa las actualizaciones del launcher."
+checkForUpdates = "Buscar actualizaciones"
+whatsNew = "¿Qué hay de nuevo?"
+updateReleaseNotes = "Notas de lanzamiento de la actualización"
 
 [ejs.waiting]
 waitingText = "Esperando a Microsoft.."
@@ -147,12 +147,12 @@ waitingText = "Esperando a Microsoft.."
 continueButton = "CONTINUAR"
 
 [js.discord]
-waiting = "Esperando al Cliente.."
+waiting = "Esperando al cliente.."
 state = "Servidor: {shortId}"
 
 [js.index]
-microsoftLoginTitle = "Inicio de Sesión de Microsoft"
-microsoftLogoutTitle = "Cierre de Sesión de Microsoft"
+microsoftLoginTitle = "Inicio de sesión de Microsoft"
+microsoftLogoutTitle = "Cierre de sesión de Microsoft"
 
 [js.login]
 login = "INICIAR SESIÓN"
@@ -165,21 +165,21 @@ invalidValue = "* Valor Inválido"
 requiredValue = "* Requerido"
 
 [js.login.error.unknown]
-title = "Error Desconocido Durante el Inicio de Sesión"
-desc = "Ha ocurrido un error desconocido. Consulta la consola para obtener más detalles."
+title = "Error desconocido durante el inicio de sesión"
+desc = "Ha ocurrido un error desconocido. Consulta la consola para obtener más detalles (CTRL + Shift + i)"
 
 [js.landing.launch]
 pleaseWait = "Por favor espera.."
-failureTitle = "Error Durante el Lanzamiento"
+failureTitle = "Error durante el lanzamiento"
 failureText = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 okay = "Aceptar"
 
 [js.landing.selectedAccount]
-noAccountSelected = "Ninguna Cuenta Seleccionada"
+noAccountSelected = "Ninguna cuenta seleccionada"
 
 [js.landing.selectedServer]
-noSelection = "Ningún Servidor Seleccionado"
-loading = "Cargando.."
+noSelection = "Ningún servidor seleccionado"
+loading = "Cargando..."
 
 [js.landing.serverStatus]
 server = "SERVIDOR"
@@ -192,34 +192,34 @@ noCompatibleJava = "No se encontró una instalación compatible de Java."
 installJavaMessage = "Para iniciar Minecraft, necesitas una instalación de 64 bits de Java {major}. ¿Quieres que instalemos una copia?"
 installJava = "Instalar Java"
 installJavaManually = "Instalar Manualmente"
-javaDownloadPrepare = "Preparando Descarga de Java.."
-javaDownloadFailureTitle = "Error Durante la Descarga de Java"
+javaDownloadPrepare = "Preparando descarga de Java.."
+javaDownloadFailureTitle = "Error durante la descarga de Java"
 javaDownloadFailureText = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
-javaRequired = "Java es Requerido<br>para Iniciar"
-javaRequiredMessage = 'Se requiere una instalación válida de x64 de Java {major} para iniciar.<br><br>Consulta nuestra <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Guía de Gestión de Java</a> para obtener instrucciones sobre cómo instalar Java manualmente.'
+javaRequired = "Java es Requerido<br>para iniciar"
+javaRequiredMessage = 'Se requiere una instalación válida de x64 de Java {major} para iniciar.<br><br>Consulta esta <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Guía de Gestión de Java</a> para obtener instrucciones sobre cómo instalar Java manualmente.'
 javaRequiredDismiss = "Entiendo"
-javaRequiredCancel = "Volver Atrás"
+javaRequiredCancel = "Volver atrás"
 
 [js.landing.downloadJava]
 findJdkFailure = "No se pudo encontrar una distribución de OpenJDK."
 javaDownloadCorruptedError = "El JDK descargado tiene un hash incorrecto, es posible que el archivo esté dañado."
 extractingJava = "Extrayendo Java"
-javaInstalled = "Java Instalado!"
+javaInstalled = "¡Java Instalado!"
 
 [js.landing.dlAsync]
 loadingServerInfo = "Cargando información del servidor.."
-fatalError = "Error Fatal"
+fatalError = "Error fatal"
 unableToLoadDistributionIndex = "No se pudo cargar una copia del índice de distribución. Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 pleaseWait = "Por favor espera.."
-errorDuringLaunchTitle = "Error Durante el Lanzamiento"
+errorDuringLaunchTitle = "Error durante el lanzamiento"
 seeConsoleForDetails = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 validatingFileIntegrity = "Validando integridad del archivo.."
-errorDuringFileVerificationTitle = "Error Durante la Verificación del Archivo"
+errorDuringFileVerificationTitle = "Error Durante la verificación del archivo"
 downloadingFiles = "Descargando archivos.."
-errorDuringFileDownloadTitle = "Error Durante la Descarga del Archivo"
+errorDuringFileDownloadTitle = "Error durante la descarga del archivo"
 preparingToLaunch = "Preparando para lanzar.."
 launchingGame = "Iniciando juego.."
-launchWrapperNotDownloaded = "El archivo principal, LaunchWrapper, no se descargó correctamente. Como resultado, el juego no puede iniciarse.<br><br>Para solucionar este problema, desactiva temporalmente tu software antivirus y vuelve a iniciar el juego.<br><br>Si tienes tiempo, por favor <a href=\"https://github.com/dscalzi/HeliosLauncher/issues\">envía un problema</a> y avísanos qué software antivirus estás utilizando. Nos pondremos en contacto con ellos y trataremos de solucionar las cosas."
+launchWrapperNotDownloaded = "El archivo principal, LaunchWrapper, no se descargó correctamente. Como resultado, el juego no puede iniciarse.<br><br>Para solucionar este problema, desactiva temporalmente tu software antivirus y vuelve a iniciar el juego.<br><br>Si tienes tiempo, por favor <a href=\"https://github.com/VI-Software/vis-launcher/issues\">abre una issue en nuestro github</a> y avísanos qué software antivirus estás utilizando. Nos pondremos en contacto con ellos y trataremos de solucionar las cosas."
 doneEnjoyServer = "Listo. ¡Disfruta del servidor!"
 checkConsoleForDetails = "Por favor, revisa la consola (CTRL + Shift + i) para obtener más detalles."
 
@@ -236,15 +236,15 @@ dismiss = "Descartar"
 
 [js.settings.fileSelectors]
 executables = "Ejecutables"
-allFiles = "Todos los Archivos"
+allFiles = "Todos los archivos"
 
 [js.settings.mstfLogin]
-errorTitle = "Algo Salió Mal"
+errorTitle = "Algo salió mal"
 errorMessage = "La autenticación de Microsoft falló. Por favor, inténtalo de nuevo."
 okButton = "Aceptar"
 
 [js.settings.mstfLogout]
-errorTitle = "Algo Salió Mal"
+errorTitle = "Algo salió mal"
 errorMessage = "La desconexión de Microsoft falló. Por favor, inténtalo de nuevo."
 okButton = "Aceptar"
 
@@ -253,9 +253,9 @@ selectButton = "Seleccionar Cuenta"
 selectedButton = "Cuenta Seleccionada ✓"
 
 [js.settings.authAccountLogout]
-lastAccountWarningTitle = "Advertencia<br>Esta es tu Última Cuenta"
-lastAccountWarningMessage = "Para usar el lanzador, debes estar conectado al menos a una cuenta. Necesitarás iniciar sesión nuevamente después.<br><br>¿Estás seguro de que quieres cerrar sesión?"
-confirmButton = "Estoy Seguro"
+lastAccountWarningTitle = "Advertencia<br>Esta es tu última cuenta"
+lastAccountWarningMessage = "Para usar el launcher, debes estar conectado al menos a una cuenta. Necesitarás iniciar sesión nuevamente después.<br><br>¿Estás seguro/a de que quieres cerrar sesión?"
+confirmButton = "Estoy Seguro/a"
 cancelButton = "Cancelar"
 
 [js.settings.authAccountPopulate]
@@ -267,9 +267,9 @@ logout = "Cerrar Sesión"
 
 [js.settings.dropinMods]
 removeButton = "Eliminar"
-deleteFailedTitle = "Error al Eliminar<br>Mod Drop-in {fullName}"
+deleteFailedTitle = "Error al eliminar<br>mod drop-in {fullName}"
 deleteFailedMessage = "Asegúrate de que el archivo no esté en uso y vuelve a intentarlo."
-failedToggleTitle = "Error al Alternar<br>Uno o Más Mods Drop-in"
+failedToggleTitle = "Error al aaternar<br>Uno o más mods drop-in"
 okButton = "Aceptar"
 
 [js.settings.serverListing]
@@ -277,38 +277,48 @@ mainServer = "Servidor Principal"
 
 [js.settings.java]
 selectedJava = "Seleccionado: Java {version} ({vendor})"
-invalidSelection = "Selección Inválida"
+invalidSelection = "Selección inválida"
 requiresJava = "Requiere Java {major} x64."
-availableOptions = "Opciones Disponibles para Java {major} (VM HotSpot)"
+availableOptions = "Opciones disponibles para Java {major} (VM HotSpot)"
 
 [js.settings.about]
-preReleaseTitle = "Prelanzamiento"
-stableReleaseTitle = "Versión Estable"
+preReleaseTitle = "Versión beta"
+stableReleaseTitle = "Versión estable"
 releaseNotesFailed = "Error al cargar las notas de la versión."
 
 [js.settings.updates]
-newReleaseTitle = "Nueva Versión Disponible"
-newPreReleaseTitle = "Nueva Versión de Prenlanzamiento Disponible"
+newReleaseTitle = "Nueva versión disponible"
+newPreReleaseTitle = "Nueva versión de prenlanzamiento disponible"
 downloadingButton = "Descargando..."
-downloadButton = 'Descargar desde GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Cierra el lanzador y ejecuta el archivo dmg para actualizar.</span>'
+downloadButton = 'Descargar desde GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Cierra el launcher y ejecuta el archivo dmg para actualizar.</span>'
 latestVersionTitle = "Estás utilizando la última versión"
-checkForUpdatesButton = "Buscar Actualizaciones"
-checkingForUpdatesButton = "Buscando Actualizaciones..."
+checkForUpdatesButton = "Buscar actualizaciones"
+checkingForUpdatesButton = "Buscando actualizaciones..."
 
 [js.uibinder.startup]
-fatalErrorTitle = "Error Fatal: No se Puede Cargar el Índice de Distribución"
-fatalErrorMessage = "No se pudo establecer una conexión con nuestros servidores para descargar el índice de distribución. No había copias locales disponibles para cargar. <br><br>El índice de distribución es un archivo esencial que proporciona la información más reciente del servidor. El lanzador no puede iniciarse sin él. Asegúrate de estar conectado a Internet y vuelve a iniciar la aplicación."
+fatalErrorTitle = "Error Fatal: No se puede cargar el índice de distribución"
+fatalErrorMessage = "No se pudo establecer una conexión con nuestros servidores para descargar el índice de distribución. No había copias locales disponibles para cargar. <br><br>El índice de distribución es un archivo esencial que proporciona la información más reciente del servidor. El launcher no puede iniciarse sin él. Asegúrate de estar conectado a Internet y vuelve a iniciar la aplicación."
 closeButton = "Cerrar"
 
+[js.uibinder.forceupdate]
+forceupdateErrorTitle = "Versión no soportada"
+forceupdateErrorMessage = 'La versión actual del launcher no está soportada y VI Software ha ordenado la migración a una versión más reciente, preferiblemente mantenida. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
+closeButton = "Cerrar"
+
+[js.uibinder.unmantained]
+unmantainedErrorTitle = "Versión no mantenida"
+unmantainedErrorMessage = 'Estás utilizando una versión desactualizada de VI Software Launcher, esta ya no está mantenida por VI Software y no ofrece soporte. Las nuevas versiones pueden traer nuevas características, solución de bugs y parches para las vulnerabilidades. Es importante mantenerse con la última versión estable. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
+ignoreButton = "Ignorar y continuar"
+
 [js.uibinder.validateAccount]
-failedMessageTitle = "Error al Actualizar el Inicio de Sesión"
+failedMessageTitle = "Error al actualizar el inicio de sesión"
 failedMessage = "No pudimos actualizar el inicio de sesión para <strong>{account}</strong>. Por favor, selecciona otra cuenta o inicia sesión nuevamente."
 failedMessageSelectAnotherAccount = "No pudimos actualizar el inicio de sesión para <strong>{account}</strong>. Por favor, inicia sesión nuevamente."
-loginButton = "Iniciar Sesión"
-selectAnotherAccountButton = "Seleccionar Otra Cuenta"
+loginButton = "Iniciar sesión"
+selectAnotherAccountButton = "Seleccionar otra cuenta"
 
 [js.uicore.autoUpdate]
-checkingForUpdateButton = "Buscando Actualizaciones..."
-installNowButton = "Instalar Ahora"
-checkForUpdatesButton = "Buscar Actualizaciones"
+checkingForUpdateButton = "Buscando actualizaciones..."
+installNowButton = "Instalar ahora"
+checkForUpdatesButton = "Buscar actualizaciones"
 

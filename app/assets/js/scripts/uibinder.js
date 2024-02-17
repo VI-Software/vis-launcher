@@ -23,7 +23,9 @@
  */
 // Requirements
 const path = require('path')
-const { Type } = require('helios-distribution-types')
+const app = require('electron')
+const https = require('https')
+const { Type } = require('vis-launcher-distribution-manager')
 
 const AuthManager = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
@@ -87,12 +89,12 @@ async function showMainUI(data) {
     refreshServerStatus()
 
     try {
-        // Make a request to the server to get a random image
+        // Performs a request to the VI Software server to get a random image route
         const response = await fetch('https://vis.galnod.com/launcher/image.php')
         const imageData = await response.json()
         const randomImg = imageData.imagen
 
-        // Set the random image as the background
+        // Applies the random image route to the app background
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
         document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/backgrounds/${randomImg}')`
 
@@ -153,12 +155,28 @@ async function showMainUI(data) {
 function continueMainUILogic() {
     const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
+    //Performs various checks to verify the version status
+
+    checkVersionStatus()
+        .then(status => {
+            if(status.maintained==true){
+                console.log('This version is officially maintained by VI Software')
+            }else if(status.maintained==false && status.forceupdate==false){
+                showUnmantainedVersion()
+            }else{
+                showForceUpdate()
+            }
+        })
+        .catch(error => {
+            console.error('Couldn\'t verify the version status:', error)
+            showForceUpdate()
+        })
+
     // If this is enabled in a development environment we'll get ratelimited.
     // The relaunch frequency is usually far too high.
     if (!isDev && isLoggedIn) {
         validateSelectedAccount()
     }
-
     if (ConfigManager.isFirstLaunch()) {
         currentView = VIEWS.welcome
         $(VIEWS.welcome).fadeIn(1000)
@@ -204,6 +222,80 @@ function showFatalStartupError() {
         })
     }, 750)
 }
+
+// Shows a screen forcing the user to close the launcher and update
+
+function showForceUpdate() {
+    setTimeout(() => {
+        $('#loadingContainer').fadeOut(250, () => {
+            document.getElementById('overlayContainer').style.background = 'none'
+            setOverlayContent(
+                Lang.queryJS('uibinder.forceupdate.forceupdateErrorTitle'),
+                Lang.queryJS('uibinder.forceupdate.forceupdateErrorMessage'),
+                Lang.queryJS('uibinder.forceupdate.closeButton')
+            )
+            setOverlayHandler(() => {
+                const window = remote.getCurrentWindow()
+                window.close()
+            })
+            toggleOverlay(true)
+        })
+    }, 750)
+}
+
+// Show a notification telling the user to update the launcher as soon as possible, but with the option of ignoring the warning
+
+function showUnmantainedVersion() {
+    setTimeout(() => {
+        $('#loadingContainer').fadeOut(250, () => {
+            document.getElementById('overlayContainer').style.background = 'none'
+            setOverlayContent(
+                Lang.queryJS('uibinder.unmantained.unmantainedErrorTitle'),
+                Lang.queryJS('uibinder.unmantained.unmantainedErrorMessage'),
+                Lang.queryJS('uibinder.unmantained.ignoreButton')
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        })
+    }, 750)
+}
+
+function checkVersionStatus() {
+    const options = {
+        hostname: 'vis.galnod.com',
+        path: `/launcher/version-status.php?version=${remote.app.getVersion()}`,
+        method: 'GET'
+    }
+
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, res => {
+            let data = ''
+
+            res.on('data', chunk => {
+                data += chunk
+            })
+
+            res.on('end', () => {
+                try {
+                    const result = JSON.parse(data)
+                    resolve(result)
+                } catch (error) {
+                    reject(error)
+                }
+            })
+        })
+
+        req.on('error', error => {
+            reject(error)
+        })
+
+        req.end()
+    })
+}
+
+
 
 /**
  * Common functions to perform after refreshing the distro index.

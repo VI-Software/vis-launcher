@@ -4,6 +4,7 @@
         "node": true
     },
     "extends": "eslint:recommended",
+    "eslint.autoFixOnSave": true,
     "parserOptions": {
         "ecmaVersion": 2022,
         "sourceType": "module"

@@ -148,7 +148,7 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGIN, (ipcEvent, ...arguments_) => {
         width: 520,
         height: 600,
         frame: true,
-        icon: getPlatformIcon('SealCircle')
+        icon: getPlatformIcon('vis-icon')
     })
 
     msftAuthWindow.on('closed', () => {
@@ -201,7 +201,7 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
         width: 520,
         height: 600,
         frame: true,
-        icon: getPlatformIcon('SealCircle')
+        icon: getPlatformIcon('vis-icon')
     })
 
     msftLogoutWindow.on('closed', () => {
@@ -247,7 +247,7 @@ function createWindow() {
     win = new BrowserWindow({
         width: 980,
         height: 552,
-        icon: getPlatformIcon('SealCircle'),
+        icon: getPlatformIcon('vis-icon'),
         frame: false,
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
@@ -287,12 +287,12 @@ function createMenu() {
         let applicationSubMenu = {
             label: 'Application',
             submenu: [{
-                label: 'About Application',
+                label: 'Acerca de la aplicación',
                 selector: 'orderFrontStandardAboutPanel:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Quit',
+                label: 'Abandonar',
                 accelerator: 'Command+Q',
                 click: () => {
                     app.quit()
@@ -302,31 +302,31 @@ function createMenu() {
 
         // New edit menu adds support for text-editing keyboard shortcuts
         let editSubMenu = {
-            label: 'Edit',
+            label: 'Editar',
             submenu: [{
-                label: 'Undo',
+                label: 'Deshacer',
                 accelerator: 'CmdOrCtrl+Z',
                 selector: 'undo:'
             }, {
-                label: 'Redo',
+                label: 'Rehacer',
                 accelerator: 'Shift+CmdOrCtrl+Z',
                 selector: 'redo:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Cut',
+                label: 'Cortar',
                 accelerator: 'CmdOrCtrl+X',
                 selector: 'cut:'
             }, {
-                label: 'Copy',
+                label: 'Copiar',
                 accelerator: 'CmdOrCtrl+C',
                 selector: 'copy:'
             }, {
-                label: 'Paste',
+                label: 'Pegar',
                 accelerator: 'CmdOrCtrl+V',
                 selector: 'paste:'
             }, {
-                label: 'Select All',
+                label: 'Seleccionar todo',
                 accelerator: 'CmdOrCtrl+A',
                 selector: 'selectAll:'
             }]
