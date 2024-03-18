@@ -224,12 +224,12 @@ doneEnjoyServer = "Listo. ¡Disfruta del servidor!"
 checkConsoleForDetails = "Por favor, revisa la consola (CTRL + Shift + i) para obtener más detalles."
 
 [js.landing.news]
-checking = "Verificando Noticias"
+checking = "Verificando noticias..."
 
 [js.landing.discord]
 loading = "Cargando juego..."
 joining = "Conectado con el servidor..."
-joined = "En un servidor multijugador."
+joined = "En un servidor multijugador"
 
 [js.overlay]
 dismiss = "Descartar"

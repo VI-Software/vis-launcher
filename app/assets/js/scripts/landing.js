@@ -119,7 +119,7 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
-    loggerLanding.info('Launching game..')
+    loggerLanding.info('Launching game...')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
@@ -167,9 +167,10 @@ function updateSelectedAccount(authUser){
         if(authUser.displayName != null){
             username = authUser.displayName
         }
-        if(authUser.uuid != null){
-            document.getElementById('avatarContainer').style.backgroundImage = `url('https://mc-heads.net/head/${authUser.displayName}/40')`
-        }
+        if (authUser.uuid != null) {
+            console.log(authUser.uuid);
+            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins-vis.galnod.com/2d/skin/${authUser.uuid}/head?scale=5)`;
+        }        
     }
     user_text.innerHTML = username
 }
@@ -208,7 +209,7 @@ const refreshMojangStatuses = async function(){
     if(response.responseStatus === RestResponseStatus.SUCCESS) {
         statuses = response.data
     } else {
-        loggerLanding.warn('Unable to refresh Mojang service status.')
+        loggerLanding.warn('Unable to refresh service status.')
         statuses = MojangRestAPI.getDefaultStatuses()
     }
     
