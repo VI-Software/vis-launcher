@@ -155,7 +155,7 @@ async function showMainUI(data) {
 function continueMainUILogic() {
     const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
-    //Performs various checks to verify the version status
+    // Performs various checks to verify the version status
 
     checkVersionStatus()
         .then(status => {
