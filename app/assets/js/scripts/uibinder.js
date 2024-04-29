@@ -131,7 +131,8 @@ async function showMainUI(data) {
             })
 
             // Continue with the rest of the logic
-            continueMainUILogic()
+            const checkver = true
+            continueMainUILogic(checkver)
         }, 250)
     } catch (error) {
         // Handle fetch error or timeout
@@ -145,18 +146,20 @@ async function showMainUI(data) {
         document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/0.jpg\')'
 
         // Continue with the rest of the logic
-        continueMainUILogic()
+        
+        const checkver = false
+        continueMainUILogic(checkver)
     }
 }
 
 
 
 
-function continueMainUILogic() {
+function continueMainUILogic(checkver) {
     const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
     // Performs various checks to verify the version status
-
+    if(checkver==true){
     checkVersionStatus()
         .then(status => {
             if(status.maintained==true){
@@ -171,7 +174,7 @@ function continueMainUILogic() {
             console.error('Couldn\'t verify the version status:', error)
             showForceUpdate()
         })
-
+    }
     // If this is enabled in a development environment we'll get ratelimited.
     // The relaunch frequency is usually far too high.
     if (!isDev && isLoggedIn) {
@@ -261,6 +264,8 @@ function showUnmantainedVersion() {
         })
     }, 750)
 }
+
+// Connects to the API server of the launcher and checks the current version status
 
 function checkVersionStatus() {
     const options = {
