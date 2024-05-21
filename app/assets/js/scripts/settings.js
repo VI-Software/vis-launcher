@@ -662,7 +662,7 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://skins-vis.galnod.com/2d/skin/${acc.displayName}/fullbody?scale=10">
+                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://skins-vis.galnod.com/2d/skin/${acc.uuid}/fullbody?scale=10">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">
