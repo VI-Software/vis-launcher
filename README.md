@@ -15,7 +15,7 @@
 
 * 🔒 Gestión completa de cuentas.
    * Agregue varias cuentas y cambie fácilmente entre ellas.
-   * Autenticación de [VI Software](https://authserver-vis.galnod.com) (Yggdrasil) totalmente compatible.
+   * Autenticación de [VIS' Yggdrasil Auth](https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth) (Yggdrasil) totalmente compatible.
    * Las credenciales nunca se almacenan, se transmiten directamente al servidor de VI Software.
 * 📂 Gestión eficiente de activos.
    * Reciba actualizaciones de clientes tan pronto como las publiquemos.
@@ -33,7 +33,7 @@
 
 Esta no es una lista exhaustiva. ¡Descarga e instala el lanzador para evaluar todo lo que puede hacer!
 
-#### ¿Necesitas ayuda? [Consulta la wiki](https://docs-vis.galnod.com/vi-software/vis-launcher)
+#### ¿Necesitas ayuda? [Consulta la wiki](https://docs.visoftware.tech/vi-software/vis-launcher)
 
 
 ## Descargas
