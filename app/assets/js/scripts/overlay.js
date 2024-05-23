@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://vis.galnod.com
+    Web: https://visoftware.tech
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -324,7 +324,7 @@ function populateAccountListings(){
     let htmlString = ''
     for(let i=0; i<accounts.length; i++){
         htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://skins-vis.galnod.com/2d/skin/${accounts[i].uuid}/head?scale=5">
+            <img src="https://skins.visoftware.tech/2d/skin/${accounts[i].uuid}/head?scale=5">
             <div class="accountListingName">${accounts[i].displayName}</div>
         </button>`
     }

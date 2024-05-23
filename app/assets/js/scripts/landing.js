@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://vis.galnod.com
+    Web: https://visoftware.tech
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -169,7 +169,7 @@ function updateSelectedAccount(authUser){
         }
         if (authUser.uuid != null) {
             console.log(authUser.uuid);
-            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins-vis.galnod.com/2d/skin/${authUser.uuid}/head?scale=5)`;
+            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.tech/2d/skin/${authUser.uuid}/head?scale=5)`;
         }        
     }
     user_text.innerHTML = username

@@ -10,8 +10,8 @@
 #    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
 #    
 #    GitHub: https://github.com/VI-Software
-#    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-#    Web: https://vis.galnod.com
+#    Documentación: https://docs.visoftware.tech/vi-software/vis-launcher
+#    Web: https://visoftware.tech
 #    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 [ejs.landing]
@@ -41,11 +41,11 @@ loginEmailError = "* Valor Inválido"
 loginEmailPlaceholder = "NOMBRE DE USUARIO"
 loginPasswordError = "* Requerido"
 loginPasswordPlaceholder = "CONTRASEÑA"
-loginForgotPasswordLink = "https://docs-vis.galnod.com/vi-software/vis-yggdrasil-auth/ver-la-informacion-de-mi-cuenta"
+loginForgotPasswordLink = "https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth/ver-la-informacion-de-mi-cuenta"
 loginForgotPasswordText = "Consultar tus datos"
 loginRememberMeText = "Recuérdame"
 loginButtonText = "INICIAR SESIÓN"
-loginNeedAccountLink = "https://authserver-vis.galnod.com"
+loginNeedAccountLink = "https://puf.visoftware.tech"
 loginNeedAccountText = "¿Necesitas una cuenta?"
 loginPasswordDisclaimer1 = "Tu contraseña se envía directamente al servidor de VI Software y nunca se almacena."
 loginPasswordDisclaimer2 = "&copy 2024 VI Software y contribuidores. Todos los derechos reservados."
@@ -309,6 +309,11 @@ closeButton = "Cerrar"
 unmantainedErrorTitle = "Versión no mantenida"
 unmantainedErrorMessage = 'Estás utilizando una versión desactualizada de VI Software Launcher, esta ya no está mantenida por VI Software y no ofrece soporte. Las nuevas versiones pueden traer nuevas características, solución de bugs y parches para las vulnerabilidades. Es importante mantenerse con la última versión estable. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
 ignoreButton = "Ignorar y continuar"
+
+[js.uibinder.bgservicewarning]
+bgservicewarningErrorTitle = "Ha ocurrido un error"
+bgservicewarningErrorMessage = 'Ha ocurrido un error al intentar conectarse a VI Software Background Services. Como resultado, no hemos podido cargar un fondo dinámico. Hemos aplicado un fondo offline estático, esto puede deberse a un incidente en la infraestructura del servicio, pero si no hay un incidente comunicado, esto podría ser un problema en su final. Puede encontrar más información respecto a este error <a href="https://docs.visoftware.tech/vi-software/vis-launcher/error-al-intentar-conectarse-a-vi-software-background-services" style="color: red">aquí</a>'
+ignoreButton = "Continuar"
 
 [js.uibinder.validateAccount]
 failedMessageTitle = "Error al actualizar el inicio de sesión"
