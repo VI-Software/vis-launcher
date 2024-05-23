@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://vis.galnod.com
+    Web: https://visoftware.tech
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -90,13 +90,13 @@ async function showMainUI(data) {
 
     try {
         // Performs a request to the VI Software server to get a random image route
-        const response = await fetch('https://vis.galnod.com/launcher/image.php')
+        const response = await fetch('https://visoftware.tech/launcher/image.php')
         const imageData = await response.json()
         const randomImg = imageData.imagen
 
         // Applies the random image route to the app background
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        document.body.style.backgroundImage = `url('https://vis.galnod.com/launcher/backgrounds/${randomImg}')`
+        document.body.style.backgroundImage = `url('https://visoftware.tech/launcher/backgrounds/${randomImg}')`
 
         // Show the element with id 'main'
         $('#main').show()
@@ -136,18 +136,16 @@ async function showMainUI(data) {
         }, 250)
     } catch (error) {
         // Handle fetch error or timeout
-        console.error('Fatal error: Cannot connect to VI Software servers')
+        console.error('There was an error while attempting to connect to VI Software\'s background services')
+        console.error('Check the VI Software Status for more information about this possible incident. If no outgoing incident is present, this might be an issue on your end.')
         console.error('There was a fetch error while attempting to resolve the background: ', error)
-        console.error('Is the client connected to the internet?\nIs there a firewall that prevents the launcher from connecting to the VI Software services?\nIs this just an occasional timeout? Maybe try relaunching.\nAre VI Software\'s servers down?\nIs this build up-to-date?')
-        console.error('Can\'t proceed with boot progress. Exit code is -3')
 
         // If there's an error, load '0.jpg' from assets
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
+        // Applies the offline background and attemps to continue with the logic, showing a warning
         document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/0.jpg\')'
-
-        // Continue with the rest of the logic
-        
-        const checkver = false
+        showBGSWarning()
+        const checkver = true
         continueMainUILogic(checkver)
     }
 }
@@ -269,7 +267,7 @@ function showUnmantainedVersion() {
 
 function checkVersionStatus() {
     const options = {
-        hostname: 'vis.galnod.com',
+        hostname: 'visoftware.tech',
         path: `/launcher/version-status.php?version=${remote.app.getVersion()}`,
         method: 'GET'
     }
@@ -300,6 +298,22 @@ function checkVersionStatus() {
     })
 }
 
+function showBGSWarning() {
+    setTimeout(() => {
+        $('#loadingContainer').fadeOut(250, () => {
+            document.getElementById('overlayContainer').style.background = 'none'
+            setOverlayContent(
+                Lang.queryJS('uibinder.bgservicewarning.bgservicewarningErrorTitle'),
+                Lang.queryJS('uibinder.bgservicewarning.bgservicewarningErrorMessage'),
+                Lang.queryJS('uibinder.bgservicewarning.ignoreButton')
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        })
+    }, 750)
+}
 
 
 /**

@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://vis.galnod.com
+    Web: https://visoftware.tech
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -21,7 +21,7 @@ const { DistributionAPI } = require('vis-launcher-core/common')
 
 const ConfigManager = require('./configmanager')
 
-exports.REMOTE_DISTRO_URL = 'https://cdn-vis.galnod.com/distribution.json'
+exports.REMOTE_DISTRO_URL = 'https://cdn.visoftware.tech/distribution.json'
 
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
