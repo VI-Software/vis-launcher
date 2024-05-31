@@ -295,6 +295,7 @@ async function populateServerListings(){
         let serverList = JSON.parse(localStorage.getItem('serverList'));
         const isPrivate = serverList.some(server => server.id === serv.rawServer.id && server.private)
         const user = await getCurrentSelectedAccount()
+        console.log('Server accessed with account:; ', user)
         const isAllowlisted = serverList.some(server => server.id === serv.rawServer.id && server.allowlist.includes(user.displayName))
         console.log(serv.rawServer.id, isPrivate, isAllowlisted)
         if (isPrivate==false || isAllowlisted) {
@@ -330,18 +331,17 @@ async function populateServerListings(){
  */
 async function getCurrentSelectedAccount(){
     await populateAccountListings();
-    const listings = document.getElementsByClassName('accountListing')
-    for(let i=0; i<listings.length; i++){
-        if(listings[i].hasAttribute('selected')){
-            const uuid = listings[i].getAttribute('uuid')
-            const accountsObj = ConfigManager.getAuthAccounts()
-            return {
-                displayName: accountsObj[uuid].displayName,
-                uuid: uuid
-            }
-        }
+    const selectedListing = document.querySelector('.accountListing[selected]');
+    if (selectedListing) {
+        const uuid = selectedListing.getAttribute('uuid');
+        const accountsObj = ConfigManager.getAuthAccounts();
+        return {
+            displayName: accountsObj[uuid].displayName,
+            uuid: uuid
+        };
     }
-    return null
+    // If no account is selected, return null
+    return null;
 }
 
 async function populateAccountListings(){

@@ -93,7 +93,7 @@ async function showMainUI(data) {
 
     // Check for server access status
     try {
-        const baseApiUrl = 'http://localhost:3000'
+        const baseApiUrl = 'https://api.visoftware.tech'
         const serverInfo = await fetch(baseApiUrl+'/services/servers')
         const serverList = await serverInfo.json()
         localStorage.setItem('serverList', JSON.stringify(serverList))

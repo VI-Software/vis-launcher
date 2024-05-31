@@ -23,7 +23,7 @@ const ConfigManager = require('./configmanager')
 
 
 
-exports.REMOTE_DISTRO_URL = 'https://cdn.visoftware.tech/distribution.json'
+exports.REMOTE_DISTRO_URL = 'https://cdn.visoftware.tech/v2/distribution.json'
 
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
