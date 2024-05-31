@@ -30,6 +30,7 @@ const { Type } = require('vis-launcher-distribution-manager')
 const AuthManager = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
 const { DistroAPI } = require('./assets/js/distromanager')
+const { error } = require('console')
 
 let rscShouldLoad = false
 let fatalStartupError = false
@@ -82,6 +83,27 @@ async function showMainUI(data) {
     if (!isDev) {
         loggerAutoUpdater.info('Initializing..')
         ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
+    }
+    try {
+        // Clear the server list from the local storage to prevent any issues and abuse
+        localStorage.removeItem('serverList');
+    }catch(err){
+        console.error(err)
+    }
+
+    // Check for server access status
+    try {
+        const baseApiUrl = 'https://api.visoftware.tech'
+        const serverInfo = await fetch(baseApiUrl+'/services/servers')
+        const serverList = await serverInfo.json()
+        localStorage.setItem('serverList', JSON.stringify(serverList))
+    }catch (error) {
+        console.error('FATAL ERROR: Could not connect to the VI Software server API')
+        console.error('You can check outgoing incidents at https://status.visoftware.tech')
+        console.error('More information about this, can be found here:')
+        console.error('Please check your network connectivity before contacting VI Software for further assistance.')
+        console.error('Error code is as follows: ', error)
+        return showAPIError()
     }
 
     await prepareSettings(true)
@@ -262,6 +284,27 @@ function showUnmantainedVersion() {
         })
     }, 750)
 }
+
+// Show a notification informing the user that it wasn't possible to connect to the main api, and as a result, the process cannot be continued
+
+function showAPIError() {
+    setTimeout(() => {
+        $('#loadingContainer').fadeOut(250, () => {
+            document.getElementById('overlayContainer').style.background = 'none'
+            setOverlayContent(
+                Lang.queryJS('uibinder.fatalapierror.fatalapierrorErrorTitle'),
+                Lang.queryJS('uibinder.fatalapierror.fatalapierrorErrorMessage'),
+                Lang.queryJS('uibinder.fatalapierror.closeButton')
+            )
+            setOverlayHandler(() => {
+                const window = remote.getCurrentWindow()
+                window.close()
+            })
+            toggleOverlay(true)
+        })
+    }, 750)
+}
+
 
 // Connects to the API server of the launcher and checks the current version status
 

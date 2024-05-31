@@ -315,6 +315,11 @@ bgservicewarningErrorTitle = "Ha ocurrido un error"
 bgservicewarningErrorMessage = 'Ha ocurrido un error al intentar conectarse a VI Software Background Services. Como resultado, no hemos podido cargar un fondo dinámico. Hemos aplicado un fondo offline estático, esto puede deberse a un incidente en la infraestructura del servicio, pero si no hay un incidente comunicado, esto podría ser un problema en su final. Puede encontrar más información respecto a este error <a href="https://docs.visoftware.tech/vi-software/vis-launcher/error-al-intentar-conectarse-a-vi-software-background-services" style="color: red">aquí</a>'
 ignoreButton = "Continuar"
 
+[js.uibinder.fatalapierror]
+fatalapierrorErrorTitle = "Error catastrófico"
+fatalapierrorErrorMessage = 'No se ha podido conectar al API de VI Software. No podemos continuar de ninguna manera. Si no hay ninguna incidencia por parte de VI Software, podría ser un problema en su final. Puede encontrar más información <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
+closeButton = "Cerrar"
+
 [js.uibinder.validateAccount]
 failedMessageTitle = "Error al actualizar el inicio de sesión"
 failedMessage = "No pudimos actualizar el inicio de sesión para <strong>{account}</strong>. Por favor, selecciona otra cuenta o inicia sesión nuevamente."
