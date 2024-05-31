@@ -292,16 +292,10 @@ async function populateServerListings(){
     const servers = distro.servers
     let htmlString = ''
     for(const serv of servers){
-        // Check if the server is private
-        const serverInfo = await fetch('http://localhost:3000/services/servers')
-        const serverList = await serverInfo.json()
+        let serverList = JSON.parse(localStorage.getItem('serverList'));
         const isPrivate = serverList.some(server => server.id === serv.rawServer.id && server.private)
         const user = await getCurrentSelectedAccount()
-        
-        // Check if the user is allowlisted
         const isAllowlisted = serverList.some(server => server.id === serv.rawServer.id && server.allowlist.includes(user.displayName))
-        
-        // Display the server only if it's not private or the user is allowlisted
         console.log(serv.rawServer.id, isPrivate, isAllowlisted)
         if (isPrivate==false || isAllowlisted) {
             htmlString += `<button class="serverListing" servid="${serv.rawServer.id}" ${serv.rawServer.id === giaSel ? 'selected' : ''}>

@@ -21,6 +21,8 @@ const { DistributionAPI } = require('vis-launcher-core/common')
 
 const ConfigManager = require('./configmanager')
 
+
+
 exports.REMOTE_DISTRO_URL = 'https://cdn.visoftware.tech/distribution.json'
 
 const api = new DistributionAPI(
