@@ -172,6 +172,8 @@ desc = "Ha ocurrido un error desconocido. Consulta la consola para obtener más 
 pleaseWait = "Por favor espera.."
 failureTitle = "Error durante el lanzamiento"
 failureText = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
+noaccessTitle = "Error durante el lanzamiento"
+noaccessText = "La cuenta seleccionada no tiene permiso para acceder al servidor seleccionado."
 okay = "Aceptar"
 
 [js.landing.selectedAccount]
@@ -260,6 +262,7 @@ cancelButton = "Cancelar"
 
 [js.settings.authAccountPopulate]
 username = "Nombre de usuario"
+rank = "Rango"
 uuid = "UUID"
 selectAccount = "Seleccionar Cuenta"
 selectedAccount = "Cuenta Seleccionada ✓"
