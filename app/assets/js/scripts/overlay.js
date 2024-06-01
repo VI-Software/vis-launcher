@@ -294,10 +294,9 @@ async function populateServerListings(){
     for(const serv of servers){
         let serverList = JSON.parse(localStorage.getItem('serverList'));
         const isPrivate = serverList.some(server => server.id === serv.rawServer.id && server.private)
-        const user = await getCurrentSelectedAccount()
+        const user = ConfigManager.getSelectedAccount()
         console.log('Server accessed with account:; ', user)
         const isAllowlisted = serverList.some(server => server.id === serv.rawServer.id && server.allowlist.includes(user.displayName))
-        console.log(serv.rawServer.id, isPrivate, isAllowlisted)
         if (isPrivate==false || isAllowlisted) {
             htmlString += `<button class="serverListing" servid="${serv.rawServer.id}" ${serv.rawServer.id === giaSel ? 'selected' : ''}>
                 <img class="serverListingImg" src="${serv.rawServer.icon}"/>
@@ -323,25 +322,6 @@ async function populateServerListings(){
         }
     }
     document.getElementById('serverSelectListScrollable').innerHTML = htmlString
-}
-/**
- * Get the display name and UUID of the currently selected account.
- * 
- * @returns {Object} An object containing the display name and UUID of the selected account.
- */
-async function getCurrentSelectedAccount(){
-    await populateAccountListings();
-    const selectedListing = document.querySelector('.accountListing[selected]');
-    if (selectedListing) {
-        const uuid = selectedListing.getAttribute('uuid');
-        const accountsObj = ConfigManager.getAuthAccounts();
-        return {
-            displayName: accountsObj[uuid].displayName,
-            uuid: uuid
-        };
-    }
-    // If no account is selected, return null
-    return null;
 }
 
 async function populateAccountListings(){

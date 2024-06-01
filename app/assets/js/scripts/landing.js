@@ -122,6 +122,16 @@ document.getElementById('launch_button').addEventListener('click', async e => {
     loggerLanding.info('Launching game...')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
+        let serverList = JSON.parse(localStorage.getItem('serverList'));
+        const user = await ConfigManager.getSelectedAccount()
+        const isPrivate = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.private)
+        const isAllowlisted = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.allowlist.includes(user.displayName))
+        if(isPrivate && !isAllowlisted){
+            showLaunchFailure(Lang.queryJS('landing.launch.noaccessTitle'), Lang.queryJS('landing.launch.noaccessText'))
+            loggerLanding.error('User does not have access to server ' + server.rawServer.name + ' (Server ID: ' + server.rawServer.id + ', Selected Account: ' + user.displayName +')')
+            return
+        }
+
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
         if(jExe == null){
             await asyncSystemScan(server.effectiveJavaOptions)
@@ -168,7 +178,6 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if (authUser.uuid != null) {
-            console.log(authUser.uuid);
             document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.tech/2d/skin/${authUser.uuid}/head?scale=5)`;
         }        
     }
