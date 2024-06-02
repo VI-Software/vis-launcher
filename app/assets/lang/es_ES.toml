@@ -169,11 +169,20 @@ title = "Error desconocido durante el inicio de sesión"
 desc = "Ha ocurrido un error desconocido. Consulta la consola para obtener más detalles (CTRL + Shift + i)"
 
 [js.landing.launch]
-pleaseWait = "Por favor espera.."
+pleaseWait = "Por favor espera..."
+checkingAccount = "Autentificando..."
 failureTitle = "Error durante el lanzamiento"
 failureText = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 noaccessTitle = "Error durante el lanzamiento"
 noaccessText = "La cuenta seleccionada no tiene permiso para acceder al servidor seleccionado."
+NoCheckModErrorTitle = "Error durante el lanzamiento"
+NoCheckModErrorText = "No se ha podido verificar la cuenta en el sistema de moderación de VI Software. <br>Consulta la consola (CTRL + Shift + i) para obtener más detalles."
+WarnsnotreadErrorTitle = "Error durante el lanzamiento"
+WarnsnotreadErrorText = 'Hay una o más sanciones a la espera de que sean vistas por ti. <a href="https://puf.visoftware.tech" style="color: red">Puedes consultarlas en el panel de usuario final de VI Software</a>'
+AccountDisabledErrorTitle = "Error durante el lanzamiento"
+AccountDisabledErrorText = 'La cuenta seleccionada se encuentra actualmente deshabilitada <span style="color: pink;">por la administradora de la experiencia</span>. Puede consultar más información sobre sus cuentas en <a href="https://puf.visoftware.tech" style="color: pink;">el panel de usuario final de VI Software</a>. <br>VI Software <span style="color: red";>NO</span> puede asistirle con este asunto.'
+GlobalAccountDisabledErrorTitle = "401 | Unauthorized"
+GlobalAccountDisabledErrorText = 'No tiene suficientes permisos para acceder al recurso solicitado. <br> Consulta la consola para obtener más detalles (CTRL + Shift + i)'
 okay = "Aceptar"
 
 [js.landing.selectedAccount]
@@ -209,18 +218,18 @@ extractingJava = "Extrayendo Java"
 javaInstalled = "¡Java Instalado!"
 
 [js.landing.dlAsync]
-loadingServerInfo = "Cargando información del servidor.."
+loadingServerInfo = "Cargando información..."
 fatalError = "Error fatal"
 unableToLoadDistributionIndex = "No se pudo cargar una copia del índice de distribución. Consulta la consola (CTRL + Shift + i) para obtener más detalles."
-pleaseWait = "Por favor espera.."
+pleaseWait = "Por favor espera..."
 errorDuringLaunchTitle = "Error durante el lanzamiento"
 seeConsoleForDetails = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
-validatingFileIntegrity = "Validando integridad del archivo.."
-errorDuringFileVerificationTitle = "Error Durante la verificación del archivo"
-downloadingFiles = "Descargando archivos.."
+validatingFileIntegrity = "Validando archivos..."
+errorDuringFileVerificationTitle = "Error durante la verificación del archivo"
+downloadingFiles = "Descargando archivos..."
 errorDuringFileDownloadTitle = "Error durante la descarga del archivo"
-preparingToLaunch = "Preparando para lanzar.."
-launchingGame = "Iniciando juego.."
+preparingToLaunch = "Preparando para lanzar..."
+launchingGame = "Iniciando juego..."
 launchWrapperNotDownloaded = "El archivo principal, LaunchWrapper, no se descargó correctamente. Como resultado, el juego no puede iniciarse.<br><br>Para solucionar este problema, desactiva temporalmente tu software antivirus y vuelve a iniciar el juego.<br><br>Si tienes tiempo, por favor <a href=\"https://github.com/VI-Software/vis-launcher/issues\">abre una issue en nuestro github</a> y avísanos qué software antivirus estás utilizando. Nos pondremos en contacto con ellos y trataremos de solucionar las cosas."
 doneEnjoyServer = "Listo. ¡Disfruta del servidor!"
 checkConsoleForDetails = "Por favor, revisa la consola (CTRL + Shift + i) para obtener más detalles."
