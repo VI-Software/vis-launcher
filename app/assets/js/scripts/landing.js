@@ -49,6 +49,7 @@ const {
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')
 const ProcessBuilder          = require('./assets/js/processbuilder')
+const { features } = require('process')
 
 // Launch Elements
 const launch_content          = document.getElementById('launch_content')
@@ -119,7 +120,9 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
-    loggerLanding.info('Launching game...')
+    setLaunchDetails(Lang.queryJS('landing.launch.checkingAccount'))
+    toggleLaunchArea(true)
+    setLaunchPercentage(0, 100)
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
         let serverList = JSON.parse(localStorage.getItem('serverList'));
@@ -130,8 +133,48 @@ document.getElementById('launch_button').addEventListener('click', async e => {
             showLaunchFailure(Lang.queryJS('landing.launch.noaccessTitle'), Lang.queryJS('landing.launch.noaccessText'))
             loggerLanding.error('User does not have access to server ' + server.rawServer.name + ' (Server ID: ' + server.rawServer.id + ', Selected Account: ' + user.displayName +')')
             return
-        }
+        }             
+        try {
+            loggerLanding.info('Comprobando moderaciones...')
+            try {
+                const response = await fetch('https://api.visoftware.tech/services/moderation/globalban/laccount/' + user.displayName);
+                const data = await response.json();
+                if(data.banned){
+                    showLaunchFailure(Lang.queryJS('landing.launch.GlobalAccountDisabledErrorTitle'), Lang.queryJS('landing.launch.GlobalAccountDisabledErrorText'))
+                    loggerLanding.error('Root account is globaly disabled by VI Software.')
+                    return
+                } 
+            }catch(err){
+                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'))
+                loggerLanding.error('An error has occurred while attempting to check root account status. Error: ', err)
+                return
+            } 
+            try {
+                const response = await fetch('https://api.visoftware.tech/services/launcher/accounts/' + user.displayName);
+                const data = await response.json();
+                if(data.suspended){
+                    showLaunchFailure(Lang.queryJS('landing.launch.AccountDisabledErrorTitle'), Lang.queryJS('landing.launch.AccountDisabledErrorText'))
+                    loggerLanding.error('Account is disabled by experience administrator.')
+                    return
+                } 
+            }catch(err){
+                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'))
+                loggerLanding.error('An error has occurred while attempting to check account status. Error: ', err)
+                return
+            } 
+            const response = await fetch('https://api.visoftware.tech/services/moderation/warns/account/' + user.displayName);
+            const data = await response.json();
+            if(data.some(warning => warning.read === 0)){
+                showLaunchFailure(Lang.queryJS('landing.launch.WarnsnotreadErrorTitle'), Lang.queryJS('landing.launch.WarnsnotreadErrorText'))
+                loggerLanding.error('User has unread warnings.')
+                return
+            } 
 
+        }catch(err){
+            showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'))
+            loggerLanding.error('An error has occurred while attempting to check unread user\'s warnings. Error: ', err)
+            return
+        }  
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
         if(jExe == null){
             await asyncSystemScan(server.effectiveJavaOptions)
