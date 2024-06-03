@@ -181,8 +181,12 @@ WarnsnotreadErrorTitle = "Error durante el lanzamiento"
 WarnsnotreadErrorText = 'Hay una o más sanciones a la espera de que sean vistas por ti. <a href="https://puf.visoftware.tech" style="color: red">Puedes consultarlas en el panel de usuario final de VI Software</a>'
 AccountDisabledErrorTitle = "Error durante el lanzamiento"
 AccountDisabledErrorText = 'La cuenta seleccionada se encuentra actualmente deshabilitada <span style="color: pink;">por la administradora de la experiencia</span>. Puede consultar más información sobre sus cuentas en <a href="https://puf.visoftware.tech" style="color: pink;">el panel de usuario final de VI Software</a>. <br>VI Software <span style="color: red";>NO</span> puede asistirle con este asunto.'
+TeamBannedErrorTitle = "Error durante el lanzamiento"
+TeamBannedErrorText = 'El Team propietario del servidor se encuentra actualmente suspendido <span style="color: pink;">por VI Software</span>. <br>Esto es una sanción impuesta al Team propietario del servidor, no a su cuenta.'
 GlobalAccountDisabledErrorTitle = "401 | Unauthorized"
 GlobalAccountDisabledErrorText = 'No tiene suficientes permisos para acceder al recurso solicitado. <br> Consulta la consola para obtener más detalles (CTRL + Shift + i)'
+ErrorCantCheckTeamOnApiErrorTitle = "Error durante el lanzamiento"
+ErrorCantCheckTeamOnApiErrorText = "No hemos podido verificar el estado de actividad del Team del servidor. <br>Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 okay = "Aceptar"
 
 [js.landing.selectedAccount]
