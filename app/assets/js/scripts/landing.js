@@ -133,9 +133,25 @@ document.getElementById('launch_button').addEventListener('click', async e => {
             showLaunchFailure(Lang.queryJS('landing.launch.noaccessTitle'), Lang.queryJS('landing.launch.noaccessText'))
             loggerLanding.error('User does not have access to server ' + server.rawServer.name + ' (Server ID: ' + server.rawServer.id + ', Selected Account: ' + user.displayName +')')
             return
-        }             
+        }
         try {
-            loggerLanding.info('Comprobando moderaciones...')
+            const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
+            
+            const serverData = await (await fetch('https://api.visoftware.tech/services/servers/' + server.rawServer.id)).json();
+            console.log(serverData)
+            const teamData = await (await fetch('https://api.visoftware.tech/services/teams/uuid/' + serverData.owner_uuid)).json();
+            console.log(teamData)
+            if(teamData.ban){
+                showLaunchFailure(Lang.queryJS('landing.launch.TeamBannedErrorTitle'), Lang.queryJS('landing.launch.TeamBannedErrorText'))
+                loggerLanding.error('Team is banned by VI Software. Ban reason: ' + teamData.ban_reason)
+                return
+            }
+        }catch(err){
+            showLaunchFailure(Lang.queryJS('landing.launch.ErrorCantCheckTeamOnApiErrorTitle'), Lang.queryJS('landing.launch.ErrorCantCheckTeamOnApiErrorText'))
+            loggerLanding.error('An error has occurred while attempting to check servers\'s team status. Error: ', err)
+            return
+        }                             
+        try {
             try {
                 const response = await fetch('https://api.visoftware.tech/services/moderation/globalban/laccount/' + user.displayName);
                 const data = await response.json();
