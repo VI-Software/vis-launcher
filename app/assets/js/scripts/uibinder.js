@@ -85,8 +85,9 @@ async function showMainUI(data) {
         ipcRenderer.send('autoUpdateAction', 'initAutoUpdater', ConfigManager.getAllowPrerelease())
     }
     try {
-        // Clear the server list from the local storage to prevent any issues and abuse
+        // Clear the server list and build status from the local storage to prevent any issues and abuse
         localStorage.removeItem('serverList');
+        localStorage.removeItem('buildstatus');
     }catch(err){
         console.error(err)
     }
@@ -111,7 +112,7 @@ async function showMainUI(data) {
     refreshServerStatus()
 
     try {
-        // Performs a request to the VI Software server to get a random image route
+        // Performs a request to the VI Software Image Server to get a random image route
         const response = await fetch('https://visoftware.tech/launcher/image.php')
         const imageData = await response.json()
         const randomImg = imageData.imagen
@@ -184,10 +185,11 @@ function continueMainUILogic(checkver) {
         .then(status => {
             if(status.maintained==true){
                 console.log('This version is officially maintained by VI Software')
+                localStorage.setItem('buildstatus', 'maintained')
             }else if(status.maintained==false && status.forceupdate==false){
-                showUnmantainedVersion()
+                localStorage.setItem('buildstatus', 'notsupported')
             }else{
-                showForceUpdate()
+                localStorage.setItem('buildstatus', 'forceupdate')
             }
         })
         .catch(error => {

@@ -170,6 +170,7 @@ desc = "Ha ocurrido un error desconocido. Consulta la consola para obtener más 
 
 [js.landing.launch]
 pleaseWait = "Por favor espera..."
+checkingClient = "Verificando instancia..."
 checkingAccount = "Autentificando..."
 failureTitle = "Error durante el lanzamiento"
 failureText = "Consulta la consola (CTRL + Shift + i) para obtener más detalles."
@@ -290,6 +291,8 @@ okButton = "Aceptar"
 
 [js.settings.serverListing]
 mainServer = "Servidor Principal"
+info = 'Puedes gestionar tus servidores en <a style="color: pink;" href="https://puf.visoftware.tech/servers">https://puf.visoftware.tech/servers</a>.</div>'
+noServers = 'No tenemos servidores para mostrarte. <br>Puedes gestionar los servidores que aparecen aquí en el <a style="color: pink;" href="https://puf.visoftware.tech/servers">panel de usuario final de VI Software</a>.</div>'
 
 [js.settings.java]
 selectedJava = "Seleccionado: Java {version} ({vendor})"
@@ -316,15 +319,14 @@ fatalErrorTitle = "Error Fatal: No se puede cargar el índice de distribución"
 fatalErrorMessage = "No se pudo establecer una conexión con nuestros servidores para descargar el índice de distribución. No había copias locales disponibles para cargar. <br><br>El índice de distribución es un archivo esencial que proporciona la información más reciente del servidor. El launcher no puede iniciarse sin él. Asegúrate de estar conectado a Internet y vuelve a iniciar la aplicación."
 closeButton = "Cerrar"
 
-[js.uibinder.forceupdate]
+[js.landing.forceupdate]
 forceupdateErrorTitle = "Versión no soportada"
-forceupdateErrorMessage = 'La versión actual del launcher no está soportada y VI Software ha ordenado la migración a una versión más reciente, preferiblemente mantenida. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
-closeButton = "Cerrar"
+forceupdateErrorMessage = 'La versión actual del launcher no está soportada y VI Software ha ordenado la migración a una versión más reciente, preferiblemente mantenida. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>.'
+closeButton = "De acuerdo"
 
-[js.uibinder.unmantained]
+[js.landing.unmantained]
 unmantainedErrorTitle = "Versión no mantenida"
 unmantainedErrorMessage = 'Estás utilizando una versión desactualizada de VI Software Launcher, esta ya no está mantenida por VI Software y no ofrece soporte. Las nuevas versiones pueden traer nuevas características, solución de bugs y parches para las vulnerabilidades. Es importante mantenerse con la última versión estable. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
-ignoreButton = "Ignorar y continuar"
 
 [js.uibinder.bgservicewarning]
 bgservicewarningErrorTitle = "Ha ocurrido un error"

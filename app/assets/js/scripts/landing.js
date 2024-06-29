@@ -120,9 +120,26 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
-    setLaunchDetails(Lang.queryJS('landing.launch.checkingAccount'))
+    setLaunchDetails(Lang.queryJS('landing.launch.checkingClient'))
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
+    try {
+        const buildstatus = localStorage.getItem('buildstatus');
+        if (buildstatus === 'notsupported') {
+            loggerLanding.error('VI Software does no longer maintained this version of the launcher and will soon be unable to connect to the servers');
+            showLaunchFailure(Lang.queryJS('landing.unmantained.unmantainedErrorTitle'), Lang.queryJS('landing.unmantained.unmantainedErrorMessage'));
+            return;
+        } else if (buildstatus === 'forceupdate') {
+            loggerLanding.error('VI Software has marked this version as unsupported, and it cannot be used to play servers.');
+            showLaunchFailure(Lang.queryJS('landing.forceupdate.forceupdateErrorTitle'), Lang.queryJS('landing.forceupdate.forceupdateErrorMessage'));
+            return;
+        }
+    } catch (err) {
+        loggerLanding.error('Unhandled error in during launch process.', err);
+        showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'));
+        return;
+    }
+    setLaunchDetails(Lang.queryJS('landing.launch.checkingAccount'))
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
         let serverList = JSON.parse(localStorage.getItem('serverList'));
@@ -138,9 +155,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
             const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
             
             const serverData = await (await fetch('https://api.visoftware.tech/services/servers/' + server.rawServer.id)).json();
-            console.log(serverData)
             const teamData = await (await fetch('https://api.visoftware.tech/services/teams/uuid/' + serverData.owner_uuid)).json();
-            console.log(teamData)
             if(teamData.ban){
                 showLaunchFailure(Lang.queryJS('landing.launch.TeamBannedErrorTitle'), Lang.queryJS('landing.launch.TeamBannedErrorText'))
                 loggerLanding.error('Team is banned by VI Software. Ban reason: ' + teamData.ban_reason)
@@ -333,7 +348,6 @@ const refreshServerStatus = async (fade = false) => {
     try {
 
         const servStat = await getServerStatus(47, serv.hostname, serv.port)
-        console.log(servStat)
         pLabel = Lang.queryJS('landing.serverStatus.players')
         pVal = servStat.players.online + '/' + servStat.players.max
 

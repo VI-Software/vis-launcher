@@ -295,8 +295,9 @@ async function populateServerListings(){
         let serverList = JSON.parse(localStorage.getItem('serverList'));
         const isPrivate = serverList.some(server => server.id === serv.rawServer.id && server.private)
         const user = ConfigManager.getSelectedAccount()
-        console.log('Server accessed with account:; ', user)
         const isAllowlisted = serverList.some(server => server.id === serv.rawServer.id && server.allowlist.includes(user.displayName))
+        const isSelectedByUser = serverList.some(server => server.id === serv.rawServer.id && server.usrsel.includes(user.displayName))
+        if(isSelectedByUser){
         if (isPrivate==false || isAllowlisted) {
             htmlString += `<button class="serverListing" servid="${serv.rawServer.id}" ${serv.rawServer.id === giaSel ? 'selected' : ''}>
                 <img class="serverListingImg" src="${serv.rawServer.icon}"/>
@@ -319,7 +320,16 @@ async function populateServerListings(){
                     </div>
                 </div>
             </button>`
+
         }
+    }
+}
+    if (htmlString === '') {
+        // There are no servers selected by the user on which this is allowed. We'll inform the user.
+        htmlString = `<div class="center">${Lang.queryJS('settings.serverListing.noServers')}</div>`;
+    }else{
+        // There are servers selected by the user on which this is allowed. We'll inform the user where it can manage its servers.
+        htmlString += `<div class="center" style="font-size: 12px;">${Lang.queryJS('settings.serverListing.info')}</div>`;
     }
     document.getElementById('serverSelectListScrollable').innerHTML = htmlString
 }
