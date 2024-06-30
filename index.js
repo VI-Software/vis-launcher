@@ -30,6 +30,8 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
+const pjson = require('./package.json');
+
 
 // Setup Lang
 LangLoader.setupLanguage()
@@ -243,6 +245,8 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
 let win
 
 function createWindow() {
+        // Determine if the version includes 'nightly' to enable nightly features
+    const isNightly = pjson.version.includes('nightly');
 
     win = new BrowserWindow({
         width: 980,
@@ -260,7 +264,8 @@ function createWindow() {
 
     const data = {
         bkid: Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)),
-        lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders)
+        lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders),
+        isNightly: isNightly
     }
     Object.entries(data).forEach(([key, val]) => ejse.data(key, val))
 

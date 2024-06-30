@@ -31,7 +31,12 @@
         <% } else{ %>  
             <div id="frameContentWin">
                 <div id="frameTitleDock">
+
+                    <% if (!isNightly) { %>
                     <span id="frameTitleText"><%= lang('app.title') %></span>
+                    <% } else { %>
+                    <span id="frameTitleText"><%= lang('app.title_nightly') %></span>
+                    <% } %>
                 </div>
                 <div id="frameButtonDockWin">
                     <button class="frameButton fMb" id="frameButton_minimize" tabIndex="-1">
