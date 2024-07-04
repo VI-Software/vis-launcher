@@ -16,6 +16,7 @@
 
 [ejs.app]
 title = "VI Software Launcher"
+title_nightly = "VI Software Launcher Nightly"
 
 [ejs.landing]
 mediaGitHubURL = "https://github.com/VI-Software"
