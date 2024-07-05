@@ -146,6 +146,12 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         const user = await ConfigManager.getSelectedAccount()
         const isPrivate = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.private)
         const isAllowlisted = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.allowlist.includes(user.displayName))
+        const isSelectedByUser = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.usrsel.includes(user.displayName))
+        if(!isSelectedByUser){
+            showLaunchFailure(Lang.queryJS('landing.launch.serverNotFoundErrorTitle'), Lang.queryJS('landing.launch.serverNotFoundErrorText'))
+            loggerLanding.error("Server not found." + " (Requested server ID: " + server.rawServer.id + ", Selected Account: " + user.displayName +")")
+            return
+        }
         if(isPrivate && !isAllowlisted){
             showLaunchFailure(Lang.queryJS('landing.launch.noaccessTitle'), Lang.queryJS('landing.launch.noaccessText'))
             loggerLanding.error('User does not have access to server ' + server.rawServer.name + ' (Server ID: ' + server.rawServer.id + ', Selected Account: ' + user.displayName +')')
