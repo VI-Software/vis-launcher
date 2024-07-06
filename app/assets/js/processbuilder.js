@@ -16,7 +16,7 @@
 
 */
 
-
+const { app } = require('@electron/remote');
 const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
 const crypto                = require('crypto')
@@ -26,6 +26,8 @@ const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-lau
 const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
+
+
 
 const ConfigManager            = require('./configmanager')
 
@@ -113,6 +115,21 @@ class ProcessBuilder {
         })
         child.on('close', (code, signal) => {
             logger.info('Exited with code', code)
+            if(code != 0){
+                setOverlayContent(
+                    Lang.queryJS('processbuilder.exit.exitErrorHeader'),
+                    Lang.queryJS('processbuilder.exit.message') + code + Lang.queryJS('processbuilder.exit.visnosupport'),
+                    Lang.queryJS('processbuilder.exit.copyCode'),
+                )
+                setOverlayHandler(() => {
+                    copy(Lang.queryJS('processbuilder.exit.copyCodeText') + code)
+                    toggleOverlay(false)
+                })
+                setDismissHandler(() => {
+                    toggleOverlay(false)
+                })
+                toggleOverlay(true, true)
+            }
             fs.remove(tempNativePath, (err) => {
                 if(err){
                     logger.warn('Error while deleting temp dir', err)
@@ -384,7 +401,12 @@ class ProcessBuilder {
         // Classpath Argument
         args.push('-cp')
         args.push(this.classpathArg(mods, tempNativePath).join(ProcessBuilder.getClasspathSeparator()))
-
+        // Sets the path to the Authlib Injector jar
+        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
+        // Add the Authlib Injector as a Java agent
+        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+        args.push('-Dauthlibinjector.noShowServerName')
         // Java Arguments
         if(process.platform === 'darwin'){
             args.push('-Xdock:name=VISoftwareLauncher')
@@ -423,7 +445,12 @@ class ProcessBuilder {
 
         // Debug securejarhandler
         // args.push('-Dbsl.debug=true')
-
+        // Sets the path to the Authlib Injector jar
+        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
+        // Add the Authlib Injector as a Java agent
+        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+        args.push('-Dauthlibinjector.noShowServerName')
         if(this.modManifest.arguments.jvm != null) {
             for(const argStr of this.modManifest.arguments.jvm) {
                 args.push(argStr
@@ -451,6 +478,26 @@ class ProcessBuilder {
         // Vanilla Arguments
         args = args.concat(this.vanillaManifest.arguments.game)
 
+        async function WriteFullscreenToOptions(filePath, lineToReplace, newLine) {
+            try {
+                const exists = await fs.pathExists(filePath);
+
+                if (exists) {
+                    let fileContent = await fs.readFile(filePath, 'utf8');
+                    if (fileContent.includes(lineToReplace)) {
+                        fileContent = fileContent.replace(lineToReplace, newLine);
+                        await fs.outputFile(filePath, fileContent);
+                    } else {
+                        await fs.outputFile(filePath, newLine);
+                    }
+                } else {
+                    await fs.outputFile(filePath, newLine);
+                }
+            } catch (err) {
+                logger.info('Error while writing fullscreen to options.txt:', err);
+            }
+        }
+
         for(let i=0; i<args.length; i++){
             if(typeof args[i] === 'object' && args[i].rules != null){
                 
@@ -472,10 +519,14 @@ class ProcessBuilder {
                         // This should be fine for a while.
                         if(rule.features.has_custom_resolution != null && rule.features.has_custom_resolution === true){
                             if(ConfigManager.getFullscreen()){
+                                logger.info("gamedir: ", this.gameDir)
+                                WriteFullscreenToOptions(path.join(this.gameDir, "options.txt"), 'fullscreen:false', 'fullscreen:true')
                                 args[i].value = [
                                     '--fullscreen',
                                     'true'
                                 ]
+                            }else{
+                                WriteFullscreenToOptions(path.join(this.gameDir, "options.txt"), 'fullscreen:true', 'fullscreen:false');
                             }
                             checksum++
                         }

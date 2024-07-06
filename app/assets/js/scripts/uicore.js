@@ -25,7 +25,7 @@
  */
 // Requirements
 const $                              = require('jquery')
-const {ipcRenderer, shell, webFrame} = require('electron')
+const {ipcRenderer, shell, webFrame, clipboard} = require('electron')
 const remote                         = require('@electron/remote')
 const isDev                          = require('./assets/js/isdev')
 const { LoggerUtil }                 = require('vis-launcher-core')
@@ -33,6 +33,11 @@ const Lang                           = require('./assets/js/langloader')
 
 const loggerUICore             = LoggerUtil.getLogger('UICore')
 const loggerAutoUpdater        = LoggerUtil.getLogger('AutoUpdater')
+
+// Copy text to clipboard.
+function copy(value) {
+    clipboard.writeText(value, 'selection')
+}
 
 // Log deprecation and process warnings.
 process.traceProcessWarnings = true
@@ -234,3 +239,35 @@ document.addEventListener('keydown', function (e) {
         window.toggleDevTools()
     }
 })
+
+/**
+ * Handles the loading text animation and updates the loading text with dots.
+ */
+
+let dotCount = 0;
+let timeoutanimation = false;
+function updateLoadingText() {
+    dotCount = (dotCount + 1) % 4;
+    const dots = '.'.repeat(dotCount);
+    const loadingText = document.getElementById('loadingText');
+    if (!timeoutanimation) {
+        if (!timeoutanimation) {
+            loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoadingText')}${dots}`;
+        }
+    }
+}
+
+// Start the dot animation
+setInterval(updateLoadingText, 350);
+
+// Timeout
+setTimeout(function() {
+    const loadingText = document.getElementById('loadingText');
+    if (loadingText) {
+        timeoutanimation = TreeWalker
+        loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoaidingTakingTooLong')}`;
+    }
+}, 10000);
+
+
+
