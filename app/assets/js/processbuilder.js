@@ -16,7 +16,7 @@
 
 */
 
-const { app } = require('@electron/remote');
+const { app }              = require('@electron/remote')
 const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
 const crypto                = require('crypto')
