@@ -16,7 +16,7 @@
 
 */
 
-
+const { app } = require('@electron/remote');
 const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
 const crypto                = require('crypto')
@@ -26,6 +26,8 @@ const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-lau
 const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
+
+
 
 const ConfigManager            = require('./configmanager')
 
@@ -384,7 +386,12 @@ class ProcessBuilder {
         // Classpath Argument
         args.push('-cp')
         args.push(this.classpathArg(mods, tempNativePath).join(ProcessBuilder.getClasspathSeparator()))
-
+        // Sets the path to the Authlib Injector jar
+        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
+        // Add the Authlib Injector as a Java agent
+        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+        args.push('-Dauthlibinjector.noShowServerName')
         // Java Arguments
         if(process.platform === 'darwin'){
             args.push('-Xdock:name=VISoftwareLauncher')
@@ -423,7 +430,12 @@ class ProcessBuilder {
 
         // Debug securejarhandler
         // args.push('-Dbsl.debug=true')
-
+        // Sets the path to the Authlib Injector jar
+        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
+        // Add the Authlib Injector as a Java agent
+        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+        args.push('-Dauthlibinjector.noShowServerName')
         if(this.modManifest.arguments.jvm != null) {
             for(const argStr of this.modManifest.arguments.jvm) {
                 args.push(argStr

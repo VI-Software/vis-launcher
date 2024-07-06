@@ -57,7 +57,7 @@ loginWithVIS = "Iniciar sesión con VI Software"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
-serverSelectHeader = "Servidores disponibles"
+serverSelectHeader = "Mi lista de servidores"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancelar"
 accountSelectHeader = "Selecciona una cuenta"
@@ -188,6 +188,8 @@ GlobalAccountDisabledErrorTitle = "401 | Unauthorized"
 GlobalAccountDisabledErrorText = 'No tiene suficientes permisos para acceder al recurso solicitado. <br> Consulta la consola para obtener más detalles (CTRL + Shift + i)'
 ErrorCantCheckTeamOnApiErrorTitle = "Error durante el lanzamiento"
 ErrorCantCheckTeamOnApiErrorText = "No hemos podido verificar el estado de actividad del Team del servidor. <br>Consulta la consola (CTRL + Shift + i) para obtener más detalles."
+serverNotFoundErrorTitle="Error durante el lanzamiento"
+serverNotFoundErrorText="No se ha podido encontrar el servidor seleccionado para la cuenta selecionada. <br>Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 okay = "Aceptar"
 
 [js.landing.selectedAccount]
