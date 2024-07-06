@@ -15,6 +15,7 @@
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
+
 const { app }              = require('@electron/remote')
 const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
