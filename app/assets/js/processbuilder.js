@@ -401,7 +401,12 @@ class ProcessBuilder {
         args.push('-cp')
         args.push(this.classpathArg(mods, tempNativePath).join(ProcessBuilder.getClasspathSeparator()))
         // Sets the path to the Authlib Injector jar
-        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        let authlibInjectorPath;
+        if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+            authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        } else {
+            authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
+        }
         const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
         // Add the Authlib Injector as a Java agent
         args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
@@ -445,7 +450,12 @@ class ProcessBuilder {
         // Debug securejarhandler
         // args.push('-Dbsl.debug=true')
         // Sets the path to the Authlib Injector jar
-        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        let authlibInjectorPath;
+        if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+            authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+        } else {
+            authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
+        }
         const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
         // Add the Authlib Injector as a Java agent
         args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
