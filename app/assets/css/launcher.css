@@ -3929,7 +3929,90 @@ input:checked + .toggleSwitchSlider:before {
  *                                                                             *
  ******************************************************************************/
 
-/* Loading container, placed above everything. */
+
+#loadingText {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    bottom: 10px; 
+    color: #fff; 
+    font-size: 16px; 
+}
+
+ .cube {
+    position: relative;
+    width: 100px;
+    transform-style: preserve-3d;
+    animation: rotate 5s infinite linear;
+}
+
+.cube div {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    background: #008080;
+    border: 2px solid #333;
+}
+
+.cube .front {
+    background-image: url('../images/vis-icon.png');
+    background-size: cover;
+}
+
+.cube .back {
+    color: #fff;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cube .left {
+    color: #fff;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cube .right {
+    color: #fff;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cube .top {
+    color: #fff;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cube .bottom {
+    color: #fff;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+  .front  { transform: rotateY(0deg) translateZ(50px); }
+  .back   { transform: rotateY(180deg) translateZ(50px); }
+  .right  { transform: rotateY(90deg) translateZ(50px); }
+  .left   { transform: rotateY(-90deg) translateZ(50px); }
+  .top    { transform: rotateX(90deg) translateZ(50px); }
+  .bottom { transform: rotateX(-90deg) translateZ(50px); }
+
+  @keyframes rotate {
+    from { transform: rotateX(0deg) rotateY(0deg); }
+    to { transform: rotateX(360deg) rotateY(360deg); }
+  }
+
 #loadingContainer {
     position: absolute;
     z-index: 400;
@@ -3940,7 +4023,6 @@ input:checked + .toggleSwitchSlider:before {
     height: calc(100% - 22px);
 }
 
-/* Loading content container. */
 #loadingContent {
     position: relative;
     display: flex;
@@ -3949,7 +4031,6 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
 }
 
-/* Spinner container. */
 #loadSpinnerContainer {
     position: relative;
     display: flex;
@@ -3957,21 +4038,18 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
 }
 
-/* Stationary image for the spinner. */
 #loadCenterImage {
     position: absolute;
     width: 277px;
     height: auto;
 }
 
-/* Rotating image for the spinner. */
 #loadSpinnerImage {
     width: 280px;
     height: auto;
     z-index: 400;
 }
 
-/* Rotating animation for the spinner. */
 @keyframes rotating {
     from {
         transform: rotate(0deg);
@@ -3981,7 +4059,6 @@ input:checked + .toggleSwitchSlider:before {
     }
 }
 
-/* Class which is applied when the spinner image is spinning. */
 .rotating {
     animation: rotating 10s linear infinite;
 }
