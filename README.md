@@ -3,9 +3,6 @@
 
 <h1 align="center">VI Software Launcher</h1>
 
-<em><h5 align="center">(Basado en el proyecto "[HeliosLauncher](https://github.com/dscalzi/helioslauncher)")</h5></em>
-
-
 [<p align="center"><img src="https://img.shields.io/github/actions/workflow/status/VI-Software/vis-launcher/build.yml?branch=master&style=for-the-badge" alt="gh actions">](https://github.com/VI-Software/vis-launcher/actions) [<img src="https://img.shields.io/github/downloads/VI-Software/vis-launcher/total.svg?style=for-the-badge" alt="downloads">](https://github.com/VI-Software/vis-launcher/releases)
 
 <p align="center">Conéctate a los servidores de VI Software sin preocupaciones, permite al VIS Launcher actualizar, pre configurar tus instalaciones de mods de las experiencias VIS por ti.</p>
@@ -43,3 +40,9 @@ Puede descargar desde [Versiones de GitHub](https://github.com/VI-Software/vis-l
 ## Bugs
 
 Para informar respecto a un bug dirígete [aquí](https://github.com/VI-Software/vis-launcher/issues)
+
+#### Información adicional
+
+VIS Launcher utiliza Authlib Injector 1.2.5, una biblioteca de inyección de autenticación para los servicios personalizados de VI Software, que está licenciada bajo la licencia AGPL-3.0. Puedes encontrar más información sobre Authlib Injector en su repositorio oficial en [GitHub](https://github.com/yushijinhun/authlib-injector).
+
+La base de VIS Launcher está basada en el proyecto [HeliosLauncher (v.2.1.0)](https://github.com/dscalzi/helioslauncher)

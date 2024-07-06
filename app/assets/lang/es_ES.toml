@@ -57,7 +57,7 @@ loginWithVIS = "Iniciar sesión con VI Software"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
-serverSelectHeader = "Servidores disponibles"
+serverSelectHeader = "Mi lista de servidores"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancelar"
 accountSelectHeader = "Selecciona una cuenta"
@@ -252,6 +252,13 @@ joined = "En un servidor multijugador"
 [js.overlay]
 dismiss = "Descartar"
 
+[js.processbuilder.exit]
+exitErrorHeader = "El juego se cerró con un código de error"
+message = "El juego se ha cerrado inesperadamente con el siguiente código: "
+copyCode = "Copiar código"
+copyCodeText = "Código del cierre inesperado del juego:  "
+visnosupport = '<br><br><small>Esto es un error del modpack de la experiencia, no del launcher de VI Software. Contacte a la administradora de su experiencia, <span style="color: red;">NO</span> contacte a VI Software para soporte sobre este error.</small>'
+
 [js.settings.fileSelectors]
 executables = "Ejecutables"
 allFiles = "Todos los archivos"
@@ -352,3 +359,6 @@ checkingForUpdateButton = "Buscando actualizaciones..."
 installNowButton = "Instalar ahora"
 checkForUpdatesButton = "Buscar actualizaciones"
 
+[js.uicore.loading]
+LoadingText = "Cargando"
+LoaidingTakingTooLong = "El procceso de carga está tardando más de lo esperado. ¿Es su conectividad a internet estable?"
