@@ -18,7 +18,8 @@ win:
   target: 
     - target: 'nsis'
       arch: 'x64'
-
+  certificateFile: './cert/certificate.pfx'
+  publisherName: 'VI Software'
 # Windows Installer Configuration
 nsis:
   oneClick: false
