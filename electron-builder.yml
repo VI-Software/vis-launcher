@@ -18,7 +18,7 @@ win:
   target: 
     - target: 'nsis'
       arch: 'x64'
-
+  certificateFile: './cert/certificate.pfx'
 # Windows Installer Configuration
 nsis:
   oneClick: false
