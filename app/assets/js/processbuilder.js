@@ -27,9 +27,6 @@ const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
 const win                   = remote.getCurrentWindow();
-
-
-
 const ConfigManager            = require('./configmanager')
 
 const logger = LoggerUtil.getLogger('ProcessBuilder')
