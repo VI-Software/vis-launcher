@@ -698,3 +698,7 @@ async function devModeToggle() {
     updateSelectedServer(data.servers[0])
     syncModConfigurations(data)
 }
+
+async function testtoken() {
+    console.log(ConfigManager.getSelectedAccount())
+}

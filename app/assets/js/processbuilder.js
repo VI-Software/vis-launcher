@@ -26,6 +26,7 @@ const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-lau
 const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
+const win                   = remote.getCurrentWindow();
 
 
 
@@ -103,6 +104,10 @@ class ProcessBuilder {
             child.unref()
         }
 
+        if(ConfigManager.getMinimizeOnLaunch()){
+            win.hide();
+        }
+
         child.stdout.setEncoding('utf8')
         child.stderr.setEncoding('utf8')
 
@@ -114,6 +119,7 @@ class ProcessBuilder {
             data.trim().split('\n').forEach(x => console.log(`\x1b[31m[Minecraft]\x1b[0m ${x}`))
         })
         child.on('close', (code, signal) => {
+            win.show();
             logger.info('Exited with code', code)
             if(code != 0){
                 setOverlayContent(
