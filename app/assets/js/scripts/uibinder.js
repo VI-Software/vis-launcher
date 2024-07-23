@@ -88,6 +88,8 @@ async function showMainUI(data) {
         // Clear the server list and build status from the local storage to prevent any issues and abuse
         localStorage.removeItem('serverList');
         localStorage.removeItem('buildstatus');
+        localStorage.removeItem('disableHttpd');
+        localStorage.removeItem('authlibDebug')
     }catch(err){
         console.error(err)
     }
@@ -690,8 +692,21 @@ ipcRenderer.on('distributionIndexDone', async (event, res) => {
     }
 })
 
-// Util for development
-async function devModeToggle() {
+// Utils for development
+
+/* Sets a custom port for the httpd server used by the authlib injector
+ Value is null by default, which means the port will be randomly chosen */
+
+ async function debug_getHelp() {
+    console.log('function debug_getHelp() - shows this help message')
+    console.log('function debug_devModeToggle() - toggles distro dev mode')
+    console.log('function debug_toggledisableHttpd() - toggles the flag disableHttpd for the authlib injector')
+    console.log('function debug_toggleAuthLibDebug(mode) - toggles debug mode for the authlib injector. Available options: verbose, authlib, dumpClass, printUntransformed')
+}
+
+/* Toggle distro dev mode */
+
+async function debug_devModeToggle() {
     DistroAPI.toggleDevMode(true)
     const data = await DistroAPI.refreshDistributionOrFallback()
     ensureJavaSettings(data)
@@ -699,6 +714,35 @@ async function devModeToggle() {
     syncModConfigurations(data)
 }
 
-async function testtoken() {
-    console.log(ConfigManager.getSelectedAccount())
+
+/* Toggles the flag disableHttpd for authlib injector */
+
+ async function debug_toggledisableHttpd() {
+    if(localStorage.getItem('disableHttpd')){
+        localStorage.removeItem('disableHttpd')
+        console.log('Httpd server enabled')
+    }else{
+        localStorage.setItem('disableHttpd', true)
+        console.log('Httpd server disabled')
+    }
+}
+
+
+/* Toggles debug mode for the authlib injector 
+    Avilable options: verbose, authlib, dumpClass, printUntransformed
+*/
+
+
+async function debug_toggleAuthLibDebug(mode){
+    if(mode){
+        if(mode=='verbose' || mode=='authlib' || mode=='dumpClass' || mode=='printUntransformed'){
+            console.log('Authlib debug mode enabled for', mode)
+            localStorage.setItem('authlibDebug', mode)
+        }else{
+            console.log('Invalid debug mode')
+        }
+    }else{
+        localStorage.removeItem('authlibDebug')
+        console.log('Authlib debug mode disabled')
+    }
 }

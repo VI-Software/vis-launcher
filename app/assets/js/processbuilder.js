@@ -27,10 +27,38 @@ const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
 const win                   = remote.getCurrentWindow();
-const ConfigManager            = require('./configmanager')
-
+const ConfigManager         = require('./configmanager')
+const net                   = require('net');
 const logger = LoggerUtil.getLogger('ProcessBuilder')
+const disableHttpd         = localStorage.getItem('disableHttpd');
+const authlibDebug          = localStorage.getItem('authlibDebug')
 
+
+
+/**
+ * Injects authlib into the JVM arguments as a java agent.
+ * @param {*} args 
+ */
+
+async function authLibArgs(args) {
+            // Sets the path to the Authlib Injector jar
+            let authlibInjectorPath;
+            if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+                authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+            } else {
+                authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
+            }
+            const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
+            // Add the Authlib Injector as a Java agent
+            args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+            args.push('-Dauthlibinjector.noShowServerName')
+            if(disableHttpd){
+                args.push(args.push('-Dauthlibinjector.disableHttpd'))
+            }
+            if(authlibDebug){
+                args.push('-Dauthlibinjector.debug=' + authlibDebug)
+            }
+}
 
 /**
  * Only forge and fabric are top level mod loaders.
@@ -404,17 +432,7 @@ class ProcessBuilder {
         // Classpath Argument
         args.push('-cp')
         args.push(this.classpathArg(mods, tempNativePath).join(ProcessBuilder.getClasspathSeparator()))
-        // Sets the path to the Authlib Injector jar
-        let authlibInjectorPath;
-        if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
-            authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
-        } else {
-            authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
-        }
-        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
-        // Add the Authlib Injector as a Java agent
-        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
-        args.push('-Dauthlibinjector.noShowServerName')
+        authLibArgs(args)
         // Java Arguments
         if(process.platform === 'darwin'){
             args.push('-Xdock:name=VISoftwareLauncher')
@@ -453,17 +471,7 @@ class ProcessBuilder {
 
         // Debug securejarhandler
         // args.push('-Dbsl.debug=true')
-        // Sets the path to the Authlib Injector jar
-        let authlibInjectorPath;
-        if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
-            authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
-        } else {
-            authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
-        }
-        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
-        // Add the Authlib Injector as a Java agent
-        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
-        args.push('-Dauthlibinjector.noShowServerName')
+        authLibArgs(args)
         if(this.modManifest.arguments.jvm != null) {
             for(const argStr of this.modManifest.arguments.jvm) {
                 args.push(argStr
