@@ -402,10 +402,24 @@ function createTray() {
     })
 }
 
-app.on('ready', () => {
-    createWindow()
-    createTray()
-})
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Someone or something tried to run a second instance of our APP, we should focus our window.
+        if (win) {
+            if (win.isMinimized()) win.restore()
+            win.focus()
+            win.show()
+        }
+    })
+    app.on('ready', () => {
+        createWindow()
+        createTray()
+    })
+}
 app.on('ready', createMenu)
 
 app.on('window-all-closed', () => {
