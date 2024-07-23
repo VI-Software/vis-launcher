@@ -96,6 +96,19 @@ function bindFileSelectors(){
 
 bindFileSelectors()
 
+launchDetachedCheckbox = document.querySelector('input[cValue="LaunchDetached"]')
+MinimizeOnLaunchCheckbox = document.querySelector('input[cValue="MinimizeOnLaunch"]')
+
+
+MinimizeOnLaunchCheckbox.addEventListener('change', function() {
+    if (this.checked) {
+        MinimizeOnLaunchCheckbox.disabled = true
+        MinimizeOnLaunchCheckbox.checked  = true
+    } else {
+        MinimizeOnLaunchCheckbox.disabled = false
+    }
+})
+
 
 /**
  * General Settings Functions

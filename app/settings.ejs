@@ -126,6 +126,18 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
+                    <span class="settingsFieldTitle"><%- lang('settings.MinimizeLauncherOnLaunch') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.MinimizeLauncherOnLaunchDesc') %></span>
+                </div>
+                <div class="settingsFieldRight">
+                    <label class="toggleSwitch">
+                        <input type="checkbox" cValue="MinimizeOnLaunch">
+                        <span class="toggleSwitchSlider"></span>
+                    </label>
+                </div>
+            </div>            
+            <div class="settingsFieldContainer">
+                <div class="settingsFieldLeft">
                     <span class="settingsFieldTitle"><%- lang('settings.launchDetachedTitle') %></span>
                     <span class="settingsFieldDesc"><%- lang('settings.launchDetachedDesc') %></span>
                 </div>
@@ -154,19 +166,28 @@
             </div>
             <div id="settingsModsContainer">
                 <div id="settingsReqModsContainer">
-                    <div class="settingsModsHeader"><%- lang('settings.requiredMods') %></div>
+                    <div class="settingsModsHeader"><%- lang('settings.requiredMods') %>
+                        <br>
+                        <small class="settingsDropinrequiredDesc"><%- lang('settings.requiredDesc') %></small>
+                    </div>
                     <div id="settingsReqModsContent">
 
                     </div>
                 </div>
                 <div id="settingsOptModsContainer">
-                    <div class="settingsModsHeader"><%- lang('settings.optionalMods') %></div>
+                    <div class="settingsModsHeader"><%- lang('settings.optionalMods') %>
+                    <br>
+                    <small class="settingsDropinrequiredDesc"><%- lang('settings.optionalDesc') %></small>
+                    </div>
                     <div id="settingsOptModsContent">
 
                     </div>
                 </div>
                 <div id="settingsDropinModsContainer">
-                    <div class="settingsModsHeader"><%- lang('settings.dropinMods') %></div>
+                    <div class="settingsModsHeader"><%- lang('settings.dropinMods') %>
+                    <br>
+                    <small><%- lang('settings.dropinModsDesc') %></small>
+                    </div>
                     <button id="settingsDropinFileSystemButton"><%- lang('settings.addMods') %> <span
                                 id="settingsDropinRefreshNote"><%- lang('settings.dropinRefreshNote') %></span></button>
                     <div id="settingsDropinModsContent">
@@ -337,12 +358,12 @@
             <div class="settingsTabHeader">
                 <span class="settingsTabHeaderText"><%- lang('settings.launcherTabHeaderText') %></span>
                 <span class="settingsTabHeaderDesc"><%- lang('settings.launcherTabHeaderDesc') %></span>
-            </div>
+            </div>                      
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
                     <span class="settingsFieldTitle"><%- lang('settings.allowPrereleaseTitle') %></span>
                     <span class="settingsFieldDesc"><%- lang('settings.allowPrereleaseDesc') %></span>
-                </div>
+                </div>              
                 <div class="settingsFieldRight">
                     <label class="toggleSwitch">
                         <input type="checkbox" cValue="AllowPrerelease">
