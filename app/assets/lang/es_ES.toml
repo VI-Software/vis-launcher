@@ -20,10 +20,10 @@ usernamePlaceholder = "Nombre de la cuenta"
 usernameEditButton = "Editar"
 settingsTooltip = "Configuración"
 serverStatus = "SERVIDOR"
-serverStatusPlaceholder = "DESCONECTADO"
-mojangStatus = "ESTADO DE MOJANG"
-mojangStatusTooltipTitle = "Servicios"
-mojangStatusNETitle = "No&nbsp;Esenciales"
+serverStatusPlaceholder = "Offline"
+visStatus = "ESTADOS DE VI SOFTWARE"
+visStatusTooltipTitle = "Servicios"
+vistatusNETitle = "No&nbsp;Esenciales"
 newsButton = "NOTICIAS"
 launchButton = "JUGAR"
 launchButtonPlaceholder = "&#8226; Ningún servidor seleccionado"
@@ -206,7 +206,7 @@ loading = "Cargando..."
 
 [js.landing.serverStatus]
 server = "SERVIDOR"
-offline = "DESCONECTADO"
+offline = "Offline"
 players = "JUGADORES"
 
 [js.landing.systemScan]
