@@ -26,7 +26,7 @@
    * Cambie entre configuraciones de servidor con facilidad.
    * Visualiza el total de jugadores conectados en el servidor seleccionado
 * Actualizaciones automáticas del launcher.
-* Ver el estado de los servicios de Mojang y Microsoft (para Minecraft).
+* Ver el estado de los servicios de VI Software.
 
 Esta no es una lista exhaustiva. ¡Descarga e instala el lanzador para evaluar todo lo que puede hacer!
 
