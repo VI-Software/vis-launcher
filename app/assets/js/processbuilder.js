@@ -16,7 +16,7 @@
 
 */
 
-const { app } = require('@electron/remote');
+const { app }              = require('@electron/remote')
 const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
 const crypto                = require('crypto')
@@ -26,13 +26,39 @@ const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-lau
 const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
-
-
-
-const ConfigManager            = require('./configmanager')
-
+const win                   = remote.getCurrentWindow();
+const ConfigManager         = require('./configmanager')
+const net                   = require('net');
 const logger = LoggerUtil.getLogger('ProcessBuilder')
+const disableHttpd         = localStorage.getItem('disableHttpd');
+const authlibDebug          = localStorage.getItem('authlibDebug')
 
+
+
+/**
+ * Injects authlib into the JVM arguments as a java agent.
+ * @param {*} args 
+ */
+
+async function authLibArgs(args) {
+            // Sets the path to the Authlib Injector jar
+            let authlibInjectorPath;
+            if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+                authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
+            } else {
+                authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
+            }
+            const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
+            // Add the Authlib Injector as a Java agent
+            args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+            args.push('-Dauthlibinjector.noShowServerName')
+            if(disableHttpd){
+                args.push(args.push('-Dauthlibinjector.disableHttpd'))
+            }
+            if(authlibDebug){
+                args.push('-Dauthlibinjector.debug=' + authlibDebug)
+            }
+}
 
 /**
  * Only forge and fabric are top level mod loaders.
@@ -103,6 +129,10 @@ class ProcessBuilder {
             child.unref()
         }
 
+        if(ConfigManager.getMinimizeOnLaunch()){
+            win.hide();
+        }
+
         child.stdout.setEncoding('utf8')
         child.stderr.setEncoding('utf8')
 
@@ -114,6 +144,7 @@ class ProcessBuilder {
             data.trim().split('\n').forEach(x => console.log(`\x1b[31m[Minecraft]\x1b[0m ${x}`))
         })
         child.on('close', (code, signal) => {
+            win.show();
             logger.info('Exited with code', code)
             if(code != 0){
                 setOverlayContent(
@@ -401,12 +432,7 @@ class ProcessBuilder {
         // Classpath Argument
         args.push('-cp')
         args.push(this.classpathArg(mods, tempNativePath).join(ProcessBuilder.getClasspathSeparator()))
-        // Sets the path to the Authlib Injector jar
-        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
-        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
-        // Add the Authlib Injector as a Java agent
-        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
-        args.push('-Dauthlibinjector.noShowServerName')
+        authLibArgs(args)
         // Java Arguments
         if(process.platform === 'darwin'){
             args.push('-Xdock:name=VISoftwareLauncher')
@@ -445,12 +471,7 @@ class ProcessBuilder {
 
         // Debug securejarhandler
         // args.push('-Dbsl.debug=true')
-        // Sets the path to the Authlib Injector jar
-        const authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
-        const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
-        // Add the Authlib Injector as a Java agent
-        args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
-        args.push('-Dauthlibinjector.noShowServerName')
+        authLibArgs(args)
         if(this.modManifest.arguments.jvm != null) {
             for(const argStr of this.modManifest.arguments.jvm) {
                 args.push(argStr
@@ -478,26 +499,6 @@ class ProcessBuilder {
         // Vanilla Arguments
         args = args.concat(this.vanillaManifest.arguments.game)
 
-        async function WriteFullscreenToOptions(filePath, lineToReplace, newLine) {
-            try {
-                const exists = await fs.pathExists(filePath);
-
-                if (exists) {
-                    let fileContent = await fs.readFile(filePath, 'utf8');
-                    if (fileContent.includes(lineToReplace)) {
-                        fileContent = fileContent.replace(lineToReplace, newLine);
-                        await fs.outputFile(filePath, fileContent);
-                    } else {
-                        await fs.outputFile(filePath, newLine);
-                    }
-                } else {
-                    await fs.outputFile(filePath, newLine);
-                }
-            } catch (err) {
-                logger.info('Error while writing fullscreen to options.txt:', err);
-            }
-        }
-
         for(let i=0; i<args.length; i++){
             if(typeof args[i] === 'object' && args[i].rules != null){
                 
@@ -519,14 +520,10 @@ class ProcessBuilder {
                         // This should be fine for a while.
                         if(rule.features.has_custom_resolution != null && rule.features.has_custom_resolution === true){
                             if(ConfigManager.getFullscreen()){
-                                logger.info("gamedir: ", this.gameDir)
-                                WriteFullscreenToOptions(path.join(this.gameDir, "options.txt"), 'fullscreen:false', 'fullscreen:true')
                                 args[i].value = [
                                     '--fullscreen',
                                     'true'
                                 ]
-                            }else{
-                                WriteFullscreenToOptions(path.join(this.gameDir, "options.txt"), 'fullscreen:true', 'fullscreen:false');
                             }
                             checksum++
                         }

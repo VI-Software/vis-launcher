@@ -1845,6 +1845,10 @@ input:checked + .toggleSwitchSlider:before {
     pointer-events: none;
 }
 
+#settingsDropinrequiredDesc {
+    font-size: 10px;
+    pointer-events: none;
+}
 /* Button to remove drop-in mods. */
 .settingsDropinRemoveButton {
     background: none;

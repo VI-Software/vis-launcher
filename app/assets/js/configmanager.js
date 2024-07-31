@@ -99,6 +99,7 @@ const DEFAULT_CONFIG = {
             resWidth: 1280,
             resHeight: 720,
             fullscreen: false,
+            MinimizeOnLaunch: true,
             autoConnect: true,
             launchDetached: true
         },
@@ -808,4 +809,23 @@ exports.getAllowPrerelease = function(def = false){
  */
 exports.setAllowPrerelease = function(allowPrerelease){
     config.settings.launcher.allowPrerelease = allowPrerelease
+}
+
+/**
+ * Check if the launcher should be minimized to the system tray when the game is launch.
+ * 
+ * @param {boolean} def Optional. If true, the default value will be returned.
+ * @returns {boolean} Whether or not the launcher should be minimized to the system tray when the game is launch.
+ */
+exports.getMinimizeOnLaunch = function(def = false){
+    return !def ? config.settings.game.MinimizeOnLaunch : DEFAULT_CONFIG.settings.game.MinimizeOnLaunch
+}
+
+/**
+ * Change the status if the launcher should be minimized to the system tray when the game is launch.
+ * 
+ * @param {boolean} MinimizeOnLaunch Whether or not the launcher should be minimized to the system tray when the game is launch.
+ */
+exports.setMinimizeOnLaunch = function(MinimizeOnLaunch){
+    config.settings.game.MinimizeOnLaunch = MinimizeOnLaunch
 }

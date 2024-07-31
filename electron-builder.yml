@@ -18,13 +18,14 @@ win:
   target: 
     - target: 'nsis'
       arch: 'x64'
-
+  certificateFile: './cert/certificate.pfx'
+  publisherName: 'VI Software'
 # Windows Installer Configuration
 nsis:
   oneClick: false
   perMachine: false
   allowElevation: true
-  license: "LICENSE"
+  license: "INSTALLER-LICENSE.md"
   allowToChangeInstallationDirectory: true
 
 # macOS Configuration

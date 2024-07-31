@@ -20,7 +20,7 @@ const remoteMain = require('@electron/remote/main')
 remoteMain.initialize()
 
 // Requirements
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, shell, Tray } = require('electron')
 const autoUpdater                       = require('electron-updater').autoUpdater
 const ejse                              = require('ejs-electron')
 const fs                                = require('fs')
@@ -31,6 +31,7 @@ const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
 const pjson = require('./package.json');
+let isExitingThroughTray = false;
 
 
 // Setup Lang
@@ -279,6 +280,15 @@ function createWindow() {
 
     win.resizable = true
 
+    win.on('close', (event) => {
+        if (!app.isQuitting && !isExitingThroughTray) {
+            event.preventDefault();
+            win.hide();
+        }
+    
+        return false;
+    });
+
     win.on('closed', () => {
         win = null
     })
@@ -290,7 +300,7 @@ function createMenu() {
 
         // Extend default included application menu to continue support for quit keyboard shortcut
         let applicationSubMenu = {
-            label: 'Application',
+            label: 'VI Software Launcher',
             submenu: [{
                 label: 'Acerca de la aplicación',
                 selector: 'orderFrontStandardAboutPanel:'
@@ -364,7 +374,52 @@ function getPlatformIcon(filename){
     return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
-app.on('ready', createWindow)
+function createTray() {    
+    tray = new Tray(path.join(__dirname, 'app', 'assets', 'images', `vis-tray.png`))
+
+    const trayMenuTemplate = [
+        {
+            label: 'Abrir',
+            click: function () {
+                win.show()
+            }
+        },
+        {
+            label: 'Salir',
+            click: function () {
+                isExitingThroughTray = true;
+                app.quit()
+            }
+        }
+    ]
+    
+    let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
+    tray.setContextMenu(trayMenu)
+    tray.setToolTip('VI Software Launcher')
+    
+    tray.on('click', () => {
+        win.isVisible() ? win.hide() : win.show()
+    })
+}
+
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+    app.quit()
+} else {
+    app.on('second-instance', (event, commandLine, workingDirectory) => {
+        // Someone or something tried to run a second instance of our APP, we should focus our window.
+        if (win) {
+            if (win.isMinimized()) win.restore()
+            win.focus()
+            win.show()
+        }
+    })
+    app.on('ready', () => {
+        createWindow()
+        createTray()
+    })
+}
 app.on('ready', createMenu)
 
 app.on('window-all-closed', () => {
@@ -382,3 +437,4 @@ app.on('activate', () => {
         createWindow()
     }
 })
+

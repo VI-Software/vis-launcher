@@ -22,6 +22,15 @@ jobs:
         with:
           node-version: 18
 
+      - name: Crear la carpeta para el certificado
+        run: mkdir -p cert
+        shell: bash
+
+
+      - name: Restaurar el certificado
+        run: echo ${{ secrets.CERTIFICATE_BASE64 }} | base64 --decode > ./cert/certificate.pfx
+        shell: bash
+
       - name: Instalar y preparar Python
         uses: actions/setup-python@v4
         with:
@@ -34,5 +43,6 @@ jobs:
       - name: Build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CERTIFICATE_FILE: ${{ github.workspace }}/cert/certificate.pfx
         run: npm run dist
         shell: bash
