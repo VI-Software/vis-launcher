@@ -173,45 +173,41 @@ document.getElementById('launch_button').addEventListener('click', async e => {
             return
         }                             
         try {
-            try {
-                const response = await fetch('https://api.visoftware.tech/services/moderation/globalban/laccount/' + user.displayName);
-                const data = await response.json();
-                if(data.banned){
-                    showLaunchFailure(Lang.queryJS('landing.launch.GlobalAccountDisabledErrorTitle'), Lang.queryJS('landing.launch.GlobalAccountDisabledErrorText'))
-                    loggerLanding.error('Root account is globaly disabled by VI Software.')
-                    return
-                } 
-            }catch(err){
-                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'))
-                loggerLanding.error('An error has occurred while attempting to check root account status. Error: ', err)
-                return
-            } 
-            try {
-                const response = await fetch('https://api.visoftware.tech/services/launcher/accounts/' + user.displayName);
-                const data = await response.json();
-                if(data.suspended){
-                    showLaunchFailure(Lang.queryJS('landing.launch.AccountDisabledErrorTitle'), Lang.queryJS('landing.launch.AccountDisabledErrorText'))
-                    loggerLanding.error('Account is disabled by experience administrator.')
-                    return
-                } 
-            }catch(err){
-                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'))
-                loggerLanding.error('An error has occurred while attempting to check account status. Error: ', err)
-                return
-            } 
-            const response = await fetch('https://api.visoftware.tech/services/moderation/warns/account/' + user.displayName);
-            const data = await response.json();
-            if(data.some(warning => warning.read === 0)){
-                showLaunchFailure(Lang.queryJS('landing.launch.WarnsnotreadErrorTitle'), Lang.queryJS('landing.launch.WarnsnotreadErrorText'))
-                loggerLanding.error('User has unread warnings.')
-                return
-            } 
+            const response = await fetch('https://api.visoftware.tech/services/moderation/mystatus', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'token': user.accessToken
+                }
+            });
 
-        }catch(err){
-            showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'))
-            loggerLanding.error('An error has occurred while attempting to check unread user\'s warnings. Error: ', err)
-            return
-        }  
+            const userData = await response.json();
+            if(response.status == 401){
+                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'));
+                loggerLanding.error('An error has occurred while attempting to verify the account in the moderation system. Error:', userData.error);
+                return;
+            }
+            if(userData.rootbanned){
+                showLaunchFailure(Lang.queryJS('landing.launch.GlobalAccountDisabledErrorTitle'), Lang.queryJS('landing.launch.GlobalAccountDisabledErrorText'))
+                loggerLanding.error('Root account is banned by VI Software. Canceling launch.')
+                return
+            }
+            if(userData.pendingwarns > 0){
+                showLaunchFailure(Lang.queryJS('landing.launch.WarnsnotreadErrorTitle'), Lang.queryJS('landing.launch.WarnsnotreadErrorText'))
+                loggerLanding.error('Root account has pending warnings awaiting to be reviewed. Canceling launch.')
+                return
+            }
+            if(userData.launcherbanned){
+                showLaunchFailure(Lang.queryJS('landing.launch.AccountDisabledErrorTitle'), Lang.queryJS('landing.launch.AccountDisabledErrorText'))
+                loggerLanding.error('Launcher account is disabled by Team Administration. Canceling launch.')
+                return
+            }
+        
+        } catch (err) {
+            showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'));
+            loggerLanding.error('An error has occurred while attempting to verify the account in the moderation system. Error: ', err);
+            return;
+        }
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
         if(jExe == null){
             await asyncSystemScan(server.effectiveJavaOptions)
