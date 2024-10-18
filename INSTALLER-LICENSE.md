@@ -1,21 +1,18 @@
-Licencias aplicables para este producto de VI Software:
+By using this product, you agree to the terms of service of VI Software and any other applicable policies that may not be mentioned below.
 
-https://docs.visoftware.tech/vi-software/guidelines/terminos-de-servicio
-https://docs.visoftware.tech/vi-software/guidelines/codigo-de-conducta
-https://docs.visoftware.tech/vi-software/guidelines/politica-de-invitacion
-https://docs.visoftware.tech/vi-software/guidelines/politica-de-uso-justo-para-la-api
+https://docs.visoftware.tech/vi-software/guidelines/terms-of-service
+https://docs.visoftware.tech/vi-software/guidelines/code-of-conduct
+https://docs.visoftware.tech/vi-software/vis-launcher/terms-of-use
+https://docs.visoftware.tech/vi-software/vis-launcher/privacy-policy
 https://docs.visoftware.tech/vi-software/guidelines/contribution-guidelines
-https://docs.visoftware.tech/vi-software/guidelines/politica-de-contribucion
+https://docs.visoftware.tech/vi-software/guidelines/contributor-license-agreement
+https://docs.visoftware.tech/vi-software/guidelines/fair-use-policy
+https://docs.visoftware.tech/vi-software/vis-skins/terms-of-use
+https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth/privacy-policy
+https://docs.visoftware.tech/vi-software/puf/privacy-policy
+https://docs.visoftware.tech/vi-software/puf/terms-of-service
 
-Applicable licenses for direct customers of VI Software:
-
-https://docs.visoftware.tech/vi-software/licencias/licencia-cliente
-
-Applicable licenses for VI Software guests:
-
-https://docs.visoftware.tech/vi-software/licencias/licencia-invitado
-
-The code for this software is distributed under the MIT license.
+ This software's source code is available under the MIT license. You can get a copy of it on GitHub or through our official mirrors. 
 
 Copyright (c) 2024 VI Software
 

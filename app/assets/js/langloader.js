@@ -53,7 +53,7 @@ exports.queryEJS = function(id, placeHolders){
 
 exports.setupLanguage = function(){
     // Load Language Files
-    exports.loadLanguage('es_ES')
+    exports.loadLanguage('en_EN')
 
     // Load Custom Language File for Launcher Customizer
     exports.loadLanguage('settings')

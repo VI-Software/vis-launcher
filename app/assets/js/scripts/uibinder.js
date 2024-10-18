@@ -96,17 +96,27 @@ async function showMainUI(data) {
 
     // Check for server access status
     try {
-        const baseApiUrl = 'https://api.visoftware.tech'
-        const serverInfo = await fetch(baseApiUrl+'/services/servers')
-        const serverList = await serverInfo.json()
-        localStorage.setItem('serverList', JSON.stringify(serverList))
-    }catch (error) {
-        console.error('FATAL ERROR: Could not connect to the VI Software server API')
-        console.error('You can check outgoing incidents at https://status.visoftware.tech')
-        console.error('More information about this, can be found here:')
-        console.error('Please check your network connectivity before contacting VI Software for further assistance.')
-        console.error('Error code is as follows: ', error)
-        return showAPIError()
+        const baseApiUrl = 'https://api.visoftware.tech';
+        const serverInfo = await fetch(baseApiUrl + '/services/servers');
+        
+        if (serverInfo.status !== 200) {
+            console.error('FATAL ERROR: Could not connect to the VI Software server API');
+            console.error('You can check outgoing incidents at https://status.visoftware.tech');
+            console.error('More information about this, can be found here:');
+            console.error('Please check your network connectivity before contacting VI Software for further assistance.');
+            showAPIError();
+            throw new Error(`Failed to fetch server list. Status code: ${serverInfo.status}`);
+        }
+        
+        const serverList = await serverInfo.json();
+        localStorage.setItem('serverList', JSON.stringify(serverList));
+    } catch (error) {
+        console.error('FATAL ERROR: Could not connect to the VI Software server API');
+        console.error('You can check outgoing incidents at https://status.visoftware.tech');
+        console.error('More information about this, can be found here:');
+        console.error('Please check your network connectivity before contacting VI Software for further assistance.');
+        console.error('Error code is as follows: ', error);
+        return showAPIError();
     }
 
     await prepareSettings(true)
@@ -168,7 +178,7 @@ async function showMainUI(data) {
         // If there's an error, load '0.jpg' from assets
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
         // Applies the offline background and attemps to continue with the logic, showing a warning
-        document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/0.jpg\')'
+        document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/offline.png\')'
         showBGSWarning()
         const checkver = true
         continueMainUILogic(checkver)
@@ -302,6 +312,7 @@ function showAPIError() {
             )
             setOverlayHandler(() => {
                 const window = remote.getCurrentWindow()
+                isExitingThroughTray = true;
                 window.close()
             })
             toggleOverlay(true)
@@ -314,8 +325,8 @@ function showAPIError() {
 
 function checkVersionStatus() {
     const options = {
-        hostname: 'visoftware.tech',
-        path: `/launcher/version-status.php?version=${remote.app.getVersion()}`,
+        hostname: 'api.visoftware.tech',
+        path: `/services/launcher/version?version=${remote.app.getVersion()}`,
         method: 'GET'
     }
 

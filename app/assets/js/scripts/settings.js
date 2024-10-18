@@ -1616,3 +1616,6 @@ async function prepareSettings(first = false) {
 
 // Prepare the settings UI on startup.
 //prepareSettings(true)
+
+// Sets the current year for copyright notice
+document.getElementById('currentYear').textContent = new Date().getFullYear();

@@ -7,7 +7,7 @@
 At VI Software, we take security concerns seriously. If you discover any security vulnerabilities within our launcher, please let us know immediately. We appreciate your efforts in responsibly disclosing these issues to us and will work to address them promptly.
 
 
-To report a vulnerability, please email us at vis-project@galnod.com with a detailed description of the vulnerability and steps to reproduce it.
+To report a vulnerability, please email us at contact (at) visoftware.tech with a detailed description of the vulnerability and steps to reproduce it.
 
 ### Scope
 
@@ -35,7 +35,7 @@ We expect all parties involved in the security disclosure process to adhere to o
 
 ### Contact Information
 
-For security-related inquiries, please contact us at vis-project@galnod.com
+For security-related inquiries, please contact us at contact (at) visoftware.tech
 
 # SPANISH
 
@@ -45,7 +45,7 @@ For security-related inquiries, please contact us at vis-project@galnod.com
 
 En VI Software, tomamos seriamente las preocupaciones de seguridad. Si descubres alguna vulnerabilidad dentro de nuestro lanzador, por favor avísanos inmediatamente. Apreciamos tus esfuerzos al divulgar responsablemente estos problemas y trabajaremos para abordarlos prontamente.
 
-Para reportar una vulnerabilidad, por favor envíanos un correo electrónico a vis-project@galnod.com con una descripción detallada de la vulnerabilidad y los pasos para reproducirla.
+Para reportar una vulnerabilidad, por favor envíanos un correo electrónico a contact (at) visoftware.tech con una descripción detallada de la vulnerabilidad y los pasos para reproducirla.
 
 ### Alcance
 
@@ -72,4 +72,4 @@ Esperamos que todas las partes involucradas en el proceso de divulgación de seg
 
 ### Información de Contacto
 
-Para consultas relacionadas con seguridad, por favor contáctanos en vis-project@galnod.com.
+Para consultas relacionadas con seguridad, por favor contáctanos en contact (at) visoftware.tech.

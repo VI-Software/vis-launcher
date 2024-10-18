@@ -146,7 +146,21 @@ class ProcessBuilder {
         child.on('close', (code, signal) => {
             win.show();
             logger.info('Exited with code', code)
-            if(code != 0){
+            if (code === 100) {
+                setOverlayContent(
+                    Lang.queryJS('processbuilder.exit.handledexit.100.exitErrorHeader'),
+                    Lang.queryJS('processbuilder.exit.handledexit.100.message') + code + Lang.queryJS('processbuilder.exit.handledexit.100.visnosupport'),
+                    Lang.queryJS('processbuilder.exit.handledexit.100.copyCode'),
+                )
+                setOverlayHandler(() => {
+                    copy(Lang.queryJS('processbuilder.exit.handledexit.100.copyCode') + code)
+                    toggleOverlay(false)
+                })
+                setDismissHandler(() => {
+                    toggleOverlay(false)
+                })
+                toggleOverlay(true, true)
+            } else if (code != 0) {
                 setOverlayContent(
                     Lang.queryJS('processbuilder.exit.exitErrorHeader'),
                     Lang.queryJS('processbuilder.exit.message') + code + Lang.queryJS('processbuilder.exit.visnosupport'),
