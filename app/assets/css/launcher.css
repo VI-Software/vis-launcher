@@ -3,7 +3,7 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
@@ -26,7 +26,7 @@
  *                                                                             *
  ******************************************************************************/
 
-@font-face {
+ @font-face {
     font-family: 'Avenir Book';
     src: url('../fonts/Avenir-Book.ttf');
 }
@@ -65,10 +65,48 @@ body, button {
     color: white;
 }
 
-/*body {
-    background: url('./../images/backgrounds/0.jpg') no-repeat center center fixed;
-    background-size: cover;
-}*/
+/* Root variables for consistent color palette */
+:root {
+    /* Primary Theme Colors */
+    --color-primary: #8a2be2; 
+    --color-primary-dark: #6a1b9a;
+    --color-primary-light: #b39ddb;  
+    
+    /* Background Colors */
+    --color-bg-darkest: #1a1a2e; 
+    --color-bg-dark: #16213e;          
+    --color-bg-light: #242f4c;      
+    
+    /* Accent Colors */
+    --color-accent: #ff1e8c;          
+    --color-accent-dark: #c2185b;     
+    --color-accent-light: #ff69b4;    
+    
+    /* UI Element Colors */
+    --color-surface: rgba(138, 43, 226, 0.1);  
+    --color-overlay: rgba(26, 26, 46, 0.85);   
+    --color-border: rgba(138, 43, 226, 0.3);   
+    
+    /* Text Colors */
+    --color-text: #ffffff;             
+    --color-text-secondary: #b3b3b3;  
+    --color-text-disabled: #666666;   
+    
+    /* Status Colors */
+    --color-success: #4caf50;          
+    --color-error: #f44336;          
+    --color-warning: #ff9800;         
+    
+    /* Special Effects */
+    --glow-primary: 0 0 10px rgba(138, 43, 226, 0.5);
+    --glow-accent: 0 0 10px rgba(255, 30, 140, 0.5);
+}
+
+/* Update base elements */
+body {
+    background-color: var(--color-bg-dark);
+    color: var(--color-text);
+}
 
 /*******************************************************************************
  *                                                                             *
@@ -155,15 +193,17 @@ body, button {
 
 /* Windows Frame Button Styles. */
 .frameButton {
-    background: none;
+    background-color: transparent;
     border: none;
+    color: var(--color-text-primary);
+    transition: background-color 0.2s ease;
     height: 22px;
     width: 39px;
     cursor: pointer;
 }
 .frameButton:hover,
 .frameButton:focus {
-    background: rgba(189, 189, 189, 0.43);
+    background-color: var(--color-bg-lighter);
 }
 .frameButton:active {
     background: rgba(156, 156, 156, 0.43);
@@ -578,22 +618,23 @@ body, button {
 /* Login text input styles. */
 .loginField {
     font-family: 'Avenir Book';
-    background: none;
-    border-width: 1.5px 0px 0px 0px;
-    border-style: solid;
+    background-color: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 8px;
+    border-radius: 4px;
     width: 250px;
     margin-bottom: 20px;
-    border-color: #fff;
-    color: rgba(255, 255, 255, 0.75);
     font-weight: bold;
     text-align: center;
     box-sizing: border-box;
-    padding: 7.5px;
     font-size: 10px;
     letter-spacing: 1px;
 }
 .loginField:focus {
     outline: none;
+    border-color: var(--color-primary);
+    box-shadow: var(--glow-primary);
 }
 .loginField:disabled {
     color: rgba(255, 255, 255, 0.50);
@@ -629,16 +670,18 @@ body, button {
 
 /* Login button styles. */
 #loginButton {
-    background: none;
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
     font-weight: bold;
     letter-spacing: 2px;
-    border: none;
-    padding: 15px 5px;
     margin: 10px 0px;
     cursor: pointer;
     position: relative;
     right: -20px;
-    transition: 0.5s ease;
 }
 #loginButton:disabled {
     color: rgba(255, 255, 255, 0.75);
@@ -649,6 +692,7 @@ body, button {
 }
 #loginButton:hover,
 #loginButton:focus {
+    background-color: var(--color-primary-dark);
     text-shadow: 0px 0px 20px #fff;
     outline: none;
 }
@@ -1176,18 +1220,24 @@ body, button {
 
 /* Settings done button styles. */
 #settingsNavDone {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
     background: none;
     border: none;
     text-align: left;
     margin: 5px 0px;
     padding: 0px 20px;
-    color: white;
     cursor: pointer;
     outline: none;
     transition: 0.25s ease;
 }
 #settingsNavDone:hover,
 #settingsNavDone:focus {
+    background-color: var(--color-primary-dark);
     text-shadow: 0px 0px 20px white, 0px 0px 20px white, 0px 0px 20px white;
 }
 #settingsNavDone:active {
@@ -1213,14 +1263,17 @@ body, button {
     overflow-y: auto;
 }
 .settingsTab::-webkit-scrollbar {
-    width: 2px;
+    width: 8px;
 }
 .settingsTab::-webkit-scrollbar-track {
-    display: none;
+    background: var(--color-bg-darkest);
 }
 .settingsTab::-webkit-scrollbar-thumb {
-    border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+.settingsTab::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
 }
 
 /* Add spacing to the top of each settings tab. */
@@ -1309,16 +1362,18 @@ body, button {
 #settingsContainer input[type=number],
 #settingsContainer input[type=text] {
     color: white;
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 3px;
-    border: 1px solid rgba(126, 126, 126, 0.57);
-    font-family: 'Avenir Book';
+    background-color: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 8px;
+    border-radius: 4px;
     transition: 0.25s ease;
 }
 #settingsContainer input[type=number]:focus,
 #settingsContainer input[type=text]:focus {
     outline: none;
     border-color: rgba(126, 126, 126, 0.87);
+    box-shadow: var(--glow-primary);
 }
 #settingsContainer input[type=number][error] {
     border-color: rgb(255, 27, 12);
@@ -1392,9 +1447,8 @@ body, button {
     transition: .4s;
 }
 input:checked + .toggleSwitchSlider {
-    background-color: rgb(31, 140, 11);
-    /* box-shadow: inset 2px 1px 20px black; */
-    border: 1px solid rgb(31, 140, 11);
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-dark);
 }
 input:checked + .toggleSwitchSlider:before {
     transform: translateX(15px);
@@ -3497,12 +3551,33 @@ input:checked + .toggleSwitchSlider:before {
     height: 3px;
     width: 265px;
     -webkit-appearance: none;
+    background-color: var(--color-bg-light);
 }
 #launch_progress[value]::-webkit-progress-bar {
     background-color: transparent;
 }
 #launch_progress[value]::-webkit-progress-value {
-    background-color: #fff;
+    background-color: var(--color-primary);
+    background-image: linear-gradient(
+        45deg,
+        var(--color-primary) 25%,
+        var(--color-primary-dark) 25%,
+        var(--color-primary-dark) 50%,
+        var(--color-primary) 50%,
+        var(--color-primary) 75%,
+        var(--color-primary-dark) 75%
+    );
+    background-size: 20px 20px;
+    animation: progress-animation 1s linear infinite;
+}
+
+@keyframes progress-animation {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
 }
 
 /* Span which displays information about the status of the launch process. */
@@ -3653,6 +3728,9 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     align-items: center;
     height: 75%;
+    border-radius: 6px;
+    padding: 20px;
+    /* backdrop-filter: blur(5px); */
 }
 
 /* Server selection header. */
@@ -3674,6 +3752,7 @@ input:checked + .toggleSwitchSlider:before {
     justify-content: center;
     max-height: 65%;
     min-height: 40%;
+    backdrop-filter: blur(5px);
 }
 
 /* Scrollable div which lists the available servers. */
@@ -3681,6 +3760,10 @@ input:checked + .toggleSwitchSlider:before {
 #accountSelectListScrollable {
     padding: 0px 5px;
     overflow-y: scroll;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 4px;
+    padding: 10px;
 }
 #serverSelectListScrollable::-webkit-scrollbar,
 #accountSelectListScrollable::-webkit-scrollbar {
@@ -3698,59 +3781,97 @@ input:checked + .toggleSwitchSlider:before {
 
 /* Content container for a server listing. */
 .serverListing {
-    border: none;
-    padding: 0px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 12px 15px;
     width: 375px;
     min-height: 60px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    opacity: 0.6;
-    transition: 0.25s ease;
+    opacity: 0.95;
+    transition: all 0.3s ease;
     cursor: pointer;
     position: relative;
-    background: rgba(131, 131, 131, 0.25);
+    background: rgba(20, 20, 40, 0.4);
+    border-radius: 8px;
+    margin: 8px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
+
 .serverListing[selected] {
-    cursor: default;
-    opacity: 1.0;
+    opacity: 1;
+    border-color: var(--color-primary);
+    background: rgba(138, 43, 226, 0.15);
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.15);
 }
+
 .serverListing:hover,
 .serverListing:focus {
-    outline: none;
-    opacity: 1.0;
+    opacity: 1;
+    transform: translateY(-2px);
+    border-color: var(--color-primary-light);
+    background: rgba(30, 30, 50, 0.5);
 }
 
-.accountListing {
+/* Server listing image */
+.serverListingImg {
+    margin: 0 15px 0 0;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    height: 55px;
+    width: 55px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.serverListing:hover .serverListingImg {
+    border-color: var(--color-primary-light);
+}
+
+/* Content container for the server listing's details */
+.serverListingDetails {
+    flex: 1;
+}
+
+/* Server name style */
+.serverListingName {
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    margin-bottom: 4px;
+    letter-spacing: 0.3px;
+}
+
+/* Server description style */
+.serverListingDescription {
+    font-size: 12px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: normal;
+}
+
+/* Version badge */
+.serverListingVersion {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--color-primary);
     color: white;
-    border: 1px solid rgba(126, 126, 126, 0.57);
-    border-radius: 3px;
-    padding: 5px 45px;
-    width: 250px;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    opacity: 0.6;
-    transition: 0.25s ease;
-    cursor: pointer;
-    position: relative;
-    background: rgba(0, 0, 0, 0.25);
-}
-.accountListing[selected] {
-    cursor: default;
-    opacity: 1.0;
-}
-.accountListing:hover,
-.accountListing:focus {
-    outline: none;
-    opacity: 1.0;
+    font-weight: 500;
+    letter-spacing: 0.3px;
 }
 
-.accountListingName {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    padding-left: 10px;
+.serverListingRevision {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 11px;
+    margin-left: 8px;
+}
+
+/* Server selection list container */
+#serverSelectListScrollable {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
 }
 
 /* Add spacing between server listings. */
@@ -3815,13 +3936,13 @@ input:checked + .toggleSwitchSlider:before {
     line-height: 12px;
     height: 12px;
     border-radius: 2px;
-    background: rgba(31, 140, 11, 0.8);
+    background: var(--color-success);
     padding: 0px 2px;
 }
 
 /* The revision version of the server's manifest. */
 .serverListingRevision {
-    color: #969696;
+    color: var(--color-text-secondary);
     font-size: 10px;
     line-height: 12px;
     padding: 0px 5px;
@@ -3840,7 +3961,8 @@ input:checked + .toggleSwitchSlider:before {
     visibility: hidden;
     opacity: 0;
     width: 65px;
-    background-color: rgba(0, 0, 0, 0.40);
+    background-color: var(--color-overlay);
+    border: 1px solid var(--color-border);
     text-align: center;
     border-radius: 4px;
     position: absolute;
@@ -3848,16 +3970,17 @@ input:checked + .toggleSwitchSlider:before {
     left: 130%;
     font-size: 10px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
+    backdrop-filter: blur(5px);
 }
 .serverListingStarTooltip::after {
     content: " ";
     position: absolute;
     top: 50%;
-    right: 100%; /* To the left of the tooltip */
+    right: 100%;
     margin-top: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: transparent rgba(0, 0, 0, 0.40) transparent transparent;
+    border-color: transparent var(--color-border) transparent transparent;
 }
 .serverListingStarWrapper:hover .serverListingStarTooltip {
     visibility: visible;
@@ -3878,6 +4001,12 @@ input:checked + .toggleSwitchSlider:before {
 /* Server selection confirm button styles. */
 #serverSelectConfirm,
 #accountSelectConfirm {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background-color 0.2s ease;
     background: none;
     border: 1px solid #ffffff;
     color: white;
@@ -3893,6 +4022,7 @@ input:checked + .toggleSwitchSlider:before {
 #serverSelectConfirm:focus,
 #accountSelectConfirm:hover,
 #accountSelectConfirm:focus {
+    background-color: var(--color-primary-dark);
     box-shadow: 0px 0px 10px 0px #fff;
     outline: none;
 }
@@ -3945,77 +4075,42 @@ input:checked + .toggleSwitchSlider:before {
     font-size: 16px; 
 }
 
- .cube {
+.cube {
+    width: 150px;
+    height: 150px;
     position: relative;
-    width: 100px;
     transform-style: preserve-3d;
-    animation: rotate 5s infinite linear;
+    animation: spin 8s infinite linear;
 }
 
 .cube div {
+    width: 150px;
+    height: 150px;
     position: absolute;
-    width: 100px;
-    height: 100px;
-    background: #008080;
-    border: 2px solid #333;
-}
-
-.cube .front {
-    background-image: url('../images/vis-icon.png');
-    background-size: cover;
-}
-
-.cube .back {
-    color: #fff;
-    font-size: 50px;
+    font-size: 80px;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    background: rgba(138, 43, 226, 0.2);
+    border: 2px solid rgba(138, 43, 226, 0.5);
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(138, 43, 226, 0.8);
+    box-shadow: 0 0 20px rgba(138, 43, 226, 0.3);
+    backdrop-filter: blur(5px);
 }
 
-.cube .left {
-    color: #fff;
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+.front  { transform: translateZ(75px); }
+.back   { transform: translateZ(-75px) rotateY(180deg); }
+.right  { transform: rotateY(-270deg) translateX(75px); transform-origin: top right; }
+.left   { transform: rotateY(270deg) translateX(-75px); transform-origin: center left; }
+.top    { transform: rotateX(-270deg) translateY(-75px); transform-origin: top center; }
+.bottom { transform: rotateX(270deg) translateY(75px); transform-origin: bottom center; }
 
-.cube .right {
-    color: #fff;
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cube .top {
-    color: #fff;
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.cube .bottom {
-    color: #fff;
-    font-size: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-  .front  { transform: rotateY(0deg) translateZ(50px); }
-  .back   { transform: rotateY(180deg) translateZ(50px); }
-  .right  { transform: rotateY(90deg) translateZ(50px); }
-  .left   { transform: rotateY(-90deg) translateZ(50px); }
-  .top    { transform: rotateX(90deg) translateZ(50px); }
-  .bottom { transform: rotateX(-90deg) translateZ(50px); }
-
-  @keyframes rotate {
-    from { transform: rotateX(0deg) rotateY(0deg); }
+@keyframes spin {
+    from { transform: rotateX(0) rotateY(0); }
     to { transform: rotateX(360deg) rotateY(360deg); }
-  }
+}
 
 #loadingContainer {
     position: absolute;
@@ -4065,4 +4160,114 @@ input:checked + .toggleSwitchSlider:before {
 
 .rotating {
     animation: rotating 10s linear infinite;
+}
+
+/* Update button styles */
+.button-primary {
+    background-color: var(--color-primary);
+    color: var(--color-text);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+.button-primary:hover {
+    background-color: var(--color-primary-dark);
+    box-shadow: var(--glow-primary);
+}
+
+/* Update input fields */
+input[type="text"],
+input[type="password"],
+input[type="number"] {
+    background-color: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    padding: 8px 12px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus {
+    border-color: var(--color-primary);
+    box-shadow: var(--glow-primary);
+}
+
+/* Update cards/containers */
+.container-surface {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    backdrop-filter: blur(5px);
+}
+
+/* Update toggle switches */
+.toggleSwitch input:checked + .toggleSwitchSlider {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary-dark);
+}
+
+/* Update scrollbars */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--color-bg-darkest);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary-dark);
+}
+
+/* Update progress bars */
+progress {
+    background-color: var(--color-bg-light);
+}
+
+progress::-webkit-progress-value {
+    background-color: var(--color-primary);
+    background-image: linear-gradient(
+        45deg,
+        var(--color-primary) 25%,
+        var(--color-primary-dark) 25%,
+        var (--color-primary-dark) 50%,
+        var(--color-primary) 50%,
+        var(--color-primary) 75%,
+        var(--color-primary-dark) 75%
+    );
+    background-size: 20px 20px;
+    animation: progress-animation 1s linear infinite;
+}
+
+@keyframes progress-animation {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 20px 0;
+    }
+}
+
+/* Update tooltips */
+.tooltip {
+    background-color: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    color: var(--color-text);
+    box-shadow: var(--glow-primary);
+    backdrop-filter: blur(5px);
+}
+
+/* Update overlay styles */
+.overlay {
+    background-color: var(--color-overlay);
+    backdrop-filter: blur(5px);
 }
