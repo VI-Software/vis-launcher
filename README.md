@@ -47,6 +47,10 @@ Need help? [Check out our wiki](https://docs.visoftware.tech/vi-software/vis-lau
 
 Get the latest version from [GitHub Releases](https://github.com/VI-Software/vis-launcher)
 
+## 🔧 Loader Support List
+
+You can view the version support list for this release [here](./LoaderSupportList.md)
+
 ## 🐛 Bug Reports 
 
 Found a bug? Report it [here](https://github.com/VI-Software/vis-launcher/issues)
