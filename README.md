@@ -55,7 +55,7 @@ You can view the version support list for this release [here](./LoaderSupportLis
 
 Found a bug? Report it [here](https://github.com/VI-Software/vis-launcher/issues)
 
-## 📄 License
+## 📄 Project License
 
 VIS Launcher is licensed under the MIT License:
 
@@ -87,3 +87,5 @@ SOFTWARE.
 - VIS Launcher uses Authlib Injector 1.2.5, an authentication injection library for VI Software's custom services, licensed under AGPL-3.0. Learn more about Authlib Injector on its official [GitHub repository](https://github.com/yushijinhun/authlib-injector).
 
 - Based on [HeliosLauncher (v2.1.0)](https://github.com/dscalzi/helioslauncher)
+
+- All third parties licenses can be found [here](./THIRD-PARTIES-LICENSES.md)
