@@ -57,29 +57,30 @@ Found a bug? Report it [here](https://github.com/VI-Software/vis-launcher/issues
 
 ## 📄 Project License
 
-VIS Launcher is licensed under the MIT License:
+VIS Launcher is licensed under a modified MIT License. For more details, see the full license [here](./LICENSE).
 
 ```text
-MIT License
-Copyright (c) 2024 VI Software
+Dual License Agreement: MIT License with Commercial Use Restriction
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Copyright (c) 2025 VI Software
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This software is licensed under the MIT License, with the following additional terms governing its commercial use. By using, copying, modifying, or distributing this software (the "Software"), you agree to the following terms:
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    Grant of License for Non-Commercial Use:
+    Permission is granted, free of charge, to any individual or entity obtaining a copy of this software and its associated documentation files, to use, copy, modify, merge, publish, and distribute copies of the Software for personal, educational, and non-commercial purposes, provided that the following conditions are met:
+        The copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+    Commercial Use Restrictions:
+    For any commercial use of the Software, including but not limited to its distribution, integration into commercial products, use in services based on the Software, or any form of monetization (such as streaming with ads, subscriptions, or donations), a separate commercial license must be obtained from the author.
+
+    Commercial License Terms:
+    To obtain a commercial license, users must contact the author to discuss and agree upon the specific terms and conditions, including any applicable fees, for commercial use.
+
+    Unauthorized Commercialization:
+    Unauthorized commercialization of the Software, without obtaining a valid commercial license, may result in legal action.
+
+    Disclaimer:
+    The Software is provided "as is", without warranty of any kind, either express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the authors or copyright holders be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Software or the use or other dealings in the Software.
 ```
 
 ## Credits
