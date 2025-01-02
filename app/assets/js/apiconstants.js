@@ -16,18 +16,7 @@
 
 */
 
+exports.API_BASE_URL = 'https://api.visoftware.tech'
+exports.CDN_URL = 'https://cdn.visoftware.tech/v2/distribution.json'
+exports.AUTH_BASE_URL = 'https://authserver.visoftware.tech'
 
-const { DistributionAPI } = require('vis-launcher-core/common')
-
-const ConfigManager = require('./configmanager')
-const { CDN_URL } = require('./apiconstants')
-
-const api = new DistributionAPI(
-    ConfigManager.getLauncherDirectory(),
-    null, // Injected forcefully by the preloader.
-    null, // Injected forcefully by the preloader.
-    CDN_URL,
-    false
-)
-
-exports.DistroAPI = api

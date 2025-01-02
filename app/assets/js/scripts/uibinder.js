@@ -31,9 +31,11 @@ const AuthManager = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
 const { DistroAPI } = require('./assets/js/distromanager')
 const { error } = require('console')
+const { API_BASE_URL } = require('./assets/js/apiconstants')
 
 let rscShouldLoad = false
 let fatalStartupError = false
+
 
 // Mapping of each view to their container IDs.
 const VIEWS = {
@@ -96,8 +98,7 @@ async function showMainUI(data) {
 
     // Check for server access status
     try {
-        const baseApiUrl = 'https://api.visoftware.tech'
-        const serverInfo = await fetch(baseApiUrl+'/services/servers')
+        const serverInfo = await fetch(API_BASE_URL+'/services/servers')
         const serverList = await serverInfo.json()
         localStorage.setItem('serverList', JSON.stringify(serverList))
     }catch (error) {
@@ -313,12 +314,20 @@ function showAPIError() {
 // Connects to the API server of the launcher and checks the current version status
 
 function checkVersionStatus() {
+    // Parse the API_BASE_URL
+    const apiUrl = new URL(API_BASE_URL);
+    
     const options = {
-        hostname: 'visoftware.tech',
-        path: `/launcher/version-status.php?version=${remote.app.getVersion()}`,
-        method: 'GET'
+        hostname: apiUrl.hostname,
+        path: `/services/launcher/version?version=${remote.app.getVersion()}`,
+        family: 4,
+        method: 'GET',
+        headers: {
+            'Host': apiUrl.hostname,
+            'User-Agent': 'VI Software Launcher/' + process.version
+        }
     }
-
+    
     return new Promise((resolve, reject) => {
         const req = https.request(options, res => {
             let data = ''
@@ -332,19 +341,20 @@ function checkVersionStatus() {
                     const result = JSON.parse(data)
                     resolve(result)
                 } catch (error) {
+                    console.error('Failed to parse response:', error)
                     reject(error)
                 }
             })
         })
 
-        req.on('error', error => {
+        req.on('error', (error) => {
+            console.error('Request failed:', error)
             reject(error)
         })
 
         req.end()
     })
 }
-
 function showBGSWarning() {
     setTimeout(() => {
         $('#loadingContainer').fadeOut(250, () => {
