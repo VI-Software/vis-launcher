@@ -3,7 +3,7 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 -->
@@ -19,11 +19,39 @@
 <div id="overlayContainer" style="display: none;">
     <div id="serverSelectContent" style="display: none;">
         <span id="serverSelectHeader"><%- lang('overlay.serverSelectHeader') %></span>
+        <input type="text" id="serverSearchInput" placeholder="Search servers..." class="serverSearchBox">
         <div id="serverSelectList">
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
             </div>
         </div>
+        <!-- Add this new dialog -->
+        <div id="serverDetailsDialog" style="display: none;">
+            <div class="serverDetailsContent">
+                <img id="serverDetailsIcon" class="serverDetailsIcon">
+                <h2 id="serverDetailsName"></h2>
+                <p id="serverDetailsDescription"></p>
+                <div class="serverDetailsMeta">
+                    <div class="serverDetailsItem">
+                        <span class="label">Version:</span>
+                        <span id="serverDetailsVersion"></span>
+                    </div>
+                    <div class="serverDetailsItem">
+                        <span class="label">Minecraft:</span>
+                        <span id="serverDetailsMinecraft"></span>
+                    </div>
+                    <div class="serverDetailsItem">
+                        <span class="label">Address:</span>
+                        <span id="serverDetailsAddress"></span>
+                    </div>
+                </div>
+                <div class="serverDetailsActions">
+                    <button id="serverDetailsConfirm" class="button-good">Select Server</button>
+                    <button id="serverDetailsCancel" class="button-secondary">Cancel</button>
+                </div>
+            </div>
+        </div>
+        <!-- ...existing code... -->
         <div id="serverSelectActions">
             <button id="serverSelectConfirm" class="overlayKeybindEnter" type="submit"><%- lang('overlay.serverSelectConfirm') %></button>
             <div id="serverSelectCancelWrapper">

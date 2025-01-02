@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -248,24 +248,43 @@ document.getElementById('accountSelectCancel').addEventListener('click', () => {
     })
 })
 
+let selectedServer = null;
+
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
     listings.map((val) => {
-        val.onclick = e => {
-            if(val.hasAttribute('selected')){
-                return
-            }
-            const cListings = document.getElementsByClassName('serverListing')
-            for(let i=0; i<cListings.length; i++){
-                if(cListings[i].hasAttribute('selected')){
-                    cListings[i].removeAttribute('selected')
-                }
-            }
-            val.setAttribute('selected', '')
-            document.activeElement.blur()
+        val.onclick = async (e) => {
+            const serverId = val.getAttribute('servid')
+            const distro = await DistroAPI.getDistribution()
+            selectedServer = distro.getServerById(serverId)
+            
+            // Populate server details
+            document.getElementById('serverDetailsIcon').src = selectedServer.rawServer.icon
+            document.getElementById('serverDetailsName').textContent = selectedServer.rawServer.name
+            document.getElementById('serverDetailsDescription').textContent = selectedServer.rawServer.description
+            document.getElementById('serverDetailsVersion').textContent = selectedServer.rawServer.version
+            document.getElementById('serverDetailsMinecraft').textContent = selectedServer.rawServer.minecraftVersion
+            document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
+
+            // Show dialog
+            document.getElementById('serverDetailsDialog').style.display = 'flex'
         }
     })
 }
+
+// Add handlers for the detail dialog buttons
+document.getElementById('serverDetailsConfirm').addEventListener('click', async () => {
+    if(selectedServer) {
+        updateSelectedServer(selectedServer)
+        refreshServerStatus(true)
+        toggleOverlay(false)
+    }
+})
+
+document.getElementById('serverDetailsCancel').addEventListener('click', () => {
+    document.getElementById('serverDetailsDialog').style.display = 'none'
+    selectedServer = null
+})
 
 function setAccountListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('accountListing'))
@@ -340,7 +359,7 @@ async function populateAccountListings(){
     let htmlString = ''
     for(let i=0; i<accounts.length; i++){
         htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://skins.visoftware.tech/2d/skin/${accounts[i].uuid}/head?scale=5">
+            <img src="https://skins.visoftware.dev/2d/skin/${accounts[i].uuid}/head?scale=5">
             <div class="accountListingName">${accounts[i].displayName}</div>
         </button>`
     }
@@ -363,7 +382,7 @@ function populateAccountListings(){
     let htmlString = ''
     for(let i=0; i<accounts.length; i++){
         htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://skins.visoftware.tech/2d/skin/${accounts[i].uuid}/head?scale=5">
+            <img src="https://skins.visoftware.dev/2d/skin/${accounts[i].uuid}/head?scale=5">
             <div class="accountListingName">${accounts[i].displayName}</div>
         </button>`
     }
@@ -380,3 +399,15 @@ function prepareAccountSelectionList(){
     populateAccountListings()
     setAccountListingHandlers()
 }
+
+document.getElementById('serverSearchInput').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase()
+    const servers = document.getElementsByClassName('serverListing')
+    
+    Array.from(servers).forEach(server => {
+        const name = server.querySelector('.serverListingName').textContent.toLowerCase()
+        const description = server.querySelector('.serverListingDescription').textContent.toLowerCase()
+        const matches = name.includes(searchTerm) || description.includes(searchTerm)
+        server.style.display = matches ? 'flex' : 'none'
+    })
+})

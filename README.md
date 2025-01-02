@@ -17,7 +17,7 @@
 
 ### 🔒 Complete Account Management
 - Add multiple accounts and switch between them easily
-- Full [VIS' Yggdrasil Auth](https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth) authentication support
+- Full [VIS' Yggdrasil Auth](https://docs.visoftware.dev/vi-software/vis-yggdrasil-auth) authentication support
 - Credentials are never stored - transmitted directly to VI Software servers
 
 ### 📂 Efficient Asset Management  
@@ -41,7 +41,7 @@
 
 ## 📚 Documentation
 
-Need help? [Check out our wiki](https://docs.visoftware.tech/vi-software/vis-launcher)
+Need help? [Check out our wiki](https://docs.visoftware.dev/vi-software/vis-launcher)
 
 ## 📥 Downloads
 

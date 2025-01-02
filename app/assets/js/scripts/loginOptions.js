@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */

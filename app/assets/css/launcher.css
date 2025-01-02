@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -1097,7 +1097,7 @@ progress::-webkit-progress-bar {
     perspective-origin: 50% 50%;
     perspective: 340px;
     background-size: 10em 10em;
-    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjI2NnB4IiBoZWlnaHQ9IjI5N3B4IiB2aWV3Qm94PSIwIDAgMjY2IDI5NyIgdmVyc2lvbj0iMS4xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxuczpza2V0Y2g9Imh0dHA6Ly93d3cuYm9oZW1pYW5jb2RpbmcuY29tL3NrZXRjaC9ucyI+CiAgICA8dGl0bGU+c3Bpbm5lcjwvdGl0bGU+CiAgICA8ZGVzY3JpcHRpb24+Q3JlYXRlZCB3aXRoIFNrZXRjaCAoaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoKTwvZGVzY3JpcHRpb24+CiAgICA8ZGVmcz48L2RlZnM+CiAgICA8ZyBpZD0iUGFnZS0xIiBzdHJva2U9Im5vbmUiIHN0cm9rZS13aWR0aD0iMSIgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIiBza2V0Y2g6dHlwZT0iTVNQYWdlIj4KICAgICAgICA8cGF0aCBkPSJNMTcxLjUwNzgxMywzLjI1MDAwMDM4IEMyMjYuMjA4MTgzLDEyLjg1NzcxMTEgMjk3LjExMjcyMiw3MS40OTEyODIzIDI1MC44OTU1OTksMTA4LjQxMDE1NSBDMjE2LjU4MjAyNCwxMzUuODIwMzEgMTg2LjUyODQwNSw5Ny4wNjI0OTY0IDE1Ni44MDA3NzQsODUuNzczNDM0NiBDMTI3LjA3MzE0Myw3NC40ODQzNzIxIDc2Ljg4ODQ2MzIsODQuMjE2MTQ2MiA2MC4xMjg5MDY1LDEwOC40MTAxNTMgQy0xNS45ODA0Njg1LDIxOC4yODEyNDcgMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IDE0NS4yNzczNDQsMjk2LjY2Nzk2OCBDMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IC0yNS40NDkyMTg3LDI1Ny4yNDIxOTggMy4zOTg0Mzc1LDEwOC40MTAxNTUgQzE2LjMwNzA2NjEsNDEuODExNDE3NCA4NC43Mjc1ODI5LC0xMS45OTIyOTg1IDE3MS41MDc4MTMsMy4yNTAwMDAzOCBaIiBpZD0iUGF0aC0xIiBmaWxsPSIjZmZmZmZmIiBza2V0Y2g6dHlwZT0iTVNTaGFwZUdyb3VwIj48L3BhdGg+CiAgICA8L2c+Cjwvc3ZnPg==);
+    background-image: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cjxzdmcgd2lkdGg9IjI2NnB4IiBoZWlnaHQ9IjI5N3B4IHZpZXdCb3g9IjAgMCAyNjYgMjk3IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbG5zOnNrZXRjaD0iaHR0cDovL3d3dy5ib2hlbWlhbmNvZGluZy5jb20vc2tldGNoL25zIj4KICAgIDx0aXRsZT5zcGlubmVyPC90aXRsZT4KICAgIDxkZXNjcmlwdGlvbj5DcmVhdGVkIHdpdGggU2tldGNoIChodHRwOi8vd3d3LmJvaGVtaWFuY29kaW5nLmNvbS9za2V0Y2gpPC9kZXNjcmlwdGlvbj4KICAgIDxkZWZzPjwvZGVmcz4KICAgIDxnIGlkPSJQYWdlLTEiIHN0cm9rZT0ibm9uZSIgc3Ryb2tlLXdpZHRoPSIxIiBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIHNrZXRjaDp0eXBlPSJNU1BhZ2UiPgogICAgICAgIDxwYXRoIGQ9Ik0xNzEuNTA3ODEzLDMuMjUwMDAwMzggQzIyNi4yMDgxODMsMTIuODU3NzExMSAyOTcuMTEyNzIyLDcxLjQ5MTI4MjMgMjUwLjg5NTU5OSwxMDguNDEwMTU1IEMyMTYuNTgyMDI0LDEzNS44MjAzMSAxODYuNTI4NDA1LDk3LjA2MjQ5NjQgMTU2LjgwMDc3NCw4NS43NzM0MzQ2IEMxMjcuMDczMTQzLDc0LjQ4NDM3MjEgNzYuODg4NDYzMiw4NC4yMTYxNDYyIDYwLjEyODkwNjUsMTA4LjQxMDE1MyBDLTE1Ljk4MDQ2ODUsMjE4LjI4MTI0NyAxNDUuMjc3MzQ0LDI5Ni42Njc5NjggMTQ1LjI3NzM0NCwyOTYuNjY3OTY4IEMxNDUuMjc3MzQ0LDI5Ni42Njc5NjggLTI1LjQ0OTIxODcsMjU3LjI0MjE5OCAzLjM5ODQzNzUsMTA4LjQxMDE1NSBDMTYuMzA3MDY2MSw0MS44MTE0MTc0IDg0LjcyNzU4MjksLTExLjk5MjI5ODUgMTcxLjUwNzgxMywzLjI1MDAwMDM4IFoiIGlkPSJQYXRoLTEiIGZpbGw9IiNmZmZmZmYiIHNrZXRjaDp0eXBlPSJNU1NoYXBlR3JvdXAiPjwvcGF0aD4KICAgIDwvZz4KPC9zdmc+);
 }
 
 #waitingTextContainer {
@@ -4367,4 +4367,92 @@ progress::-webkit-progress-value {
 .overlay {
     background-color: var(--color-overlay);
     backdrop-filter: blur(5px);
+}
+
+
+.serverSearchBox {
+    width: 375px;
+    padding: 8px;
+    margin-bottom: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    color: white;
+}
+
+.serverSearchBox:focus {
+    outline: none;
+    border-color: var(--color-primary);
+}
+
+/* Server Details Dialog */
+#serverDetailsDialog {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.serverDetailsContent {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: 30px;
+    width: 600px;  
+    text-align: center;
+}
+
+.serverDetailsIcon {
+    width: 128px; 
+    height: 128px;
+    border-radius: 12px
+    margin-bottom: 20px; 
+}
+
+#serverDetailsName {
+    font-size: 32px;  
+    margin-bottom: 15px; 
+}
+
+#serverDetailsDescription {
+    color: var(--color-text-secondary);
+    margin-bottom: 30px;
+    font-size: 16px;  
+}
+
+.serverDetailsMeta {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.serverDetailsItem {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--color-border);
+    font-size: 14px; 
+}
+
+.serverDetailsItem .label {
+    color: var(--color-text-secondary);
+}
+
+.serverDetailsActions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+}
+
+.button-good {
+    background: var(--color-success);
+}
+
+.button-secondary {
+    background: var(--color-bg-light);
 }

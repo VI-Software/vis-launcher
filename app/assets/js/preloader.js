@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -34,8 +34,8 @@ const logger = LoggerUtil.getLogger('Preloader')
 logger.info('VI Software Launcher')
 logger.info('Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.')
 logger.info('GitHub: https://github.com/VI-Software')
-logger.info('Documentación: https://docs.visoftware.tech/vi-software/vis-launcher')
-logger.info('Web: https://visoftware.tech')
+logger.info('Documentación: https://docs.visoftware.dev/vi-software/vis-launcher')
+logger.info('Web: https://visoftware.dev')
 logger.info('https://github.com/VI-Software/vis-launcher/blob/main/LICENSE')
 logger.info('Cargando...')
 

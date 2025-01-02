@@ -1,1 +1,1 @@
-You can find the latest copy of our Code of Conduct [here](https://docs.visoftware.tech/vi-software/guidelines/code-of-conduct)
+You can find the latest copy of our Code of Conduct [here](https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct)

@@ -1,16 +1,16 @@
 By using this product, you agree to the terms of service of VI Software and any other applicable policies that may not be mentioned below.
 
-https://docs.visoftware.tech/vi-software/guidelines/terms-of-service
-https://docs.visoftware.tech/vi-software/guidelines/code-of-conduct
-https://docs.visoftware.tech/vi-software/vis-launcher/terms-of-use
-https://docs.visoftware.tech/vi-software/vis-launcher/privacy-policy
-https://docs.visoftware.tech/vi-software/guidelines/contribution-guidelines
-https://docs.visoftware.tech/vi-software/guidelines/contributor-license-agreement
-https://docs.visoftware.tech/vi-software/guidelines/fair-use-policy
-https://docs.visoftware.tech/vi-software/vis-skins/terms-of-use
-https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth/privacy-policy
-https://docs.visoftware.tech/vi-software/puf/privacy-policy
-https://docs.visoftware.tech/vi-software/puf/terms-of-service
+https://docs.visoftware.dev/vi-software/guidelines/terms-of-service
+https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct
+https://docs.visoftware.dev/vi-software/vis-launcher/terms-of-use
+https://docs.visoftware.dev/vi-software/vis-launcher/privacy-policy
+https://docs.visoftware.dev/vi-software/guidelines/contribution-guidelines
+https://docs.visoftware.dev/vi-software/guidelines/contributor-license-agreement
+https://docs.visoftware.dev/vi-software/guidelines/fair-use-policy
+https://docs.visoftware.dev/vi-software/vis-skins/terms-of-use
+https://docs.visoftware.dev/vi-software/vis-yggdrasil-auth/privacy-policy
+https://docs.visoftware.dev/vi-software/puf/privacy-policy
+https://docs.visoftware.dev/vi-software/puf/terms-of-service
 
  This software's source code is available under the MIT license. You can get a copy of it on GitHub or through our official mirrors. 
 

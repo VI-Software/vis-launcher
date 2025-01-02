@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -160,8 +160,8 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         try {
             const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
             
-            const serverData = await (await fetch('https://api.visoftware.tech/services/servers/' + server.rawServer.id)).json();
-            const teamData = await (await fetch('https://api.visoftware.tech/services/teams/uuid/' + serverData.owner_uuid)).json();
+            const serverData = await (await fetch('https://api.visoftware.dev/services/servers/' + server.rawServer.id)).json();
+            const teamData = await (await fetch('https://api.visoftware.dev/services/teams/uuid/' + serverData.owner_uuid)).json();
             if(teamData.ban){
                 showLaunchFailure(Lang.queryJS('landing.launch.TeamBannedErrorTitle'), Lang.queryJS('landing.launch.TeamBannedErrorText'))
                 loggerLanding.error('Team is banned by VI Software. Ban reason: ' + teamData.ban_reason)
@@ -173,7 +173,7 @@ document.getElementById('launch_button').addEventListener('click', async e => {
             return
         }                             
         try {
-            const response = await fetch('https://api.visoftware.tech/services/moderation/mystatus', {
+            const response = await fetch('https://api.visoftware.dev/services/moderation/mystatus', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -254,7 +254,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if (authUser.uuid != null) {
-            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.tech/2d/skin/${authUser.uuid}/head?scale=5)`;
+            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.dev/2d/skin/${authUser.uuid}/head?scale=5)`;
         }        
     }
     user_text.innerHTML = username

@@ -11,7 +11,7 @@
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -675,7 +675,7 @@ function populateAuthAccounts(){
 
         const accHtml = `<div class="settingsAuthAccount" uuid="${acc.uuid}">
             <div class="settingsAuthAccountLeft">
-                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://skins.visoftware.tech/2d/skin/${acc.uuid}/fullbody?scale=10">
+                <img class="settingsAuthAccountImage" alt="${acc.displayName}" src="https://skins.visoftware.dev/2d/skin/${acc.uuid}/fullbody?scale=10">
             </div>
             <div class="settingsAuthAccountRight">
                 <div class="settingsAuthAccountDetails">
