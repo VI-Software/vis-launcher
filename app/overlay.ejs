@@ -46,12 +46,33 @@
                     </div>
                 </div>
                 <div class="serverDetailsActions">
+                    <button id="serverDetailsResources" class="button-secondary">Resources</button>
                     <button id="serverDetailsConfirm" class="button-good">Select Server</button>
                     <button id="serverDetailsCancel" class="button-secondary">Cancel</button>
                 </div>
             </div>
+
+            <!-- Add the resources modal -->
+            <div id="serverResourcesModal" style="display: none;">
+                <div class="modalContent">
+                    <div class="modalHeader">
+                        <h3>Server Resources</h3>
+                        <button class="modalClose">&times;</button>
+                    </div>
+                    <div class="modalBody">
+                        <input type="text" id="resourceSearch" placeholder="Search resources..." class="resourceSearchBox">
+                        <div class="resourceCategories">
+                            <button class="resourceTab active" data-tab="required">Required</button>
+                            <button class="resourceTab" data-tab="optional">Optional</button>
+                            <button class="resourceTab" data-tab="libraries">Libraries</button>
+                        </div>
+                        <div class="resourceList">
+                            <!-- Resources populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- ...existing code... -->
         <div id="serverSelectActions">
             <button id="serverSelectConfirm" class="overlayKeybindEnter" type="submit"><%- lang('overlay.serverSelectConfirm') %></button>
             <div id="serverSelectCancelWrapper">

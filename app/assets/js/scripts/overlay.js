@@ -286,6 +286,85 @@ document.getElementById('serverDetailsCancel').addEventListener('click', () => {
     selectedServer = null
 })
 
+// Add resource modal functionality
+document.getElementById('serverDetailsResources').addEventListener('click', () => {
+    document.getElementById('serverResourcesModal').style.display = 'flex'
+    populateResources(selectedServer)
+})
+
+document.querySelector('.modalClose').addEventListener('click', () => {
+    document.getElementById('serverResourcesModal').style.display = 'none'
+})
+
+// Close modal when clicking outside
+document.getElementById('serverResourcesModal').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('serverResourcesModal')) {
+        document.getElementById('serverResourcesModal').style.display = 'none'
+    }
+})
+
+// Handle resource tab switching
+document.querySelectorAll('.resourceTab').forEach(tab => {
+    tab.addEventListener('click', () => {
+        document.querySelectorAll('.resourceTab').forEach(t => t.classList.remove('active'))
+        tab.classList.add('active')
+        populateResources(selectedServer, tab.dataset.tab)
+    })
+})
+
+function populateResources(server, category = 'required') {
+    const resourceList = document.querySelector('.resourceList')
+    resourceList.innerHTML = ''
+
+    if (!server || !server.rawServer.modules) return
+
+    const resources = server.rawServer.modules.filter(mod => {
+        if (category === 'required') {
+            return mod.type === 'ForgeMod' && (!mod.required || mod.required.value !== false)
+        } else if (category === 'optional') {
+            return mod.type === 'ForgeMod' && mod.required && mod.required.value === false
+        } else {
+            return mod.type !== 'ForgeMod'
+        }
+    })
+
+    // Add resource count at the top
+    const countDiv = document.createElement('div')
+    countDiv.className = 'resourceCount'
+    countDiv.textContent = `${resources.length} resource${resources.length !== 1 ? 's' : ''}`
+    resourceList.appendChild(countDiv)
+
+    resources.forEach(mod => {
+        const item = document.createElement('div')
+        item.className = 'resourceItem'
+        item.innerHTML = `
+            <div>
+                <div class="name">${mod.name}</div>
+                <div class="version">${extractVersion(mod.id)}</div>
+            </div>
+        `
+        resourceList.appendChild(item)
+    })
+}
+
+// Add search functionality
+document.getElementById('resourceSearch').addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase()
+    const items = document.querySelectorAll('.resourceItem')
+    
+    items.forEach(item => {
+        const name = item.querySelector('.name').textContent.toLowerCase()
+        const version = item.querySelector('.version').textContent.toLowerCase()
+        const matches = name.includes(searchTerm) || version.includes(searchTerm)
+        item.style.display = matches ? 'flex' : 'none'
+    })
+})
+
+function extractVersion(id) {
+    const match = id.match(/:([^:@]+)(?:@|$)/)
+    return match ? match[1] : ''
+}
+
 function setAccountListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('accountListing'))
     listings.map((val) => {
