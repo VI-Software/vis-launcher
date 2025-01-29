@@ -2,7 +2,7 @@ appId: 'vi-software-launcher'
 productName: 'VI Software Launcher'
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2024 VI Software'
+copyright: 'Copyright © 2025 VI Software'
 
 asar: true
 compression: 'maximum'

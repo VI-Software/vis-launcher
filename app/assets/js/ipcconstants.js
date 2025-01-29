@@ -7,7 +7,7 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher

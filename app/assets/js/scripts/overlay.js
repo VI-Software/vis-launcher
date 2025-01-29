@@ -3,11 +3,11 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
@@ -266,6 +266,12 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsMinecraft').textContent = selectedServer.rawServer.minecraftVersion
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
+            // Add website button handler
+            document.getElementById('serverDetailsWebsite').onclick = () => {
+                // Using Electron shell to open external URL
+                require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
+            }
+
             // Show dialog
             document.getElementById('serverDetailsDialog').style.display = 'flex'
         }
@@ -422,13 +428,6 @@ async function populateServerListings(){
         }
     }
 }
-    if (htmlString === '') {
-        // There are no servers selected by the user on which this is allowed. We'll inform the user.
-        htmlString = `<div class="center">${Lang.queryJS('settings.serverListing.noServers')}</div>`;
-    }else{
-        // There are servers selected by the user on which this is allowed. We'll inform the user where it can manage its servers.
-        htmlString += `<div class="center" style="font-size: 12px;">${Lang.queryJS('settings.serverListing.info')}</div>`;
-    }
     document.getElementById('serverSelectListScrollable').innerHTML = htmlString
 }
 

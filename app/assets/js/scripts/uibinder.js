@@ -7,7 +7,7 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
@@ -735,7 +735,7 @@ async function debug_devModeToggle() {
 async function debug_toggleAuthLibDebug(mode){
     if(mode){
         if(mode=='verbose' || mode=='authlib' || mode=='dumpClass' || mode=='printUntransformed'){
-            console.log('Authlib debug mode enabled for', mode)
+            console.log('Authlib debug mode enabled at level', mode)
             localStorage.setItem('authlibDebug', mode)
         }else{
             console.log('Invalid debug mode')

@@ -14,7 +14,7 @@ https://docs.visoftware.dev/vi-software/puf/terms-of-service
 
  This software's source code is available under the MIT license. You can get a copy of it on GitHub or through our official mirrors. 
 
-Copyright (c) 2024 VI Software
+Copyright (c) 2025 VI Software
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

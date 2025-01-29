@@ -7,7 +7,7 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
@@ -32,7 +32,7 @@ const { HeliosDistribution } = require('vis-launcher-core/common')
 const logger = LoggerUtil.getLogger('Preloader')
 
 logger.info('VI Software Launcher')
-logger.info('Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.')
+logger.info('© 2025 VI Software. Todos los derechos reservados.')
 logger.info('GitHub: https://github.com/VI-Software')
 logger.info('Documentación: https://docs.visoftware.dev/vi-software/vis-launcher')
 logger.info('Web: https://visoftware.dev')

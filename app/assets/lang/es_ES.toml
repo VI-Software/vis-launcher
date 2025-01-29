@@ -7,7 +7,7 @@
 #                         \/                                 \/            \/ 
 #                         
 #                         
-#    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+#    © 2025 VI Software. Todos los derechos reservados.
 #    
 #    GitHub: https://github.com/VI-Software
 #    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
@@ -48,7 +48,7 @@ loginButtonText = "INICIAR SESIÓN"
 loginNeedAccountLink = "https://puf.visoftware.dev"
 loginNeedAccountText = "¿Necesitas una cuenta?"
 loginPasswordDisclaimer1 = "Tu contraseña se envía directamente al servidor de VI Software y nunca se almacena."
-loginPasswordDisclaimer2 = "&copy 2024 VI Software y contribuidores. Todos los derechos reservados."
+loginPasswordDisclaimer2 = "&copy 2025 VI Software y contribuidores. Todos los derechos reservados."
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opciones de inicio de sesión"
@@ -57,7 +57,7 @@ loginWithVIS = "Iniciar sesión con VI Software"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
-serverSelectHeader = "Mi lista de servidores"
+serverSelectHeader = "Lista de servidores de VI Software"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancelar"
 accountSelectHeader = "Selecciona una cuenta"
