@@ -27,6 +27,10 @@ const api = new DistributionAPI(
     null, // Injected forcefully by the preloader.
     null, // Injected forcefully by the preloader.
     CDN_URL,
+    false,
+    {  // TODO: Make this have more sense.
+        'authorization': 'public-servers',
+    },
     false
 )
 

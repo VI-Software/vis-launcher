@@ -120,9 +120,6 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
-    setLaunchDetails(Lang.queryJS('landing.launch.checkingClient'))
-    toggleLaunchArea(true)
-    setLaunchPercentage(0, 100)
     try {
         const buildstatus = localStorage.getItem('buildstatus');
         if (buildstatus === 'notsupported') {
@@ -139,75 +136,9 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'));
         return;
     }
-    setLaunchDetails(Lang.queryJS('landing.launch.checkingAccount'))
+    loggerLanding.info('Launching game..')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
-        let serverList = JSON.parse(localStorage.getItem('serverList'));
-        const user = await ConfigManager.getSelectedAccount()
-        const isPrivate = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.private)
-        const isAllowlisted = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.allowlist.includes(user.displayName))
-        const isSelectedByUser = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.usrsel.includes(user.displayName))
-        if(!isSelectedByUser){
-            showLaunchFailure(Lang.queryJS('landing.launch.serverNotFoundErrorTitle'), Lang.queryJS('landing.launch.serverNotFoundErrorText'))
-            loggerLanding.error("Server not found." + " (Requested server ID: " + server.rawServer.id + ", Selected Account: " + user.displayName +")")
-            return
-        }
-        if(isPrivate && !isAllowlisted){
-            showLaunchFailure(Lang.queryJS('landing.launch.noaccessTitle'), Lang.queryJS('landing.launch.noaccessText'))
-            loggerLanding.error('User does not have access to server ' + server.rawServer.name + ' (Server ID: ' + server.rawServer.id + ', Selected Account: ' + user.displayName +')')
-            return
-        }
-        try {
-            const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
-            
-            const serverData = await (await fetch('https://api.visoftware.dev/services/servers/' + server.rawServer.id)).json();
-            const teamData = await (await fetch('https://api.visoftware.dev/services/teams/uuid/' + serverData.owner_uuid)).json();
-            if(teamData.ban){
-                showLaunchFailure(Lang.queryJS('landing.launch.TeamBannedErrorTitle'), Lang.queryJS('landing.launch.TeamBannedErrorText'))
-                loggerLanding.error('Team is banned by VI Software. Ban reason: ' + teamData.ban_reason)
-                return
-            }
-        }catch(err){
-            showLaunchFailure(Lang.queryJS('landing.launch.ErrorCantCheckTeamOnApiErrorTitle'), Lang.queryJS('landing.launch.ErrorCantCheckTeamOnApiErrorText'))
-            loggerLanding.error('An error has occurred while attempting to check servers\'s team status. Error: ', err)
-            return
-        }                             
-        try {
-            const response = await fetch('https://api.visoftware.dev/services/moderation/mystatus', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'token': user.accessToken
-                }
-            });
-
-            const userData = await response.json();
-            if(response.status == 401){
-                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'));
-                loggerLanding.error('An error has occurred while attempting to verify the account in the moderation system. Error:', userData.error);
-                return;
-            }
-            if(userData.rootbanned){
-                showLaunchFailure(Lang.queryJS('landing.launch.GlobalAccountDisabledErrorTitle'), Lang.queryJS('landing.launch.GlobalAccountDisabledErrorText'))
-                loggerLanding.error('Root account is banned by VI Software. Canceling launch.')
-                return
-            }
-            if(userData.pendingwarns > 0){
-                showLaunchFailure(Lang.queryJS('landing.launch.WarnsnotreadErrorTitle'), Lang.queryJS('landing.launch.WarnsnotreadErrorText'))
-                loggerLanding.error('Root account has pending warnings awaiting to be reviewed. Canceling launch.')
-                return
-            }
-            if(userData.launcherbanned){
-                showLaunchFailure(Lang.queryJS('landing.launch.AccountDisabledErrorTitle'), Lang.queryJS('landing.launch.AccountDisabledErrorText'))
-                loggerLanding.error('Launcher account is disabled by Team Administration. Canceling launch.')
-                return
-            }
-        
-        } catch (err) {
-            showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'));
-            loggerLanding.error('An error has occurred while attempting to verify the account in the moderation system. Error: ', err);
-            return;
-        }
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
         if(jExe == null){
             await asyncSystemScan(server.effectiveJavaOptions)
@@ -582,12 +513,16 @@ async function dlAsync(login = true) {
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
+    const authHeaders = {
+        'authorization': ConfigManager.getSelectedAccount().accessToken,
+    }
     const fullRepairModule = new FullRepair(
         ConfigManager.getCommonDirectory(),
         ConfigManager.getInstanceDirectory(),
         ConfigManager.getLauncherDirectory(),
         ConfigManager.getSelectedServer(),
-        DistroAPI.isDevMode()
+        DistroAPI.isDevMode(),
+        authHeaders
     )
 
     fullRepairModule.spawnReceiver()
@@ -646,10 +581,12 @@ async function dlAsync(login = true) {
     const mojangIndexProcessor = new MojangIndexProcessor(
         ConfigManager.getCommonDirectory(),
         serv.rawServer.minecraftVersion)
+        
     const distributionIndexProcessor = new DistributionIndexProcessor(
         ConfigManager.getCommonDirectory(),
         distro,
-        serv.rawServer.id
+        serv.rawServer.id,
+        authHeaders
     )
 
     const modLoaderData = await distributionIndexProcessor.loadModLoaderVersionJson(serv)

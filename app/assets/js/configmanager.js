@@ -452,9 +452,49 @@ exports.removeAuthAccount = function(uuid){
  * @returns {Object} The selected authenticated account.
  */
 exports.getSelectedAccount = function(){
+    const authAcc = config.authenticationDatabase[config.selectedAccount]
+    
+    if(authAcc != null) {
+        // Trigger async refresh in background.
+        refreshDistroAndSettings(authAcc)
+    }
     return config.authenticationDatabase[config.selectedAccount]
 }
 
+/**
+ * Refresh distribution and settings with the given auth account.
+ * This is used to update the distribution authentification and the UI with the new distribution.
+ * @param {Object} authAcc The authenticated account to use
+ */
+async function refreshDistroAndSettings(authAcc) {
+    logger.info('Refreshing distribution settings for account:', authAcc.displayName + ' (' + authAcc.uuid + ')')
+    
+    const authHeaders = {
+        'authorization': authAcc.accessToken
+    }
+    DistroAPI['authHeaders'] = authHeaders
+
+    try {
+        logger.info('Fetching distribution data...')
+        const data = await DistroAPI.getDistribution()
+        ensureJavaSettings(data)
+
+        let selectedServer = ConfigManager.getSelectedServer()
+        if (!selectedServer || !data.getServerById(selectedServer)) {
+            const mainServer = data.getMainServer()
+            selectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
+            ConfigManager.setSelectedServer(selectedServer)
+        }
+
+        data.servers.forEach(server => {
+            updateSelectedServer(server)
+            syncModConfigurations(data)
+        })
+        logger.info('Distribution refresh completed successfully')
+    } catch (err) {
+        logger.error('Failed to refresh distribution:', err)
+    }
+}
 /**
  * Set the selected authenticated account.
  * 
@@ -463,10 +503,13 @@ exports.getSelectedAccount = function(){
  * 
  * @returns {Object} The selected authenticated account.
  */
-exports.setSelectedAccount = function(uuid){
+exports.setSelectedAccount = async function(uuid){
+    console.log('Setting selected account to: ' + uuid)
     const authAcc = config.authenticationDatabase[uuid]
     if(authAcc != null) {
         config.selectedAccount = uuid
+        // Call the shared refresh function instead of duplicating code
+        await refreshDistroAndSettings(authAcc)
     }
     return authAcc
 }

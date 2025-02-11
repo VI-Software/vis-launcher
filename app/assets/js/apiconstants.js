@@ -17,6 +17,6 @@
 */
 
 exports.API_BASE_URL = 'https://api.visoftware.dev'
-exports.CDN_URL = 'https://cdn.visoftware.dev/v2/distribution.json'
+exports.CDN_URL = 'https://cdn.visoftware.dev/distribution.json'
 exports.AUTH_BASE_URL = 'https://authserver.visoftware.dev'
 
