@@ -480,8 +480,10 @@ async function refreshDistroAndSettings(authAcc) {
         ensureJavaSettings(data)
 
         let selectedServer = ConfigManager.getSelectedServer()
+        
         if (!selectedServer || !data.getServerById(selectedServer)) {
             const mainServer = data.getMainServer()
+            
             selectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
             ConfigManager.setSelectedServer(selectedServer)
         }
