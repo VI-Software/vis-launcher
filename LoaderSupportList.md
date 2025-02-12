@@ -41,9 +41,9 @@ This document outlines the version support for this specific launcher release
 
 ## Supported mod loaders
 
-🟢Supported
-🟠Legacy Support Only. Latest technologies might not be supported
-🔴Not officially supported
+- 🟢Supported
+- 🟠Legacy Support Only. Latest technologies might not be supported
+- 🔴Not officially supported
 
 | Name | Status | Notes |
 |----------|----------|----------|
