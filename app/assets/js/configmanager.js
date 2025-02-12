@@ -29,6 +29,7 @@ const dataPath = path.join(sysRoot, '.visdev-launcher')
 
 const launcherDir = require('@electron/remote').app.getPath('userData')
 
+
 /**
  * Retrieve the absolute path of the launcher directory.
  * 
@@ -473,25 +474,32 @@ async function refreshDistroAndSettings(authAcc) {
         'authorization': authAcc.accessToken
     }
     DistroAPI['authHeaders'] = authHeaders
+    localStorage.setItem('authHeaders', authHeaders)
 
     try {
         logger.info('Fetching distribution data...')
         const data = await DistroAPI.getDistribution()
         ensureJavaSettings(data)
 
-        let selectedServer = ConfigManager.getSelectedServer()
+        const currentSelectedServer = ConfigManager.getSelectedServer()
         
-        if (!selectedServer || !data.getServerById(selectedServer)) {
+        // Only update selected server if it's invalid or doesn't exist in the distribution
+        if (!currentSelectedServer || !data.getServerById(currentSelectedServer)) {
             const mainServer = data.getMainServer()
-            
-            selectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
-            ConfigManager.setSelectedServer(selectedServer)
+            const newSelectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
+            ConfigManager.setSelectedServer(newSelectedServer)
+            logger.info('Selected server was invalid or missing, updated to:', newSelectedServer)
+        } else {
+            // Ensure we keep the current selected server
+            logger.info('Keeping current selected server:', currentSelectedServer)
         }
 
+        // Process server updates and mod configurations
         data.servers.forEach(server => {
-            updateSelectedServer(server)
+            // updateSelectedServer(server)
             syncModConfigurations(data)
         })
+        // ConfigManager.setSelectedServer(currentSelectedServer)
         logger.info('Distribution refresh completed successfully')
     } catch (err) {
         logger.error('Failed to refresh distribution:', err)

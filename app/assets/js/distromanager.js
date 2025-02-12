@@ -22,15 +22,17 @@ const { DistributionAPI } = require('vis-launcher-core/common')
 const ConfigManager = require('./configmanager')
 const { CDN_URL } = require('./apiconstants')
 
+defaultAuthHeaders = {  
+    'authorization': 'public-servers',
+}
+
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
     null, // Injected forcefully by the preloader.
     null, // Injected forcefully by the preloader.
     CDN_URL,
     false,
-    {  // TODO: Make this have more sense.
-        'authorization': 'public-servers',
-    },
+    localStorage.getItem('authHeaders') || defaultAuthHeaders,
     false
 )
 
