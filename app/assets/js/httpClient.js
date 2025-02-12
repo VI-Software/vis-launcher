@@ -24,4 +24,4 @@ const httpClient = got.extend({
     }
 });
 
-module.exports = httpClient;
+module.exports.default = httpClient;

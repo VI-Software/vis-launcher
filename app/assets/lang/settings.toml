@@ -7,11 +7,11 @@
 #                         \/                                 \/            \/ 
 #                         
 #                         
-#    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+#    © 2025 VI Software. Todos los derechos reservados.
 #    
 #    GitHub: https://github.com/VI-Software
 #    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-#    Web: https://visoftware.tech
+#    Web: https://visoftware.dev
 #    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 [ejs.app]
@@ -20,7 +20,7 @@ title_nightly = "VI Software Launcher Nightly"
 
 [ejs.landing]
 mediaGitHubURL = "https://github.com/VI-Software"
-mediaDiscordURL = "https://visoftware.tech/discord"
+mediaDiscordURL = "https://visoftware.dev/discord"
 
 [ejs.settings]
 sourceGithubLink = "https://github.com/VI-Software/vis-launcher"
@@ -29,5 +29,5 @@ supportLink = "https://github.com/VI-Software/vis-launcher/issues"
 
 [ejs.welcome]
 welcomeHeader = "Bienvenido/a a VI Software Launcher"
-welcomeDescription = 'Este launcher fue desarrollado por el equipo de VI Software para facilitar la gestión de modpacks en las experiencias VIS. Al utilizar este launcher, aceptas la <a style="color: purple;" href="https://docs-vis.galnod.com/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://docs-vis.galnod.com/vi-software/vis-launcher/terminos-de-uso" style="color: purple;">términos de servicio</a> de VI Software'
+welcomeDescription = 'Este launcher fue desarrollado por el equipo de VI Software para facilitar la gestión de modpacks en las experiencias VIS. Al utilizar este launcher, aceptas la <a style="color: purple;" href="https://docs.visoftware.dev/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://docs.visoftware.dev/vi-software/vis-launcher/terminos-de-uso" style="color: purple;">términos de servicio</a> de VI Software'
 welcomeDescCTA = "¡La diversión está a la vuelta de la esquina!"

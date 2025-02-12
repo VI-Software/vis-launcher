@@ -7,11 +7,11 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -120,9 +120,6 @@ function setLaunchEnabled(val){
 
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
-    setLaunchDetails(Lang.queryJS('landing.launch.checkingClient'))
-    toggleLaunchArea(true)
-    setLaunchPercentage(0, 100)
     try {
         const buildstatus = localStorage.getItem('buildstatus');
         if (buildstatus === 'notsupported') {
@@ -139,75 +136,9 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'));
         return;
     }
-    setLaunchDetails(Lang.queryJS('landing.launch.checkingAccount'))
+    loggerLanding.info('Launching game..')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
-        let serverList = JSON.parse(localStorage.getItem('serverList'));
-        const user = await ConfigManager.getSelectedAccount()
-        const isPrivate = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.private)
-        const isAllowlisted = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.allowlist.includes(user.displayName))
-        const isSelectedByUser = serverList.some(apiserver => apiserver.id === server.rawServer.id && apiserver.usrsel.includes(user.displayName))
-        if(!isSelectedByUser){
-            showLaunchFailure(Lang.queryJS('landing.launch.serverNotFoundErrorTitle'), Lang.queryJS('landing.launch.serverNotFoundErrorText'))
-            loggerLanding.error("Server not found." + " (Requested server ID: " + server.rawServer.id + ", Selected Account: " + user.displayName +")")
-            return
-        }
-        if(isPrivate && !isAllowlisted){
-            showLaunchFailure(Lang.queryJS('landing.launch.noaccessTitle'), Lang.queryJS('landing.launch.noaccessText'))
-            loggerLanding.error('User does not have access to server ' + server.rawServer.name + ' (Server ID: ' + server.rawServer.id + ', Selected Account: ' + user.displayName +')')
-            return
-        }
-        try {
-            const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
-            
-            const serverData = await (await fetch('https://api.visoftware.tech/services/servers/' + server.rawServer.id)).json();
-            const teamData = await (await fetch('https://api.visoftware.tech/services/teams/uuid/' + serverData.owner_uuid)).json();
-            if(teamData.ban){
-                showLaunchFailure(Lang.queryJS('landing.launch.TeamBannedErrorTitle'), Lang.queryJS('landing.launch.TeamBannedErrorText'))
-                loggerLanding.error('Team is banned by VI Software. Ban reason: ' + teamData.ban_reason)
-                return
-            }
-        }catch(err){
-            showLaunchFailure(Lang.queryJS('landing.launch.ErrorCantCheckTeamOnApiErrorTitle'), Lang.queryJS('landing.launch.ErrorCantCheckTeamOnApiErrorText'))
-            loggerLanding.error('An error has occurred while attempting to check servers\'s team status. Error: ', err)
-            return
-        }                             
-        try {
-            const response = await fetch('https://api.visoftware.tech/services/moderation/mystatus', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'token': user.accessToken
-                }
-            });
-
-            const userData = await response.json();
-            if(response.status == 401){
-                showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'));
-                loggerLanding.error('An error has occurred while attempting to verify the account in the moderation system. Error:', userData.error);
-                return;
-            }
-            if(userData.rootbanned){
-                showLaunchFailure(Lang.queryJS('landing.launch.GlobalAccountDisabledErrorTitle'), Lang.queryJS('landing.launch.GlobalAccountDisabledErrorText'))
-                loggerLanding.error('Root account is banned by VI Software. Canceling launch.')
-                return
-            }
-            if(userData.pendingwarns > 0){
-                showLaunchFailure(Lang.queryJS('landing.launch.WarnsnotreadErrorTitle'), Lang.queryJS('landing.launch.WarnsnotreadErrorText'))
-                loggerLanding.error('Root account has pending warnings awaiting to be reviewed. Canceling launch.')
-                return
-            }
-            if(userData.launcherbanned){
-                showLaunchFailure(Lang.queryJS('landing.launch.AccountDisabledErrorTitle'), Lang.queryJS('landing.launch.AccountDisabledErrorText'))
-                loggerLanding.error('Launcher account is disabled by Team Administration. Canceling launch.')
-                return
-            }
-        
-        } catch (err) {
-            showLaunchFailure(Lang.queryJS('landing.launch.NoCheckModErrorTitle'), Lang.queryJS('landing.launch.NoCheckModErrorText'));
-            loggerLanding.error('An error has occurred while attempting to verify the account in the moderation system. Error: ', err);
-            return;
-        }
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())
         if(jExe == null){
             await asyncSystemScan(server.effectiveJavaOptions)
@@ -254,7 +185,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if (authUser.uuid != null) {
-            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.tech/2d/skin/${authUser.uuid}/head?scale=5)`;
+            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.dev/2d/skin/${authUser.uuid}/head?scale=5)`;
         }        
     }
     user_text.innerHTML = username
@@ -582,12 +513,16 @@ async function dlAsync(login = true) {
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
 
+    const authHeaders = {
+        'authorization': ConfigManager.getSelectedAccount().accessToken,
+    }
     const fullRepairModule = new FullRepair(
         ConfigManager.getCommonDirectory(),
         ConfigManager.getInstanceDirectory(),
         ConfigManager.getLauncherDirectory(),
         ConfigManager.getSelectedServer(),
-        DistroAPI.isDevMode()
+        DistroAPI.isDevMode(),
+        authHeaders
     )
 
     fullRepairModule.spawnReceiver()
@@ -646,10 +581,12 @@ async function dlAsync(login = true) {
     const mojangIndexProcessor = new MojangIndexProcessor(
         ConfigManager.getCommonDirectory(),
         serv.rawServer.minecraftVersion)
+        
     const distributionIndexProcessor = new DistributionIndexProcessor(
         ConfigManager.getCommonDirectory(),
         distro,
-        serv.rawServer.id
+        serv.rawServer.id,
+        authHeaders
     )
 
     const modLoaderData = await distributionIndexProcessor.loadModLoaderVersionJson(serv)
@@ -808,6 +745,7 @@ function slide_(up){
 }
 
 // Bind news button.
+/*
 document.getElementById('newsButton').onclick = () => {
     // Toggle tabbing.
     if(newsActive){
@@ -826,6 +764,7 @@ document.getElementById('newsButton').onclick = () => {
     slide_(!newsActive)
     newsActive = !newsActive
 }
+*/
 
 // Array to store article meta.
 let newsArr = null
@@ -899,7 +838,7 @@ let newsAlertShown = false
  */
 function showNewsAlert(){
     newsAlertShown = true
-    $(newsButtonAlert).fadeIn(250)
+    // $(newsButtonAlert).fadeIn(250)
 }
 
 async function digestMessage(str) {

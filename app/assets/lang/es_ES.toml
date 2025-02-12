@@ -7,11 +7,11 @@
 #                         \/                                 \/            \/ 
 #                         
 #                         
-#    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+#    © 2025 VI Software. Todos los derechos reservados.
 #    
 #    GitHub: https://github.com/VI-Software
-#    Documentación: https://docs.visoftware.tech/vi-software/vis-launcher
-#    Web: https://visoftware.tech
+#    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+#    Web: https://visoftware.dev
 #    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 [ejs.landing]
@@ -41,23 +41,24 @@ loginEmailError = "* Valor Inválido"
 loginEmailPlaceholder = "NOMBRE DE USUARIO"
 loginPasswordError = "* Requerido"
 loginPasswordPlaceholder = "CONTRASEÑA"
-loginForgotPasswordLink = "https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth/ver-la-informacion-de-mi-cuenta"
+loginForgotPasswordLink = "https://docs.visoftware.dev/vi-software/vis-yggdrasil-auth/ver-la-informacion-de-mi-cuenta"
 loginForgotPasswordText = "Consultar tus datos"
 loginRememberMeText = "Recuérdame"
 loginButtonText = "INICIAR SESIÓN"
-loginNeedAccountLink = "https://puf.visoftware.tech"
+loginNeedAccountLink = "https://puf.visoftware.dev"
 loginNeedAccountText = "¿Necesitas una cuenta?"
 loginPasswordDisclaimer1 = "Tu contraseña se envía directamente al servidor de VI Software y nunca se almacena."
-loginPasswordDisclaimer2 = "&copy 2024 VI Software y contribuidores. Todos los derechos reservados."
+loginPasswordDisclaimer2 = "&copy 2025 VI Software y contribuidores. Todos los derechos reservados."
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opciones de inicio de sesión"
 loginWithMicrosoft = "Iniciar sesión con Microsoft"
-loginWithVIS = "Iniciar sesión con VI Software"
+loginWithVISWeb = "Iniciar sesión con VI Software Web oAuth 2.0"
+loginWithVIS = "Iniciar sesión con VI Software Legacy"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
-serverSelectHeader = "Mi lista de servidores"
+serverSelectHeader = "Lista de servidores de VI Software"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancelar"
 accountSelectHeader = "Selecciona una cuenta"
@@ -146,7 +147,7 @@ whatsNew = "¿Qué hay de nuevo?"
 updateReleaseNotes = "Notas de lanzamiento de la actualización"
 
 [ejs.waiting]
-waitingText = "Esperando a Microsoft.."
+waitingText = "Esperando a VI Software..."
 
 [ejs.welcome]
 continueButton = "CONTINUAR"
@@ -184,9 +185,9 @@ noaccessText = "La cuenta seleccionada no tiene permiso para acceder al servidor
 NoCheckModErrorTitle = "Error durante el lanzamiento"
 NoCheckModErrorText = "No se ha podido verificar la cuenta en el sistema de moderación de VI Software. <br>Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 WarnsnotreadErrorTitle = "Error durante el lanzamiento"
-WarnsnotreadErrorText = 'Hay una o más sanciones a la espera de que sean vistas por ti. <a href="https://puf.visoftware.tech" style="color: red">Puedes consultarlas en el panel de usuario final de VI Software</a>'
+WarnsnotreadErrorText = 'Hay una o más sanciones a la espera de que sean vistas por ti. <a href="https://puf.visoftware.dev" style="color: red">Puedes consultarlas en el panel de usuario final de VI Software</a>'
 AccountDisabledErrorTitle = "Error durante el lanzamiento"
-AccountDisabledErrorText = 'La cuenta seleccionada se encuentra actualmente deshabilitada <span style="color: pink;">por la administradora de la experiencia</span>. Puede consultar más información sobre sus cuentas en <a href="https://puf.visoftware.tech" style="color: pink;">el panel de usuario final de VI Software</a>. <br>VI Software <span style="color: red";>NO</span> puede asistirle con este asunto.'
+AccountDisabledErrorText = 'La cuenta seleccionada se encuentra actualmente deshabilitada <span style="color: pink;">por la administradora de la experiencia</span>. Puede consultar más información sobre sus cuentas en <a href="https://puf.visoftware.dev" style="color: pink;">el panel de usuario final de VI Software</a>. <br>VI Software <span style="color: red";>NO</span> puede asistirle con este asunto.'
 TeamBannedErrorTitle = "Error durante el lanzamiento"
 TeamBannedErrorText = 'El Team propietario del servidor se encuentra actualmente suspendido <span style="color: pink;">por VI Software</span>. <br>Esto es una sanción impuesta al Team propietario del servidor, no a su cuenta.'
 GlobalAccountDisabledErrorTitle = "401 | Unauthorized"
@@ -305,8 +306,8 @@ okButton = "Aceptar"
 
 [js.settings.serverListing]
 mainServer = "Servidor Principal"
-info = 'Puedes gestionar tus servidores en <a style="color: pink;" href="https://puf.visoftware.tech/servers">https://puf.visoftware.tech/servers</a>.</div>'
-noServers = 'No tenemos servidores para mostrarte. <br>Puedes gestionar los servidores que aparecen aquí en el <a style="color: pink;" href="https://puf.visoftware.tech/servers">panel de usuario final de VI Software</a>.</div>'
+info = 'Puedes gestionar tus servidores en <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
+noServers = 'No tenemos servidores para mostrarte. <br>Puedes gestionar los servidores que aparecen aquí en el <a style="color: pink;" href="https://puf.visoftware.dev/servers">panel de usuario final de VI Software</a>.</div>'
 
 [js.settings.java]
 selectedJava = "Seleccionado: Java {version} ({vendor})"
@@ -344,7 +345,7 @@ unmantainedErrorMessage = 'Estás utilizando una versión desactualizada de VI S
 
 [js.uibinder.bgservicewarning]
 bgservicewarningErrorTitle = "Ha ocurrido un error"
-bgservicewarningErrorMessage = 'Ha ocurrido un error al intentar conectarse a VI Software Background Services. Como resultado, no hemos podido cargar un fondo dinámico. Hemos aplicado un fondo offline estático, esto puede deberse a un incidente en la infraestructura del servicio, pero si no hay un incidente comunicado, esto podría ser un problema en su final. Puede encontrar más información respecto a este error <a href="https://docs.visoftware.tech/vi-software/vis-launcher/error-al-intentar-conectarse-a-vi-software-background-services" style="color: red">aquí</a>'
+bgservicewarningErrorMessage = 'Ha ocurrido un error al intentar conectarse a VI Software Background Services. Como resultado, no hemos podido cargar un fondo dinámico. Hemos aplicado un fondo offline estático, esto puede deberse a un incidente en la infraestructura del servicio, pero si no hay un incidente comunicado, esto podría ser un problema en su final. Puede encontrar más información respecto a este error <a href="https://docs.visoftware.dev/vi-software/vis-launcher/error-al-intentar-conectarse-a-vi-software-background-services" style="color: red">aquí</a>'
 ignoreButton = "Continuar"
 
 [js.uibinder.fatalapierror]

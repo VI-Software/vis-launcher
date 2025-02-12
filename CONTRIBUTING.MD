@@ -1,1 +1,1 @@
-You can find the latest copy of our Contribution Guidelines [here](https://docs.visoftware.tech/vi-software/guidelines/contribution-guidelines)
+You can find the latest copy of our Contribution Guidelines [here](https://docs.visoftware.dev/vi-software/guidelines/contribution-guidelines)
