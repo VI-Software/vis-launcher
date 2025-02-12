@@ -4,7 +4,7 @@
   "productName": "VI Software Launcher",
   "description": "VI Software Launcher",
   "author": "VI Software",
-  "license": "MIT",
+  "license": "MPL-2.0",
   "private": true,
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
