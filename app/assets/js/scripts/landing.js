@@ -745,6 +745,7 @@ function slide_(up){
 }
 
 // Bind news button.
+/*
 document.getElementById('newsButton').onclick = () => {
     // Toggle tabbing.
     if(newsActive){
@@ -763,6 +764,7 @@ document.getElementById('newsButton').onclick = () => {
     slide_(!newsActive)
     newsActive = !newsActive
 }
+*/
 
 // Array to store article meta.
 let newsArr = null
@@ -836,7 +838,7 @@ let newsAlertShown = false
  */
 function showNewsAlert(){
     newsAlertShown = true
-    $(newsButtonAlert).fadeIn(250)
+    // $(newsButtonAlert).fadeIn(250)
 }
 
 async function digestMessage(str) {

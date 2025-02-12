@@ -497,6 +497,7 @@ async function refreshDistroAndSettings(authAcc) {
         logger.error('Failed to refresh distribution:', err)
     }
 }
+
 /**
  * Set the selected authenticated account.
  * 

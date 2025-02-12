@@ -3,7 +3,7 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
@@ -20,6 +20,7 @@
 const loginOptionsCancelContainer = document.getElementById('loginOptionCancelContainer')
 const loginOptionVISoftware = document.getElementById('loginOptionVISoftware')
 const loginOptionsCancelButton = document.getElementById('loginOptionCancelButton')
+const loginOptionVISWeb = document.getElementById('loginOptionVISWeb')
 
 let loginOptionsCancellable = false
 
@@ -40,6 +41,22 @@ loginOptionVISoftware.onclick = (e) => {
         loginViewOnSuccess = loginOptionsViewOnLoginSuccess
         loginViewOnCancel = loginOptionsViewOnLoginCancel
         loginCancelEnabled(true)
+    })
+}
+
+loginOptionVISWeb.onclick = (e) => {
+    switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
+        AuthManager.addVISWebAccount()
+            .then((account) => {
+                loginViewOnSuccess = loginOptionsViewOnLoginSuccess
+                loginViewOnCancel = loginOptionsViewOnLoginCancel
+                switchView(VIEWS.waiting, loginViewOnSuccess)
+            })
+            .catch((err) => {
+                // On error, just return to login view
+                switchView(VIEWS.waiting, VIEWS.loginOptions)
+                loginCancelEnabled(true)
+            })
     })
 }
 

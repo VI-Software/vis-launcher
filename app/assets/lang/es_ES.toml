@@ -53,7 +53,8 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software y contribuidores. Todos los d
 [ejs.loginOptions]
 loginOptionsTitle = "Opciones de inicio de sesión"
 loginWithMicrosoft = "Iniciar sesión con Microsoft"
-loginWithVIS = "Iniciar sesión con VI Software"
+loginWithVISWeb = "Iniciar sesión con VI Software Web oAuth 2.0"
+loginWithVIS = "Iniciar sesión con VI Software Legacy"
 cancelButton = "Cancelar"
 
 [ejs.overlay]
@@ -146,7 +147,7 @@ whatsNew = "¿Qué hay de nuevo?"
 updateReleaseNotes = "Notas de lanzamiento de la actualización"
 
 [ejs.waiting]
-waitingText = "Esperando a Microsoft.."
+waitingText = "Esperando a VI Software..."
 
 [ejs.welcome]
 continueButton = "CONTINUAR"

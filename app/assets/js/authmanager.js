@@ -3,7 +3,7 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
@@ -34,6 +34,10 @@ const { RestResponseStatus } = require('vis-launcher-core/common')
 const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('vis-launcher-core/mojang')
 const { MicrosoftAuth, microsoftErrorDisplayable, MicrosoftErrorCode } = require('vis-launcher-core/microsoft')
 const { AZURE_CLIENT_ID }    = require('./ipcconstants')
+const http                   = require('http')
+const { shell }              = require('electron')
+const { API_BASE_URL, WEBLOGIN_URL } = require('./apiconstants')
+const got                    = require('got')
 
 const log = LoggerUtil.getLogger('AuthManager')
 
@@ -48,10 +52,9 @@ const log = LoggerUtil.getLogger('AuthManager')
  * @param {string} password The account password.
  * @returns {Promise.<Object>} Promise which resolves the resolved authenticated account object.
  */
-exports.addMojangAccount = async function(username, password) {
+const addMojangAccount = async function(username, password) {
     try {
         const response = await MojangRestAPI.authenticate(username, password, ConfigManager.getClientToken())
-        console.log(response)
         if(response.responseStatus === RestResponseStatus.SUCCESS) {
 
             const session = response.data
@@ -75,6 +78,8 @@ exports.addMojangAccount = async function(username, password) {
         return Promise.reject(mojangErrorDisplayable(MojangErrorCode.UNKNOWN))
     }
 }
+
+exports.addMojangAccount = addMojangAccount
 
 const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
 
@@ -175,6 +180,89 @@ exports.addMicrosoftAccount = async function(authCode) {
     return ret
 }
 
+/**
+ * Create a temporary web server to handle the OAuth callback
+ */
+function createOAuthServer(port) {
+    return new Promise((resolve, reject) => {
+        const server = http.createServer((req, res) => {
+            const url = new URL(req.url, `http://localhost:${port}`)
+            
+            if (url.pathname === '/callback') {
+                const token = url.searchParams.get('token')
+                if (token) {
+                    res.writeHead(200, { 'Content-Type': 'text/html' })
+                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authorization successful!</h1><p>You may now close this window now.</p></body></html>')
+                    server.close()
+                    resolve(token) 
+                } else {
+                    reject(new Error('No token received'))
+                }
+            }
+        })
+
+        server.listen(port, 'localhost', () => {
+            log.info(`OAuth server listening on port ${port}`)
+        })
+
+        server.on('error', (err) => {
+            reject(err)
+        })
+    })
+}
+
+/**
+ * Add a VI Software Web OAuth account.
+ * This will open the browser for web authentication and handle the callback.
+ */
+exports.addVISWebAccount = async function() {
+    try {
+        const port = 43123
+        
+        const tokenPromise = createOAuthServer(port)
+
+        const challenge = await got.get(`${API_BASE_URL}/services/launcher/v2/requestchallenge?version=${require('../../../package.json').version}`).json()
+        
+        if(!challenge || !challenge.challengeId) {
+            throw new Error('Failed to get challenge')
+        }
+
+        const authUrl = `${WEBLOGIN_URL}?challenge=${challenge.challengeId}`
+
+        shell.openExternal(authUrl)
+
+        const token = await tokenPromise
+        
+        const accountInfo = await got.get(`${API_BASE_URL}/services/launcher/v2/whoami`, {
+            headers: {
+                'authorization': token
+            }
+        }).json()
+
+        const ret = await addMojangAccount(accountInfo.data.username, accountInfo.data.login)
+        
+        if(ConfigManager.getClientToken() == null) {
+            ConfigManager.setClientToken(uuidv4())
+        }
+        
+        ConfigManager.save()
+
+
+        updateSelectedAccount(ret)
+        await prepareSettings(true)
+        
+        await ConfigManager.getSelectedAccount()
+
+        return ret
+
+    } catch (err) {
+        log.error('Error during VI Software Web OAuth:', err)
+        throw {
+            title: 'Login Failed',
+            message: 'Failed to authenticate with VI Software. Please try again.'
+        }
+    }
+}
 /**
  * Remove a Mojang account. This will invalidate the access token associated
  * with the account and then remove it from the database.

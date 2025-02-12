@@ -96,20 +96,6 @@ async function showMainUI(data) {
         console.error(err)
     }
 
-    // Check for server access status
-    try {
-        const serverInfo = await fetch(API_BASE_URL+'/services/servers')
-        const serverList = await serverInfo.json()
-        localStorage.setItem('serverList', JSON.stringify(serverList))
-    }catch (error) {
-        console.error('FATAL ERROR: Could not connect to the VI Software server API')
-        console.error('You can check outgoing incidents at https://status.visoftware.dev')
-        console.error('More information about this, can be found here:')
-        console.error('Please check your network connectivity before contacting VI Software for further assistance.')
-        console.error('Error code is as follows: ', error)
-        return showAPIError()
-    }
-
     await prepareSettings(true)
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
