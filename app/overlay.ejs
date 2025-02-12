@@ -3,15 +3,15 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 -->
@@ -19,9 +19,61 @@
 <div id="overlayContainer" style="display: none;">
     <div id="serverSelectContent" style="display: none;">
         <span id="serverSelectHeader"><%- lang('overlay.serverSelectHeader') %></span>
+        <input type="text" id="serverSearchInput" placeholder="Search servers..." class="serverSearchBox">
         <div id="serverSelectList">
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
+            </div>
+        </div>
+        <!-- Add this new dialog -->
+        <div id="serverDetailsDialog" style="display: none;">
+            <div class="serverDetailsContent">
+                <img id="serverDetailsIcon" class="serverDetailsIcon">
+                <h2 id="serverDetailsName"></h2>
+                <p id="serverDetailsDescription"></p>
+                <div class="serverDetailsMeta">
+                    <div class="serverDetailsItem">
+                        <span class="label">Version:</span>
+                        <span id="serverDetailsVersion"></span>
+                    </div>
+                    <div class="serverDetailsItem">
+                        <span class="label">Minecraft:</span>
+                        <span id="serverDetailsMinecraft"></span>
+                    </div>
+                    <div class="serverDetailsItem">
+                        <span class="label">Address:</span>
+                        <span id="serverDetailsAddress"></span>
+                    </div>
+                </div>
+                <div class="serverDetailsActions">
+                    <button id="serverDetailsConfirm" class="button-primary">Select Server</button>
+                    <button id="serverDetailsCancel" class="button-secondary">Cancel</button>
+                    <div class="button-group-utilities">
+                        <button id="serverDetailsWebsite" class="button-utility">View on web</button>
+                        <button id="serverDetailsResources" class="button-utility">Resources</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add the resources modal -->
+            <div id="serverResourcesModal" style="display: none;">
+                <div class="modalContent">
+                    <div class="modalHeader">
+                        <h3>Server Resources</h3>
+                        <button class="modalClose">&times;</button>
+                    </div>
+                    <div class="modalBody">
+                        <input type="text" id="resourceSearch" placeholder="Search resources..." class="resourceSearchBox">
+                        <div class="resourceCategories">
+                            <button class="resourceTab active" data-tab="required">Required</button>
+                            <button class="resourceTab" data-tab="optional">Optional</button>
+                            <button class="resourceTab" data-tab="libraries">Libraries</button>
+                        </div>
+                        <div class="resourceList">
+                            <!-- Resources populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="serverSelectActions">

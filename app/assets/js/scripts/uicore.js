@@ -7,11 +7,11 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -53,10 +53,10 @@ window.eval = global.eval = function () {
 // Display warning when devtools window is opened.
 remote.getCurrentWebContents().on('devtools-opened', () => {
     console.log('%cSTOP', 'color: white; -webkit-text-stroke: 4px #a02d2a; font-size: 180px; font-weight: bold')
-    console.log('%c¡Mantén tus cuentas seguras! No envíes ninguna información de aquí a cualquiera y no pegues cualquier texto aquí.', 'font-size: 16px')
-    console.log('%cSi se te ha solicitado que pegues o envíes cualquier información, aquí estás siendo estafado/a', 'color: red; font-size: 16px; font-weight: bold')
-    console.log('%cProseguir podría proporcionar acceso al atacante a las cuentas vinculadas al launcher.', 'font-size: 16px')
-    console.log('%cA no ser que sepas exactamente lo que estás haciendo, cierra esta pestaña de inmediato.', 'font-size: 16px')
+    console.log('%cKeep your accounts safe! Do not share any information from here with anyone and do not paste any text here.', 'font-size: 16px')
+    console.log('%cIf someone asked you to paste or send any information here, you are being scammed', 'color: red; font-size: 16px; font-weight: bold')
+    console.log('%cProceeding could give an attacker access to accounts linked to the launcher.', 'font-size: 16px')
+    console.log('%cUnless you exactly know what you are doing, close this tab immediately.', 'font-size: 16px')
 })
 
 // Disable zoom, needed for darwin.

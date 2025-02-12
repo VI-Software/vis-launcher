@@ -3,15 +3,15 @@
 This document outlines the version support for this specific launcher release
 
 ## Officially Minecraft Supported versions
-🟢Supported
-🟡Minimal support
-🟠Works, but might not have the latest technologies and is not officially supported. It might be supported by community members.
-🔴Not supported
+- 🟢Supported
+- 🟡Minimal support
+- 🟠Works, but might not have the latest technologies and is not officially supported. It might be supported by community members.
+- 🔴Not supported
 
 | Version  | Status   |
 |----------|----------|
-| 1.21.X     | 🟢        |
-| 1.20.X     | 🟢        |
+| 1.21.X     | 🟢      |
+| 1.20.X     | 🟢      |
 | 1.19.X   | 🟢        |
 | 1.19.2   | 🟢        |
 | 1.18.X   | 🟢        |
@@ -41,9 +41,9 @@ This document outlines the version support for this specific launcher release
 
 ## Supported mod loaders
 
-🟢Supported
-🟠Legacy Support Only. Latest technologies might not be supported
-🔴Not officially supported
+- 🟢Supported
+- 🟠Legacy Support Only. Latest technologies might not be supported
+- 🔴Not officially supported
 
 | Name | Status | Notes |
 |----------|----------|----------|

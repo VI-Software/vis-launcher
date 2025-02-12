@@ -1,35 +1,31 @@
 By using this product, you agree to the terms of service of VI Software and any other applicable policies that may not be mentioned below.
 
-https://docs.visoftware.tech/vi-software/guidelines/terms-of-service
-https://docs.visoftware.tech/vi-software/guidelines/code-of-conduct
-https://docs.visoftware.tech/vi-software/vis-launcher/terms-of-use
-https://docs.visoftware.tech/vi-software/vis-launcher/privacy-policy
-https://docs.visoftware.tech/vi-software/guidelines/contribution-guidelines
-https://docs.visoftware.tech/vi-software/guidelines/contributor-license-agreement
-https://docs.visoftware.tech/vi-software/guidelines/fair-use-policy
-https://docs.visoftware.tech/vi-software/vis-skins/terms-of-use
-https://docs.visoftware.tech/vi-software/vis-yggdrasil-auth/privacy-policy
-https://docs.visoftware.tech/vi-software/puf/privacy-policy
-https://docs.visoftware.tech/vi-software/puf/terms-of-service
+https://docs.visoftware.dev/vi-software/guidelines/terms-of-service
+https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct
+https://docs.visoftware.dev/vi-software/guidelines/platform-license-agreement
+https://docs.visoftware.dev/vi-software/guidelines/contribution-guidelines
+https://docs.visoftware.dev/vi-software/guidelines/contributor-license-agreement
+https://docs.visoftware.dev/vi-software/guidelines/fair-use-policy
+https://docs.visoftware.dev/vi-software/vis-skins/terms-of-use
+https://docs.visoftware.dev/vi-software/guidelines/privacy-policy
 
- This software's source code is available under the MIT license. You can get a copy of it on GitHub or through our official mirrors. 
+Please be advised that by using the product "VI Software Launcher" (VIS Launcher), you acknowledge and agree to comply with the platform's guidelines, as well as any additional relevant guidelines pertaining to the platform to which the software connects.
 
-Copyright (c) 2024 VI Software
+VI Software Launcher (VIS Launcher) is licensed under the Mozilla Public License Version 2.0. For more details, see the full license at our GitHub repo (https://github.com/VI-Software/vis-launcher/)
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+Mozilla Public License Version 2.0
+=========================================================
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+This source code is licensed under the Mozilla Public License, v. 2.0.
+You may obtain a copy of the License at:
+
+    http://mozilla.org/MPL/2.0/
+
+Copyright (C) 2025 VI Software
+
+Software distributed under the License is distributed on an "AS IS" basis,
+WITHOUT WARRANTY OF ANY KIND, either express or implied, including but not
+limited to the warranties of merchantability, fitness for a particular purpose
+and noninfringement. See the License for the specific language governing
+permissions and limitations under the License.

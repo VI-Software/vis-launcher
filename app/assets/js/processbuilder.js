@@ -7,11 +7,11 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -32,6 +32,7 @@ const net                   = require('net');
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 const disableHttpd         = localStorage.getItem('disableHttpd');
 const authlibDebug          = localStorage.getItem('authlibDebug')
+const { AUTH_BASE_URL }     = require('./apiconstants')
 
 
 
@@ -48,9 +49,8 @@ async function authLibArgs(args) {
             } else {
                 authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
             }
-            const authServerUrl = 'https://authserver.visoftware.tech/authlib-injector';
             // Add the Authlib Injector as a Java agent
-            args.unshift(`-javaagent:${authlibInjectorPath}=${authServerUrl}`);
+            args.unshift(`-javaagent:${authlibInjectorPath}=${AUTH_BASE_URL}/authlib-injector`);
             args.push('-Dauthlibinjector.noShowServerName')
             if(disableHttpd){
                 args.push(args.push('-Dauthlibinjector.disableHttpd'))

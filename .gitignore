@@ -6,3 +6,4 @@
 /dist/
 ./cert
 ./cert/*
+gpg.log

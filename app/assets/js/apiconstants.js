@@ -16,9 +16,8 @@
 
 */
 
+exports.API_BASE_URL = 'https://api.visoftware.dev'
+exports.WEBLOGIN_URL = 'https://visoftware.dev/launcher-login'
+exports.CDN_URL = 'https://cdn.visoftware.dev/distribution.json'
+exports.AUTH_BASE_URL = 'https://authserver.visoftware.dev'
 
-'use strict'
-const getFromEnv = parseInt(process.env.ELECTRON_IS_DEV, 10) === 1
-const isEnvSet = 'ELECTRON_IS_DEV' in process.env
-
-module.exports = isEnvSet ? getFromEnv : (process.defaultApp || /node_modules[\\/]electron[\\/]/.test(process.execPath))

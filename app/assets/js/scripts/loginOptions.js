@@ -3,15 +3,15 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -20,6 +20,7 @@
 const loginOptionsCancelContainer = document.getElementById('loginOptionCancelContainer')
 const loginOptionVISoftware = document.getElementById('loginOptionVISoftware')
 const loginOptionsCancelButton = document.getElementById('loginOptionCancelButton')
+const loginOptionVISWeb = document.getElementById('loginOptionVISWeb')
 
 let loginOptionsCancellable = false
 
@@ -40,6 +41,22 @@ loginOptionVISoftware.onclick = (e) => {
         loginViewOnSuccess = loginOptionsViewOnLoginSuccess
         loginViewOnCancel = loginOptionsViewOnLoginCancel
         loginCancelEnabled(true)
+    })
+}
+
+loginOptionVISWeb.onclick = (e) => {
+    switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
+        AuthManager.addVISWebAccount()
+            .then((account) => {
+                loginViewOnSuccess = loginOptionsViewOnLoginSuccess
+                loginViewOnCancel = loginOptionsViewOnLoginCancel
+                switchView(VIEWS.waiting, loginViewOnSuccess)
+            })
+            .catch((err) => {
+                // On error, just return to login view
+                switchView(VIEWS.waiting, VIEWS.loginOptions)
+                loginCancelEnabled(true)
+            })
     })
 }
 

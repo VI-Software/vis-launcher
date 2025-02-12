@@ -7,11 +7,11 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -28,6 +28,7 @@ const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.e
 const dataPath = path.join(sysRoot, '.visdev-launcher')
 
 const launcherDir = require('@electron/remote').app.getPath('userData')
+
 
 /**
  * Retrieve the absolute path of the launcher directory.
@@ -452,7 +453,57 @@ exports.removeAuthAccount = function(uuid){
  * @returns {Object} The selected authenticated account.
  */
 exports.getSelectedAccount = function(){
+    const authAcc = config.authenticationDatabase[config.selectedAccount]
+    
+    if(authAcc != null) {
+        // Trigger async refresh in background.
+        refreshDistroAndSettings(authAcc)
+    }
     return config.authenticationDatabase[config.selectedAccount]
+}
+
+/**
+ * Refresh distribution and settings with the given auth account.
+ * This is used to update the distribution authentification and the UI with the new distribution.
+ * @param {Object} authAcc The authenticated account to use
+ */
+async function refreshDistroAndSettings(authAcc) {
+    logger.info('Refreshing distribution settings for account:', authAcc.displayName + ' (' + authAcc.uuid + ')')
+    
+    const authHeaders = {
+        'authorization': authAcc.accessToken
+    }
+    DistroAPI['authHeaders'] = authHeaders
+    localStorage.setItem('authHeaders', authHeaders)
+
+    try {
+        logger.info('Fetching distribution data...')
+        const data = await DistroAPI.getDistribution()
+        ensureJavaSettings(data)
+
+        const currentSelectedServer = ConfigManager.getSelectedServer()
+        
+        // Only update selected server if it's invalid or doesn't exist in the distribution
+        if (!currentSelectedServer || !data.getServerById(currentSelectedServer)) {
+            const mainServer = data.getMainServer()
+            const newSelectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
+            ConfigManager.setSelectedServer(newSelectedServer)
+            logger.info('Selected server was invalid or missing, updated to:', newSelectedServer)
+        } else {
+            // Ensure we keep the current selected server
+            logger.info('Keeping current selected server:', currentSelectedServer)
+        }
+
+        // Process server updates and mod configurations
+        data.servers.forEach(server => {
+            // updateSelectedServer(server)
+            syncModConfigurations(data)
+        })
+        // ConfigManager.setSelectedServer(currentSelectedServer)
+        logger.info('Distribution refresh completed successfully')
+    } catch (err) {
+        logger.error('Failed to refresh distribution:', err)
+    }
 }
 
 /**
@@ -463,10 +514,13 @@ exports.getSelectedAccount = function(){
  * 
  * @returns {Object} The selected authenticated account.
  */
-exports.setSelectedAccount = function(uuid){
+exports.setSelectedAccount = async function(uuid){
+    console.log('Setting selected account to: ' + uuid)
     const authAcc = config.authenticationDatabase[uuid]
     if(authAcc != null) {
         config.selectedAccount = uuid
+        // Call the shared refresh function instead of duplicating code
+        await refreshDistroAndSettings(authAcc)
     }
     return authAcc
 }

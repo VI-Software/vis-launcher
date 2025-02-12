@@ -7,11 +7,11 @@
                          \/                                 \/            \/ 
                          
                          
-    Copyright 2024 (©) VI Software y contribuidores. Todos los derechos reservados.
+    © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
     Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
-    Web: https://visoftware.tech
+    Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
 */
@@ -31,9 +31,11 @@ const AuthManager = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
 const { DistroAPI } = require('./assets/js/distromanager')
 const { error } = require('console')
+const { API_BASE_URL } = require('./assets/js/apiconstants')
 
 let rscShouldLoad = false
 let fatalStartupError = false
+
 
 // Mapping of each view to their container IDs.
 const VIEWS = {
@@ -94,85 +96,59 @@ async function showMainUI(data) {
         console.error(err)
     }
 
-    // Check for server access status
-    try {
-        const baseApiUrl = 'https://api.visoftware.tech'
-        const serverInfo = await fetch(baseApiUrl+'/services/servers')
-        const serverList = await serverInfo.json()
-        localStorage.setItem('serverList', JSON.stringify(serverList))
-    }catch (error) {
-        console.error('FATAL ERROR: Could not connect to the VI Software server API')
-        console.error('You can check outgoing incidents at https://status.visoftware.tech')
-        console.error('More information about this, can be found here:')
-        console.error('Please check your network connectivity before contacting VI Software for further assistance.')
-        console.error('Error code is as follows: ', error)
-        return showAPIError()
-    }
-
     await prepareSettings(true)
     updateSelectedServer(data.getServerById(ConfigManager.getSelectedServer()))
     refreshServerStatus()
 
     try {
-        // Performs a request to the VI Software Image Server to get a random image route
-        const response = await fetch('https://visoftware.tech/launcher/image.php')
-        const imageData = await response.json()
-        const randomImg = imageData.imagen
-
-        // Applies the random image route to the app background
+        const response = await fetch(API_BASE_URL+'/services/images/random')
+        if (!response.ok) throw new Error('Network response was not ok')
+        
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        document.body.style.backgroundImage = `url('https://visoftware.tech/launcher/backgrounds/${randomImg}')`
-
-        // Show the element with id 'main'
-        $('#main').show()
-
-        const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
-
-        // If this is enabled in a development environment, we'll get ratelimited.
-        // The relaunch frequency is usually far too high.
-        if (!isDev && isLoggedIn) {
-            validateSelectedAccount()
-        }
-
-        if (ConfigManager.isFirstLaunch()) {
-            currentView = VIEWS.welcome
-            $(VIEWS.welcome).fadeIn(1000)
-        } else {
-            if (isLoggedIn) {
-                currentView = VIEWS.landing
-                $(VIEWS.landing).fadeIn(1000)
-            } else {
-                loginOptionsCancelEnabled(false)
-                loginOptionsViewOnLoginSuccess = VIEWS.landing
-                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-                currentView = VIEWS.loginOptions
-                $(VIEWS.loginOptions).fadeIn(1000)
-            }
-        }
-
-        setTimeout(() => {
-            $('#loadingContainer').fadeOut(500, () => {
-                $('#loadSpinnerImage').removeClass('rotating')
-            })
-
-            // Continue with the rest of the logic
-            const checkver = true
-            continueMainUILogic(checkver)
-        }, 250)
+        document.body.style.backgroundImage = `url('${response.url}')`
     } catch (error) {
-        // Handle fetch error or timeout
-        console.error('There was an error while attempting to connect to VI Software\'s background services')
-        console.error('Check the VI Software Status for more information about this possible incident. If no outgoing incident is present, this might be an issue on your end.')
-        console.error('There was a fetch error while attempting to resolve the background: ', error)
-
-        // If there's an error, load '0.jpg' from assets
+        // On any error, fallback to offline background
+        console.error('Failed to fetch background image:', error)
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        // Applies the offline background and attemps to continue with the logic, showing a warning
-        document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/0.jpg\')'
+        document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/offline.jpg\')'
         showBGSWarning()
+    }
+
+    $('#main').show()
+
+    const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
+
+    // If this is enabled in a development environment, we'll get ratelimited.
+    // The relaunch frequency is usually far too high.
+    if (!isDev && isLoggedIn) {
+        validateSelectedAccount()
+    }
+
+    if (ConfigManager.isFirstLaunch()) {
+        currentView = VIEWS.welcome
+        $(VIEWS.welcome).fadeIn(1000)
+    } else {
+        if (isLoggedIn) {
+            currentView = VIEWS.landing
+            $(VIEWS.landing).fadeIn(1000)
+        } else {
+            loginOptionsCancelEnabled(false)
+            loginOptionsViewOnLoginSuccess = VIEWS.landing
+            loginOptionsViewOnLoginCancel = VIEWS.loginOptions
+            currentView = VIEWS.loginOptions
+            $(VIEWS.loginOptions).fadeIn(1000)
+        }
+    }
+
+    setTimeout(() => {
+        $('#loadingContainer').fadeOut(500, () => {
+            $('#loadSpinnerImage').removeClass('rotating')
+        })
+
+        // Continue with the rest of the logic
         const checkver = true
         continueMainUILogic(checkver)
-    }
+    }, 250)
 }
 
 
@@ -313,12 +289,20 @@ function showAPIError() {
 // Connects to the API server of the launcher and checks the current version status
 
 function checkVersionStatus() {
+    // Parse the API_BASE_URL
+    const apiUrl = new URL(API_BASE_URL);
+    
     const options = {
-        hostname: 'visoftware.tech',
-        path: `/launcher/version-status.php?version=${remote.app.getVersion()}`,
-        method: 'GET'
+        hostname: apiUrl.hostname,
+        path: `/services/launcher/version?version=${remote.app.getVersion()}`,
+        family: 4,
+        method: 'GET',
+        headers: {
+            'Host': apiUrl.hostname,
+            'User-Agent': 'VI Software Launcher/' + process.version
+        }
     }
-
+    
     return new Promise((resolve, reject) => {
         const req = https.request(options, res => {
             let data = ''
@@ -332,19 +316,20 @@ function checkVersionStatus() {
                     const result = JSON.parse(data)
                     resolve(result)
                 } catch (error) {
+                    console.error('Failed to parse response:', error)
                     reject(error)
                 }
             })
         })
 
-        req.on('error', error => {
+        req.on('error', (error) => {
+            console.error('Request failed:', error)
             reject(error)
         })
 
         req.end()
     })
 }
-
 function showBGSWarning() {
     setTimeout(() => {
         $('#loadingContainer').fadeOut(250, () => {
@@ -736,7 +721,7 @@ async function debug_devModeToggle() {
 async function debug_toggleAuthLibDebug(mode){
     if(mode){
         if(mode=='verbose' || mode=='authlib' || mode=='dumpClass' || mode=='printUntransformed'){
-            console.log('Authlib debug mode enabled for', mode)
+            console.log('Authlib debug mode enabled at level', mode)
             localStorage.setItem('authlibDebug', mode)
         }else{
             console.log('Invalid debug mode')
