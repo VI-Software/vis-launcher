@@ -22,9 +22,11 @@ const { DistributionAPI } = require('vis-launcher-core/common')
 const ConfigManager = require('./configmanager')
 const { CDN_URL } = require('./apiconstants')
 
-defaultAuthHeaders = {  
+const defaultAuthHeaders = {  
     'authorization': 'public-servers',
 }
+
+console.log('defaultAuthHeaders', defaultAuthHeaders)
 
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
