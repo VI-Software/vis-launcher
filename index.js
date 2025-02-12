@@ -276,6 +276,9 @@ function createWindow() {
         win.show()
     })*/
    
+    win.once('ready-to-show', () => {
+        win.webContents.openDevTools(); // Open dev tools when window is ready
+    });
     win.removeMenu()
 
     win.resizable = true
