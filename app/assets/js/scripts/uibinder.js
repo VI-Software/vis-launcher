@@ -294,7 +294,7 @@ function checkVersionStatus() {
     
     const options = {
         hostname: apiUrl.hostname,
-        path: `/services/launcher/version?version=${remote.app.getVersion()}`,
+        path: `/services/launcher/v2/version?version=${remote.app.getVersion()}`,
         family: 4,
         method: 'GET',
         headers: {

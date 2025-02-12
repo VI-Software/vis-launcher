@@ -478,7 +478,7 @@ async function refreshDistroAndSettings(authAcc) {
 
     try {
         logger.info('Fetching distribution data...')
-        const data = await DistroAPI.getDistribution()
+        const data = await DistroAPI.refreshDistributionOrFallback()
         ensureJavaSettings(data)
 
         const currentSelectedServer = ConfigManager.getSelectedServer()
