@@ -1,75 +1,58 @@
-# ENGLISH
+# Security Policy
 
-## Security Policy
+## Reporting a Vulnerability
 
-### Reporting a Vulnerability
+At VI Software, security is a fundamental priority. We are committed to maintaining a secure and reliable open-source launcher. We highly appreciate responsible disclosure of security vulnerabilities and encourage researchers to report potential issues directly to us.
 
-At VI Software, we take security concerns seriously. If you discover any security vulnerabilities within our launcher, please let us know immediately. We appreciate your efforts in responsibly disclosing these issues to us and will work to address them promptly.
+To report a vulnerability, please email **security (at) visoftware.dev** with the following details:
+- A clear and precise description of the vulnerability.
+- Steps to reproduce the issue.
+- Potential impact assessment.
+- Any relevant logs, screenshots, or proof-of-concept code.
 
+We acknowledge and value contributions to our security, and we will work diligently to address reported vulnerabilities in a timely manner.
 
-To report a vulnerability, please email us at vis-project@galnod.com with a detailed description of the vulnerability and steps to reproduce it.
+## Scope
 
-### Scope
+This security policy applies to the **VI Software Launcher** repository hosted on GitHub. It covers vulnerabilities directly related to the launcher, including but not limited to:
 
-This security policy applies to the VI Software launcher hosted on GitHub. It covers vulnerabilities within the launcher software itself, including but not limited to:
+- Remote Code Execution (RCE)
+- Denial-of-Service (DoS) attacks
+- Cross-Site Scripting (XSS)
+- SQL Injection (SQLi)
+- Authentication bypass vulnerabilities
+- Information disclosure
+- Privilege escalation
+- Vulnerabilities affecting the API or any backend services integral to the launcher's functionality
 
--   Remote code execution
--   Denial of service attacks
--   Cross-site scripting (XSS)
--   SQL injection
--   Authentication bypass
--   Information disclosure
+## Exclusions
 
-### Exclusions
+This policy does not cover vulnerabilities in:
+- Third-party dependencies or services, unless they directly impact the security of the launcher.
+- Social engineering attacks, including phishing or impersonation.
+- Security issues related to misconfigured environments or outdated versions outside of our control.
 
-Please note that this policy does not cover vulnerabilities in third-party dependencies or services used by the launcher, unless they pose a direct risk to our users. However, we still encourage you to report such vulnerabilities to the respective maintainers.
+We encourage researchers to report third-party vulnerabilities to the respective maintainers.
 
+## Disclosure Process
 
-### Disclosure Policy
+VI Software follows a structured responsible disclosure process:
 
-We believe in responsible disclosure and will coordinate the release of security advisories with you, the reporter, to ensure that users have sufficient time to update their software before any vulnerabilities are publicly disclosed. We appreciate your cooperation in maintaining the security of our users.
+1. Acknowledge receipt of the report within **48 hours**.
+2. Investigate and validate the reported vulnerability.
+3. Collaborate with the reporter to develop and test a resolution.
+4. Release a security patch and notify affected users.
+5. Coordinate public disclosure after an appropriate remediation period.
 
-### Code of Conduct
+We request researchers to allow us sufficient time to address vulnerabilities before any public disclosure.
 
-We expect all parties involved in the security disclosure process to adhere to our Code of Conduct. Any violations of this code will not be tolerated and may result in the termination of collaboration.
+## Code of Conduct
 
-### Contact Information
+All security researchers and contributors must adhere to ethical and professional standards. Reports submitted in bad faith, including threats or coercion, will not be entertained.
 
-For security-related inquiries, please contact us at vis-project@galnod.com
+## Contact Information
 
-# SPANISH
+For all security-related inquiries, please reach out to **security (at) visoftware.dev**.
 
-## Política de Seguridad
+We appreciate your commitment to improving the security of the VI Software Launcher and thank you for your responsible disclosure efforts.
 
-### Reportar una Vulnerabilidad
-
-En VI Software, tomamos seriamente las preocupaciones de seguridad. Si descubres alguna vulnerabilidad dentro de nuestro lanzador, por favor avísanos inmediatamente. Apreciamos tus esfuerzos al divulgar responsablemente estos problemas y trabajaremos para abordarlos prontamente.
-
-Para reportar una vulnerabilidad, por favor envíanos un correo electrónico a vis-project@galnod.com con una descripción detallada de la vulnerabilidad y los pasos para reproducirla.
-
-### Alcance
-
-Esta política de seguridad se aplica al lanzador de VI Software alojado en GitHub. Cubre vulnerabilidades dentro del propio software del lanzador, incluyendo pero no limitado a:
-
-- Ejecución remota de código
-- Ataques de denegación de servicio
-- Scripting entre sitios (XSS)
-- Inyección SQL
-- Circunvalación de autenticación
-- Divulgación de información
-
-### Exclusiones
-
-Por favor ten en cuenta que esta política no cubre vulnerabilidades en dependencias de terceros o servicios utilizados por el lanzador, a menos que representen un riesgo directo para nuestros usuarios. Sin embargo, te animamos a reportar tales vulnerabilidades a los mantenedores respectivos.
-
-### Política de Divulgación
-
-Creemos en la divulgación responsable y coordinaremos la publicación de avisos de seguridad contigo, el reportero, para asegurar que los usuarios tengan tiempo suficiente para actualizar su software antes de que se divulguen públicamente las vulnerabilidades. Agradecemos tu cooperación en el mantenimiento de la seguridad de nuestros usuarios.
-
-### Código de Conducta
-
-Esperamos que todas las partes involucradas en el proceso de divulgación de seguridad se adhieran a nuestro Código de Conducta. Cualquier violación de este código no será tolerada y puede resultar en la terminación de la colaboración.
-
-### Información de Contacto
-
-Para consultas relacionadas con seguridad, por favor contáctanos en vis-project@galnod.com.
