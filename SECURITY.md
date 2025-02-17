@@ -38,7 +38,7 @@ We encourage researchers to report third-party vulnerabilities to the respective
 
 VI Software follows a structured responsible disclosure process:
 
-1. Acknowledge receipt of the report within **48 hours**.
+1. Acknowledge receipt of the report.
 2. Investigate and validate the reported vulnerability.
 3. Collaborate with the reporter to develop and test a resolution.
 4. Release a security patch and notify affected users.
