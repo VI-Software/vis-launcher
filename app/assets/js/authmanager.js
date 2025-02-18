@@ -181,6 +181,30 @@ exports.addMicrosoftAccount = async function(authCode) {
 }
 
 /**
+ * Check if a challenge is still valid
+ * @param {string} challengeId The challenge ID to check
+ * @param {string} secret The challenge secret
+ * @returns {Promise<boolean>} True if challenge is still valid
+ */
+async function checkChallenge(challengeId, secret) {
+    try {
+        const response = await got.get(`${API_BASE_URL}/services/launcher/v2/viewchallenge?id=${challengeId}`, {
+            headers: {
+                'secret': secret
+            }
+        }).json()
+
+        if(response.status === 'Success') {
+            const expiryDate = new Date(response.challenge.expiry_date)
+            return new Date() < expiryDate
+        }
+        return false
+    } catch (err) {
+        return false
+    }
+}
+
+/**
  * Create a temporary web server to handle the OAuth callback
  */
 function createOAuthServer(port) {
@@ -194,8 +218,9 @@ function createOAuthServer(port) {
                     res.writeHead(200, { 'Content-Type': 'text/html' })
                     res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authorization successful!</h1><p>You may now close this window now.</p></body></html>')
                     server.close()
-                    resolve(token) 
+                    resolve({ token, server }) 
                 } else {
+                    server.close()
                     reject(new Error('No token received'))
                 }
             }
@@ -208,36 +233,108 @@ function createOAuthServer(port) {
         server.on('error', (err) => {
             reject(err)
         })
+
+        // Return server instance so it can be cleaned up if needed
+        return server
     })
 }
 
-/**
- * Add a VI Software Web OAuth account.
- * This will open the browser for web authentication and handle the callback.
- */
 exports.addVISWebAccount = async function() {
+    let pollInterval
+    let challengeValid = true
+    let serverInstance
+
+    const cleanup = () => {
+        if (pollInterval) {
+            clearInterval(pollInterval)
+        }
+        if (serverInstance && serverInstance.listening) {
+            serverInstance.close()
+        }
+    }
+
     try {
         const port = 43123
-        
-        const tokenPromise = createOAuthServer(port)
+        let tokenResolve, tokenReject
+        const tokenPromise = new Promise((resolve, reject) => {
+            tokenResolve = resolve
+            tokenReject = reject
+        })
 
-        const challenge = await got.get(`${API_BASE_URL}/services/launcher/v2/requestchallenge?version=${require('../../../package.json').version}`).json()
-        
-        if(!challenge || !challenge.challengeId) {
-            throw new Error('Failed to get challenge')
-        }
+        // Create server first
+        serverInstance = http.createServer((req, res) => {
+            const url = new URL(req.url, `http://localhost:${port}`)
+            
+            if (url.pathname === '/callback') {
+                const token = url.searchParams.get('token')
+                if (token && challengeValid) {
+                    res.writeHead(200, { 'Content-Type': 'text/html' })
+                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authorization successful!</h1><p>You may now close this window.</p></body></html>')
+                    serverInstance.close()
+                    tokenResolve(token)
+                } else {
+                    res.writeHead(400, { 'Content-Type': 'text/html' })
+                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authentication failed</h1><p>Please close this window and try again.</p></body></html>')
+                    serverInstance.close()
+                    tokenReject(new Error('Invalid token received'))
+                }
+            }
+        })
 
-        const authUrl = `${WEBLOGIN_URL}?challenge=${challenge.challengeId}`
+        // Handle server errors
+        serverInstance.on('error', (err) => {
+            cleanup()
+            tokenReject(err)
+        })
 
-        shell.openExternal(authUrl)
+        // Start listening
+        serverInstance.listen(port, 'localhost', async () => {
+            log.info(`OAuth server listening on port ${port}`)
+            
+            try {
+                // Get challenge after server is ready
+                const challengeResponse = await got.get(`${API_BASE_URL}/services/launcher/v2/requestchallenge?version=${require('../../../package.json').version}`).json()
+                
+                if(!challengeResponse || challengeResponse.status !== 'Success') {
+                    throw new Error(challengeResponse?.error || 'Failed to get challenge')
+                }
 
+                const { challengeId, secret } = challengeResponse
+                const authUrl = `${WEBLOGIN_URL}?challenge=${challengeId}`
+
+                // Open browser after everything is ready
+                shell.openExternal(authUrl)
+
+                // Start polling
+                pollInterval = setInterval(async () => {
+                    const isValid = await checkChallenge(challengeId, secret)
+                    if (!isValid && challengeValid) {
+                        challengeValid = false
+                        cleanup()
+                        tokenReject(new Error('Challenge expired'))
+                    }
+                }, 30000)
+
+            } catch (err) {
+                cleanup()
+                tokenReject(err)
+            }
+        })
+
+        // Wait for authentication
         const token = await tokenPromise
-        
+        cleanup()
+
+        // Rest of the function remains the same...
         const accountInfo = await got.get(`${API_BASE_URL}/services/launcher/v2/whoami`, {
             headers: {
                 'authorization': token
             }
         }).json()
+
+        if (!accountInfo?.data) {
+            throw new Error('Invalid account data received')
+        }
 
         const ret = await addMojangAccount(accountInfo.data.username, accountInfo.data.login)
         
@@ -247,22 +344,25 @@ exports.addVISWebAccount = async function() {
         
         ConfigManager.save()
 
-
         updateSelectedAccount(ret)
         await prepareSettings(true)
         
-        await ConfigManager.getSelectedAccount()
+        await ConfigManager.getSelectedAccount() // It also refreshes CDN authentification to the new account
 
         return ret
 
     } catch (err) {
+        cleanup()
         log.error('Error during VI Software Web OAuth:', err)
-        throw {
+        return Promise.reject({
             title: 'Login Failed',
-            message: 'Failed to authenticate with VI Software. Please try again.'
-        }
+            message: err.message === 'Challenge expired' 
+                ? 'Authentication timeout. Please try again.' 
+                : 'Failed to authenticate with VI Software. Please try again.'
+        })
     }
 }
+
 /**
  * Remove a Mojang account. This will invalidate the access token associated
  * with the account and then remove it from the database.
