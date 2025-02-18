@@ -53,9 +53,18 @@ loginOptionVISWeb.onclick = (e) => {
                 switchView(VIEWS.waiting, loginViewOnSuccess)
             })
             .catch((err) => {
-                // On error, just return to login view
-                switchView(VIEWS.waiting, VIEWS.loginOptions)
-                loginCancelEnabled(true)
+                switchView(VIEWS.waiting, VIEWS.loginOptions, 500, 500)
+                setTimeout(() => {
+                    setOverlayContent(
+                        err.title || 'Error',
+                        err.message || 'An unknown error occurred',
+                        'OK'
+                    )
+                    setOverlayHandler(() => {
+                        toggleOverlay(false)
+                    })
+                    toggleOverlay(true)
+                }, 500) // Wait for view transition to complete
             })
     })
 }
