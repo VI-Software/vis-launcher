@@ -33,10 +33,6 @@ const LangLoader                        = require('./app/assets/js/langloader')
 const pjson = require('./package.json');
 let isExitingThroughTray = false;
 
-
-// Setup Lang
-LangLoader.setupLanguage()
-
 // Setup auto updater.
 function initAutoUpdater(event, data) {
 
@@ -415,12 +411,39 @@ if (!gotTheLock) {
             win.show()
         }
     })
-    app.on('ready', () => {
+    
+    // Initialize language and then create the window when app is ready
+    app.whenReady().then(() => {
+        let locale = '';
+        try {
+            if (process.platform === 'win32') {
+                locale = app.getLocale();
+            } else {
+                // macOS/Linux
+                locale = process.env.LANG || 
+                         process.env.LC_ALL || 
+                         process.env.LC_MESSAGES || 
+                         process.env.LANGUAGE;
+                
+                if (locale) {
+                    // Format: en_US.UTF-8 -> en-US
+                    locale = locale.split('.')[0].replace('_', '-');
+                } else {
+                    locale = app.getLocale();
+                }
+            }
+        } catch (error) {
+            console.error('Error detecting system locale:', error);
+            locale = 'en_US';
+        }
+        
+        LangLoader.setupLanguage(locale)
+        
         createWindow()
+        createMenu()
         createTray()
     })
 }
-app.on('ready', createMenu)
 
 app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar

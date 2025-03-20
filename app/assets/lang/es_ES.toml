@@ -3,7 +3,7 @@
 # \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
 #  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
 #  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-#   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+#   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
 #                         \/                                 \/            \/ 
 #                         
 #                         
@@ -13,6 +13,8 @@
 #    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
 #    Web: https://visoftware.dev
 #    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+# 
+#    Translation by: VI Software
 
 [ejs.landing]
 updateAvailableTooltip = "Actualización disponible"
@@ -69,9 +71,9 @@ accountSelectCancel = "Cancelar"
 navHeaderText = "Configuración"
 navAccount = "Cuenta"
 navMinecraft = "Juego"
-navMods = "Candidatos"
+navMods = "Mods"
 navJava = "Java"
-navLauncher = "Launcher"
+navLauncher = "Lanzador"
 navAbout = "Acerca de"
 navUpdates = "Actualizaciones"
 navDone = "Hecho"
@@ -145,12 +147,17 @@ launcherUpdatesHeaderDesc = "Descarga, instala y revisa las actualizaciones del 
 checkForUpdates = "Buscar actualizaciones"
 whatsNew = "¿Qué hay de nuevo?"
 updateReleaseNotes = "Notas de lanzamiento de la actualización"
+languageTitle = "Idioma"
+languageDesc = "Selecciona el idioma que quieres usar en el launcher."
 
 [ejs.waiting]
 waitingText = "Esperando a VI Software..."
 
 [ejs.welcome]
 continueButton = "CONTINUAR"
+welcomeHeader = "Bienvenido/a a VI Software Launcher"
+welcomeDescription = 'Este launcher fue desarrollado por el <a href="https://github.com/orgs/VI-Software/people" style="color: purple;">equipo de VI Software</a> para facilitar la gestión de modpacks en las experiencias del servidor. Al utilizar este launcher, aceptas la <a style="color: purple;" href="https://docs.visoftware.dev/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://docs.visoftware.dev/vi-software/vis-launcher/terminos-de-uso" style="color: purple;">términos de servicio</a> de <a href="https://visoftware.dev" style="color: purple;">VI Software</a>.'
+welcomeDescCTA = "¡La diversión está a la vuelta de la esquina!"
 
 [js.discord]
 waiting = "Esperando al cliente.."
@@ -197,6 +204,12 @@ ErrorCantCheckTeamOnApiErrorText = "No hemos podido verificar el estado de activ
 serverNotFoundErrorTitle="Error durante el lanzamiento"
 serverNotFoundErrorText="No se ha podido encontrar el servidor seleccionado para la cuenta selecionada. <br>Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 okay = "Aceptar"
+unmantainedErrorTitle = "Versión no mantenida"
+unmantainedErrorMessage = 'Estás utilizando una versión desactualizada del VI Software Launcher, que ya no es mantenida por VI Software y no ofrece soporte. Las nuevas versiones pueden traer nuevas funciones, correcciones de errores y parches para vulnerabilidades. Es importante mantenerse con la última versión estable. Puedes descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
+forceupdateErrorTitle = "Versión no soportada"
+forceupdateErrorMessage = 'La versión actual del launcher no es soportada y VI Software ha ordenado la migración a una versión más nueva, preferiblemente mantenida. Puedes descargar la última versión estable <a href="https://visoftware.dev/launcher" style="color: red">aquí</a>.'
+
+
 
 [js.landing.selectedAccount]
 noAccountSelected = "Ninguna cuenta seleccionada"
@@ -334,15 +347,6 @@ fatalErrorTitle = "Error Fatal: No se puede cargar el índice de distribución"
 fatalErrorMessage = "No se pudo establecer una conexión con nuestros servidores para descargar el índice de distribución. No había copias locales disponibles para cargar. <br><br>El índice de distribución es un archivo esencial que proporciona la información más reciente del servidor. El launcher no puede iniciarse sin él. Asegúrate de estar conectado a Internet y vuelve a iniciar la aplicación."
 closeButton = "Cerrar"
 
-[js.uibinder.forceupdate]
-forceupdateErrorTitle = "Versión no soportada"
-forceupdateErrorMessage = 'La versión actual del launcher no está soportada y VI Software ha ordenado la migración a una versión más reciente, preferiblemente mantenida. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>.'
-closeButton = "De acuerdo"
-
-[js.uibinder.unmantained]
-unmantainedErrorTitle = "Versión no mantenida"
-unmantainedErrorMessage = 'Estás utilizando una versión desactualizada de VI Software Launcher, esta ya no está mantenida por VI Software y no ofrece soporte. Las nuevas versiones pueden traer nuevas características, solución de bugs y parches para las vulnerabilidades. Es importante mantenerse con la última versión estable. Puede descargar la última versión estable <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">aquí</a>'
-
 [js.uibinder.bgservicewarning]
 bgservicewarningErrorTitle = "Ha ocurrido un error"
 bgservicewarningErrorMessage = 'Ha ocurrido un error al intentar conectarse a VI Software Background Services. Como resultado, no hemos podido cargar un fondo dinámico. Hemos aplicado un fondo offline estático, esto puede deberse a un incidente en la infraestructura del servicio, pero si no hay un incidente comunicado, esto podría ser un problema en su final. Puede encontrar más información respecto a este error <a href="https://docs.visoftware.dev/vi-software/vis-launcher/error-al-intentar-conectarse-a-vi-software-background-services" style="color: red">aquí</a>'
@@ -368,3 +372,18 @@ checkForUpdatesButton = "Buscar actualizaciones"
 [js.uicore.loading]
 LoadingText = "Cargando"
 LoaidingTakingTooLong = "El procceso de carga está tardando más de lo esperado. ¿Es su conectividad a internet estable?"
+
+[js.settings.language]
+restartRequiredTitle = "Reinicio Requerido"
+restartRequiredMessage = "Necesitas reiniciar el lanzador para que el cambio de idioma surta efecto."
+restartNowButton = "Reiniciar Ahora"
+restartLaterButton = "Más Tarde"
+
+[settings]
+languageTitle = "Idioma"
+languageDesc = "Selecciona el idioma que quieres usar en el launcher."
+
+[welcome]
+welcomeHeader = "Bienvenido/a a VI Software Launcher"
+welcomeDescription = 'Este launcher fue desarrollado por el equipo de VI Software para facilitar la gestión de modpacks en las experiencias VIS. Al utilizar este launcher, aceptas la <a style="color: purple;" href="https://docs.visoftware.dev/vi-software/vis-launcher/politica-de-privacidad">política de privacidad</a> y <a href="https://docs.visoftware.dev/vi-software/vis-launcher/terminos-de-uso" style="color: purple;">términos de servicio</a> de VI Software'
+welcomeDescCTA = "¡La diversión está a la vuelta de la esquina!"

@@ -23,6 +23,7 @@ const semver = require('semver')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
 const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants')
+const LangLoader = require('./assets/js/langloader')
 
 const settingsState = {
     invalid: new Set()
@@ -363,7 +364,7 @@ function fullSettingsSave() {
 
 /* Closes the settings view and saves all data. */
 settingsNavDone.onclick = () => {
-    fullSettingsSave()
+    saveAllSettings()
     switchView(getCurrentView(), VIEWS.landing)
 }
 
@@ -1605,6 +1606,7 @@ async function prepareSettings(first = false) {
         setupSettingsTabs()
         initSettingsValidators()
         prepareUpdateTab()
+        setupLanguageSelector()
     } else {
         await prepareModsTab()
     }
@@ -1614,5 +1616,85 @@ async function prepareSettings(first = false) {
     prepareAboutTab()
 }
 
-// Prepare the settings UI on startup.
-//prepareSettings(true)
+/**
+ * Set up the language selector dropdown in the launcher tab.
+ */
+function setupLanguageSelector() {
+    const languageOptions = document.getElementById('settingsLanguageOptions') 
+    const languageSelected = document.getElementById('settingsLanguageSelected')
+    const supportedLanguages = LangLoader.getSupportedLanguages()
+    
+    const currentLang = LangLoader.getLanguageOverride() || 'en_US'
+    
+    languageSelected.innerHTML = supportedLanguages[currentLang] || supportedLanguages['en_US']
+    
+    languageOptions.innerHTML = ''
+    
+    Object.entries(supportedLanguages).forEach(([langCode, langName]) => {
+        const option = document.createElement('div')
+        option.setAttribute('value', langCode)
+        option.innerHTML = langName
+        if (langCode === currentLang) {
+            option.setAttribute('selected', '')
+        }
+        
+        option.addEventListener('click', () => {
+            if (langCode === currentLang) return
+            
+            languageSelected.innerHTML = langName
+            
+            Array.from(languageOptions.children).forEach(child => {
+                child.removeAttribute('selected')
+            })
+            option.setAttribute('selected', '')
+            
+            LangLoader.setLanguageOverride(langCode)
+            
+            // require restart to the user
+            setOverlayContent(
+                Lang.queryJS('settings.language.restartRequiredTitle'),
+                Lang.queryJS('settings.language.restartRequiredMessage'),
+                Lang.queryJS('settings.language.restartNowButton'),
+                Lang.queryJS('settings.language.restartLaterButton')
+            )
+            
+            setOverlayHandler(() => {
+                remote.app.relaunch()
+                remote.app.exit(0)
+            })
+            
+            setDismissHandler(() => {
+                toggleOverlay(false)
+            })
+            
+            toggleOverlay(true, true)
+        })
+        
+        languageOptions.appendChild(option)
+    })
+}
+
+/**
+ * Save all settings including the currently selected language.
+ */
+function saveAllSettings() {
+    saveSettingsValues()
+    saveModConfiguration()
+    
+    // Get the selected language from the UI
+    const selectedLang = document.querySelector('#settingsLanguageOptions [selected]')
+    if (selectedLang) {
+        const langCode = selectedLang.getAttribute('value')
+        LangLoader.setLanguageOverride(langCode)
+    }
+    
+    ConfigManager.save()
+    saveDropinModConfiguration()
+    saveShaderpackSettings()
+}
+
+// Replace the fullSettingsSave call in the settingsNavDone click handler
+settingsNavDone.onclick = () => {
+    saveAllSettings()
+    switchView(getCurrentView(), VIEWS.landing)
+}
