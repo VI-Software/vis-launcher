@@ -1,0 +1,388 @@
+#
+#    ____   ____.___    _________       _____  __                                 
+# \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+#  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+#  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+#   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+#                         \/                                 \/            \/ 
+#                         
+#                         
+#    © 2025 VI Software. All rights reserved.
+#    
+#    GitHub: https://github.com/VI-Software
+#    Documentation: https://docs.visoftware.dev/vi-software/vis-launcher
+#    Web: https://visoftware.dev
+#    Project License: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+# 
+#    Translation by: VI Software
+
+[ejs.landing]
+updateAvailableTooltip = "Actualització disponible"
+usernamePlaceholder = "Nom del compte"
+usernameEditButton = "Editar"
+settingsTooltip = "Configuració"
+serverStatus = "SERVIDOR"
+serverStatusPlaceholder = "Desconnectat"
+visStatus = "ESTAT DE VI SOFTWARE"
+visStatusTooltipTitle = "Serveis"
+vistatusNETitle = "No&nbsp;Essencial"
+newsButton = "NOTÍCIES"
+launchButton = "JUGAR"
+launchButtonPlaceholder = "&#8226; Cap servidor seleccionat"
+launchDetails = "Si us plau, espereu.."
+newsNavigationStatus = "{currentPage} de {totalPages}"
+newsErrorLoadSpan = "Comprovant notícies.."
+newsErrorFailedSpan = "No s'han pogut carregar les notícies"
+newsErrorRetryButton = "Tornar a provar"
+newsErrorNoneSpan = "Sense notícies"
+
+[ejs.login]
+loginCancelText = "Cancel·lar"
+loginSubheader = "Iniciant sessió amb VI Software Yggdrasil"
+loginEmailError = "* Valor invàlid"
+loginEmailPlaceholder = "NOM D'USUARI"
+loginPasswordError = "* Obligatori"
+loginPasswordPlaceholder = "CONTRASENYA"
+loginForgotPasswordLink = "https://docs.visoftware.dev/vi-software/vis-yggdrasil-auth/view-my-account-information"
+loginForgotPasswordText = "Consultar les meves dades"
+loginRememberMeText = "Recordar-me"
+loginButtonText = "INICIAR SESSIÓ"
+loginNeedAccountLink = "https://puf.visoftware.dev"
+loginNeedAccountText = "Necessites un compte?"
+loginPasswordDisclaimer1 = "La teva contrasenya s'envia directament al servidor de VI Software i mai es guarda."
+loginPasswordDisclaimer2 = "&copy 2025 VI Software i col·laboradors. Tots els drets reservats."
+
+[ejs.loginOptions]
+loginOptionsTitle = "Opcions d'inici de sessió"
+loginWithMicrosoft = "Iniciar sessió amb Microsoft"
+loginWithVISWeb = "Iniciar sessió amb VI Software Web oAuth 2.0"
+loginWithVIS = "Iniciar sessió amb VI Software Legacy"
+cancelButton = "Cancel·lar"
+
+[ejs.overlay]
+serverSelectHeader = "Llista de servidors de VI Software"
+serverSelectConfirm = "Seleccionar"
+serverSelectCancel = "Cancel·lar"
+accountSelectHeader = "Selecciona un compte"
+accountSelectConfirm = "Seleccionar"
+accountSelectCancel = "Cancel·lar"
+
+[ejs.settings]
+navHeaderText = "Configuració"
+navAccount = "Compte"
+navMinecraft = "Joc"
+navMods = "Mods"
+navJava = "Java"
+navLauncher = "Llançador"
+navAbout = "Sobre"
+navUpdates = "Actualitzacions"
+navDone = "Fet"
+tabAccountHeaderText = "Configuració del compte"
+tabAccountHeaderDesc = "Afegir nous comptes o gestionar els existents."
+microsoftAccount = "Microsoft"
+addMicrosoftAccount = "+ Afegir compte de Microsoft"
+VISAccount = "VI Software"
+addVISAccount = "+ Afegir compte de VI Software"
+minecraftTabHeaderText = "Configuració del joc"
+minecraftTabHeaderDesc = "Opcions relacionades amb l'inici del joc."
+gameResolutionTitle = "Resolució del joc"
+launchFullscreenTitle = "Iniciar en pantalla completa"
+autoConnectTitle = "Connectar automàticament al servidor en iniciar el joc si està disponible."
+autoConnectDesc = "Es connecta automàticament al servidor si la funcionalitat està disponible al servidor seleccionat. (Ha d'estar habilitat per l'administrador de l'experiència)"
+MinimizeLauncherOnLaunch = "Minimitzar el llançador a la safata del sistema en iniciar el joc."
+MinimizeLauncherOnLaunchDesc = "Mantenir el llançador a la safata del sistema quan s'inicia el joc. S'obrirà automàticament quan es tanqui el joc."
+launchDetachedTitle = "(Avançat) Separar el procés del joc del procés del llançador"
+launchDetachedDesc = "Si els processos del llançador i del joc no estan separats, tancar el llançador també tancarà el joc."
+tabModsHeaderText = "Configuració de mods"
+tabModsHeaderDesc = "Activar o desactivar mods."
+switchServerButton = "Canviar"
+requiredMods = "Mods requerits"
+requiredDesc = "Aquests mods són obligatoris segons l'administrador de l'experiència. S'inclouran sempre quan iniciïs el joc."
+optionalMods = "Mods opcionals"
+optionalDesc = "Aquests mods estan inclosos amb l'experiència dissenyada pel teu administrador, alguns dels quals poden estar activats per defecte. És la teva elecció activar-los o desactivar-los."
+dropinMods = "Mods addicionals"
+dropinModsDesc = "Personalitza l'experiència al teu gust! Afegeix mods que el teu administrador no inclou amb l'experiència aquí."
+addMods = "Afegir mods"
+dropinRefreshNote = "(F5 per actualitzar)"
+shaderpacks = "Paquets de shaders"
+shaderpackDesc = "Activa o desactiva els shaders. Tingues en compte que els shaders només funcionaran correctament en configuracions potents. Pots afegir paquets personalitzats aquí."
+selectShaderpack = "Seleccionar paquet de shaders"
+tabJavaHeaderText = "Configuració de Java"
+tabJavaHeaderDesc = "Gestionar configuració avançada de Java."
+memoryTitle = "Memòria"
+maxRAM = "RAM màxima"
+minRAM = "RAM mínima"
+memoryDesc = "Es recomana un mínim de 3 gigabytes de RAM. Establir els valors mínim i màxim iguals pot reduir les baixades de rendiment."
+memoryTotalTitle = "Total"
+memoryAvailableTitle = "Disponible"
+javaExecutableTitle = "Executable de Java"
+javaExecSelDialogTitle = "Seleccionar executable de Java"
+javaExecSelButtonText = "Triar fitxer"
+javaExecDesc = "L'executable de Java es valida abans d'iniciar el joc."
+javaPathDesc = "La ruta ha d'acabar amb <strong>{pathSuffix}</strong>."
+jvmOptsTitle = "Opcions addicionals de JVM"
+jvmOptsDesc = "Opcions que es proporcionaran a la JVM en temps d'execució. <em>-Xms</em> i <em>-Xmx</em> no s'han d'incloure."
+launcherTabHeaderText = "Configuració del llançador"
+launcherTabHeaderDesc = "Opcions relacionades amb el llançador."
+allowPrereleaseTitle = "Canal d'actualitzacions nocturnes."
+allowPrereleaseDesc = "Les versions nocturnes inclouen noves funcions que poden no haver estat completament provades o integrades.<br>Aquesta opció es considerarà activa sempre que estiguis en una versió nocturna."
+dataDirectoryTitle = "Directori de dades"
+selectDataDirectory = "Seleccionar directori de dades"
+chooseFolder = "Triar carpeta"
+dataDirectoryDesc = "Tots els fitxers del joc i les instal·lacions locals de Java s'emmagatzemaran al directori de dades.<br>Les captures de pantalla i els guardats del món s'emmagatzemen a la carpeta d'instància per a la configuració del servidor corresponent."
+aboutTabHeaderText = "Sobre"
+aboutTabHeaderDesc = "Veure informació i notes de la versió actual."
+aboutTitle = "{appName}"
+stableRelease = "Versió estable"
+versionText = "Versió "
+sourceGithub = "Codi font (GitHub)"
+soporte = "Suport"
+devToolsConsole = "Consola d'eines de desenvolupament"
+releaseNotes = "Notes de la versió"
+changelog = "Registre de canvis"
+noReleaseNotes = "Sense notes de la versió"
+viewReleaseNotes = "Veure notes de la versió a GitHub"
+launcherUpdatesHeaderText = "Actualitzacions del llançador"
+launcherUpdatesHeaderDesc = "Descarregar, instal·lar i revisar actualitzacions del llançador."
+checkForUpdates = "Comprovar actualitzacions"
+whatsNew = "Què hi ha de nou?"
+updateReleaseNotes = "Notes de la versió de l'actualització"
+languageTitle = "Idioma"
+languageDesc = "Selecciona l'idioma que vols utilitzar al launcher."
+
+[ejs.waiting]
+waitingText = "Esperant a VI Software..."
+
+[ejs.welcome]
+continueButton = "CONTINUAR"
+welcomeHeader = "Benvingut/da a VI Software Launcher"
+welcomeDescription = "Aquest launcher va ser desenvolupat per l'<a href=\"https://github.com/orgs/VI-Software/people\" style=\"color: purple;\">equip de VI Software</a> per facilitar la gestió de modpacks a les experiències del servidor. En utilitzar aquest launcher, acceptes la <a style=\"color: purple;\" href=\"https://docs.visoftware.dev/vi-software/vis-launcher/privacy-policy\">política de privacitat</a> i els <a href=\"https://docs.visoftware.dev/vi-software/vis-launcher/terms-of-service\" style=\"color: purple;\">termes de servei</a> de <a href=\"https://visoftware.dev\" style=\"color: purple;\">VI Software</a>."
+welcomeDescCTA = "La diversió és a la cantonada!"
+
+[js.discord]
+waiting = "Esperant al client.."
+state = "Servidor: {shortId}"
+
+[js.index]
+microsoftLoginTitle = "Inici de sessió de Microsoft"
+microsoftLogoutTitle = "Tancament de sessió de Microsoft"
+
+[js.login]
+login = "INICIAR SESSIÓ"
+loggingIn = "INICIANT SESSIÓ"
+success = "ÈXIT"
+tryAgain = "Tornar a provar"
+
+[js.login.error]
+invalidValue = "* Valor invàlid"
+requiredValue = "* Obligatori"
+
+[js.login.error.unknown]
+title = "Error desconegut durant l'inici de sessió"
+desc = "S'ha produït un error desconegut. Comprova la consola per a més detalls (CTRL + Shift + i)"
+
+[js.landing.launch]
+pleaseWait = "Si us plau, espereu..."
+checkingClient = "Comprovant instància..."
+checkingAccount = "Autenticant..."
+failureTitle = "Error durant l'inici"
+failureText = "Comprova la consola (CTRL + Shift + i) per a més detalls."
+noaccessTitle = "Error durant l'inici"
+noaccessText = "El compte seleccionat no té permís per accedir al servidor seleccionat."
+NoCheckModErrorTitle = "Error durant l'inici"
+NoCheckModErrorText = "No s'ha pogut verificar el compte al sistema de moderació de VI Software. <br>Comprova la consola (CTRL + Shift + i) per a més detalls."
+WarnsnotreadErrorTitle = "Error durant l'inici"
+WarnsnotreadErrorText = "Hi ha una o més sancions pendents de ser vistes per tu. <a href=\"https://puf.visoftware.dev\" style=\"color: red\">Pots comprovar-les al panell d'usuari final de VI Software</a>"
+AccountDisabledErrorTitle = "Error durant l'inici"
+AccountDisabledErrorText = "El compte seleccionat està actualment desactivat <span style=\"color: pink;\">per l'administrador de l'experiència</span>. Pots trobar més informació sobre els teus comptes a <a href=\"https://puf.visoftware.dev\" style=\"color: pink;\">el panell d'usuari final de VI Software</a>. <br>VI Software <span style=\"color: red;\">NO POT</span> ajudar-te amb aquest assumpte."
+TeamBannedErrorTitle = "Error durant l'inici"
+TeamBannedErrorText = "L'equip propietari del servidor està actualment suspès <span style=\"color: pink;\">per VI Software</span>. <br>Aquesta és una sanció imposada a l'equip propietari del servidor, no al teu compte."
+GlobalAccountDisabledErrorTitle = "401 | No autoritzat"
+GlobalAccountDisabledErrorText = 'No tens permisos suficients per accedir al recurs sol·licitat. <br> Comprova la consola per a més detalls (CTRL + Shift + i)'
+ErrorCantCheckTeamOnApiErrorTitle = "Error durant l'inici"
+ErrorCantCheckTeamOnApiErrorText = "No hem pogut verificar l'estat d'activitat de l'equip del servidor. <br>Comprova la consola (CTRL + Shift + i) per a més detalls."
+serverNotFoundErrorTitle = "Error durant l'inici"
+serverNotFoundErrorText = "No s'ha pogut trobar el servidor seleccionat per al compte seleccionat. <br>Comprova la consola (CTRL + Shift + i) per a més detalls."
+okay = "D'acord"
+unmantainedErrorTitle = "Versió no mantinguda"
+unmantainedErrorMessage = "Estàs utilitzant una versió obsoleta del VI Software Launcher, que ja no és mantinguda per VI Software i no ofereix suport. Les noves versions poden portar noves funcions, correccions d'errors i parches per a vulnerabilitats. És important mantenir-se amb la última versió estable. Pots descarregar la última versió estable <a href=\"https://github.com/VI-Software/vis-launcher/releases/latest\" style=\"color: red\">aquí</a>"
+forceupdateErrorTitle = "Versió no suportada"
+forceupdateErrorMessage = 'La versió actual del llançador no és suportada i VI Software ha ordenat la migració a una versió més nova, preferiblement mantinguda. Pots descarregar la última versió estable <a href="https://visoftware.dev/launcher" style="color: red">aquí</a>.'
+
+
+[js.landing.selectedAccount]
+noAccountSelected = "Cap compte seleccionat"
+
+[js.landing.selectedServer]
+noSelection = "Cap servidor seleccionat"
+loading = "Carregant..."
+
+[js.landing.serverStatus]
+server = "SERVIDOR"
+offline = "Desconnectat"
+players = "JUGADORS"
+
+[js.landing.systemScan]
+checking = "Comprovant informació del sistema.."
+noCompatibleJava = "No s'ha trobat cap instal·lació de Java compatible."
+installJavaMessage = "Per iniciar Minecraft, necessites una instal·lació de Java {major} de 64 bits. Vols que instal·lem una còpia?"
+installJava = "Instal·lar Java"
+installJavaManually = "Instal·lar manualment"
+javaDownloadPrepare = "Preparant la descàrrega de Java.."
+javaDownloadFailureTitle = "Error durant la descàrrega de Java"
+javaDownloadFailureText = "Comprova la consola (CTRL + Shift + i) per a més detalls."
+javaRequired = "Es requereix Java<br>per iniciar"
+javaRequiredMessage = 'Es requereix una instal·lació vàlida de Java {major} x64 per iniciar.<br><br>Consulta aquesta <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Guia de gestió de Java</a> per obtenir instruccions sobre com instal·lar Java manualment.'
+javaRequiredDismiss = "Ho entenc"
+javaRequiredCancel = "Tornar"
+
+[js.landing.downloadJava]
+findJdkFailure = "No s'ha pogut trobar una distribució OpenJDK."
+javaDownloadCorruptedError = "El JDK descarregat té un hash incorrecte, el fitxer podria estar corrupte."
+extractingJava = "Extraient Java"
+javaInstalled = "Java instal·lat!"
+
+[js.landing.dlAsync]
+loadingServerInfo = "Carregant informació..."
+fatalError = "Error fatal"
+unableToLoadDistributionIndex = "No s'ha pogut carregar una còpia de l'índex de distribució. Comprova la consola (CTRL + Shift + i) per a més detalls."
+pleaseWait = "Si us plau, espereu..."
+errorDuringLaunchTitle = "Error durant l'inici"
+seeConsoleForDetails = "Comprova la consola (CTRL + Shift + i) per a més detalls."
+validatingFileIntegrity = "Validant fitxers..."
+errorDuringFileVerificationTitle = "Error durant la verificació de fitxers"
+downloadingFiles = "Descarregant fitxers..."
+errorDuringFileDownloadTitle = "Error durant la descàrrega de fitxers"
+preparingToLaunch = "Preparant per iniciar..."
+launchingGame = "Iniciant joc..."
+launchWrapperNotDownloaded = "El fitxer principal, LaunchWrapper, no s'ha descarregat correctament. Com a resultat, el joc no es pot iniciar.<br><br>Per solucionar aquest problema, desactiva temporalment el teu antivirus i reinicia el joc.<br><br>Si tens temps, si us plau <a href=\"https://github.com/VI-Software/vis-launcher/issues\">obre una incidència al nostre GitHub</a> i fes-nos saber quin antivirus estàs utilitzant. Ens posarem en contacte amb ells i intentarem resoldre el problema."
+doneEnjoyServer = "Fet. Gaudeix del servidor!"
+checkConsoleForDetails = "Si us plau, comprova la consola (CTRL + Shift + i) per a més detalls."
+
+[js.landing.news]
+checking = "Comprovant notícies..."
+
+[js.landing.discord]
+loading = "Carregant joc..."
+joining = "Connectant al servidor..."
+joined = "En un servidor multijugador"
+
+[js.overlay]
+dismiss = "Descartar"
+
+[js.processbuilder.exit]
+exitErrorHeader = "El joc s'ha tancat amb un codi d'error"
+message = "El joc s'ha tancat inesperadament amb el següent codi: "
+copyCode = "Copiar codi"
+copyCodeText = "Codi de tancament inesperat del joc: "
+visnosupport = "<br><br><small>Aquest és un error amb el modpack de l'experiència, no amb el llançador de VI Software. Contacta amb l'administrador de l'experiència, <span style=\"color: red;\">NO</span> contactis amb VI Software per suport sobre aquest error.</small>"
+
+[js.settings.fileSelectors]
+executables = "Executables"
+allFiles = "Tots els fitxers"
+
+[js.settings.mstfLogin]
+errorTitle = "Alguna cosa ha anat malament"
+errorMessage = "L'autenticació de Microsoft ha fallat. Si us plau, torna-ho a provar."
+okButton = "D'acord"
+
+[js.settings.mstfLogout]
+errorTitle = "Alguna cosa ha anat malament"
+errorMessage = "El tancament de sessió de Microsoft ha fallat. Si us plau, torna-ho a provar."
+okButton = "D'acord"
+
+[js.settings.authAccountSelect]
+selectButton = "Seleccionar compte"
+selectedButton = "Compte seleccionat ✓"
+
+[js.settings.authAccountLogout]
+lastAccountWarningTitle = "Avís<br>Aquest és el teu últim compte"
+lastAccountWarningMessage = "Per utilitzar el llançador, has d'haver iniciat sessió amb almenys un compte. Hauràs d'iniciar sessió de nou després.<br><br>Estàs segur que vols tancar la sessió?"
+confirmButton = "N'estic segur"
+cancelButton = "Cancel·lar"
+
+[js.settings.authAccountPopulate]
+username = "Nom del compte"
+rank = "Rang"
+uuid = "UUID"
+selectAccount = "Seleccionar compte"
+selectedAccount = "Compte seleccionat ✓"
+logout = "Tancar sessió"
+
+[js.settings.dropinMods]
+removeButton = "Eliminar"
+deleteFailedTitle = "No s'ha pogut eliminar<br>el mod addicional {fullName}"
+deleteFailedMessage = "Assegura't que el fitxer no està en ús i torna-ho a provar."
+failedToggleTitle = "No s'ha pogut canviar<br>Un o més mods addicionals"
+okButton = "D'acord"
+
+[js.settings.serverListing]
+mainServer = "Servidor principal"
+info = 'Pots gestionar els teus servidors a <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
+noServers = "No tenim servidors per mostrar-te. <br>Pots gestionar els servidors que apareixen aquí al <a style=\"color: pink;\" href=\"https://puf.visoftware.dev/servers\">panell d'usuari final de VI Software</a>.</div>"
+
+[js.settings.java]
+selectedJava = "Seleccionat: Java {version} ({vendor})"
+invalidSelection = "Selecció invàlida"
+requiresJava = "Requereix Java {major} x64."
+availableOptions = "Opcions disponibles per a Java {major} (HotSpot VM)"
+
+[js.settings.about]
+preReleaseTitle = "Versió nocturna"
+stableReleaseTitle = "Versió estable"
+releaseNotesFailed = "No s'han pogut carregar les notes de la versió."
+
+[js.settings.updates]
+newReleaseTitle = "Nova versió disponible"
+newPreReleaseTitle = "Nova versió preliminar disponible"
+downloadingButton = "Descarregant..."
+downloadButton = 'Descarregar de GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Tanca el llançador i executa el fitxer dmg per actualitzar.</span>'
+latestVersionTitle = "Estàs utilitzant la última versió"
+checkForUpdatesButton = "Comprovar actualitzacions"
+checkingForUpdatesButton = "Comprovant actualitzacions..."
+
+[js.uibinder.startup]
+fatalErrorTitle = "Error fatal: No es pot carregar l'índex de distribució"
+fatalErrorMessage = "No s'ha pogut establir una connexió amb els nostres servidors per descarregar l'índex de distribució. No hi havia còpies locals disponibles per carregar. <br><br>L'índex de distribució és un fitxer essencial que proporciona la informació més recent del servidor. El llançador no pot iniciar-se sense ell. Assegura't que estàs connectat a Internet i reinicia l'aplicació."
+closeButton = "Tancar"
+
+[js.uibinder.bgservicewarning]
+bgservicewarningErrorTitle = "S'ha produït un error"
+bgservicewarningErrorMessage = "S'ha produït un error mentre s'intentava connectar amb els serveis en segon pla de VI Software. Com a resultat, no hem pogut carregar un fons dinàmic. Hem aplicat un fons estàtic fora de línia, això pot ser degut a un incident en la infraestructura del servei, però si no hi ha cap incident reportat, podria ser un problema al teu extrem. Pots trobar més informació sobre aquest error <a href=\"https://docs.visoftware.dev/vi-software/vis-launcher/error-trying-to-connect-to-vi-software-background-services\" style=\"color: red\">aquí</a>"
+ignoreButton = "Continuar"
+
+[js.uibinder.fatalapierror]
+fatalapierrorErrorTitle = "Error catastròfic"
+fatalapierrorErrorMessage = "No s'ha pogut connectar amb l'API de VI Software. No podem continuar de cap manera. Si no hi ha cap incident per part de VI Software, podria ser un problema al teu extrem. Pots trobar més informació <a href=\"https://github.com/VI-Software/vis-launcher/releases/latest\" style=\"color: red\">aquí</a>"
+closeButton = "Tancar"
+
+[js.uibinder.validateAccount]
+failedMessageTitle = "No s'ha pogut actualitzar l'inici de sessió"
+failedMessage = "No hem pogut actualitzar l'inici de sessió per a <strong>{account}</strong>. Si us plau, selecciona un altre compte o inicia sessió de nou."
+failedMessageSelectAnotherAccount = "No hem pogut actualitzar l'inici de sessió per a <strong>{account}</strong>. Si us plau, inicia sessió de nou."
+loginButton = "Iniciar sessió"
+selectAnotherAccountButton = "Seleccionar un altre compte"
+
+[js.uicore.autoUpdate]
+checkingForUpdateButton = "Comprovant actualitzacions..."
+installNowButton = "Instal·lar ara"
+checkForUpdatesButton = "Comprovar actualitzacions"
+
+[js.uicore.loading]
+LoadingText = "Carregant"
+LoaidingTakingTooLong = "El procés de càrrega està trigant més del esperat. La teva connexió a Internet és estable?"
+
+[js.settings.language]
+restartRequiredTitle = "Cal reiniciar"
+restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi d'idioma tingui efecte."
+restartNowButton = "Reiniciar ara"
+restartLaterButton = "Més tard"
+
+[settings]
+languageTitle = "Idioma"
+languageDesc = "Selecciona l'idioma que vols utilitzar al launcher."
+
+[welcome]
+welcomeHeader = "Benvingut/da a VI Software Launcher"
+welcomeDescription = "Aquest launcher va ser desenvolupat per l'equip de VI Software per facilitar la gestió de modpacks a les experiències VIS. En utilitzar aquest launcher, acceptes la <a style=\"color: purple;\" href=\"https://docs.visoftware.dev/vi-software/vis-launcher/politica-de-privacitat\">política de privacitat</a> i els <a href=\"https://docs.visoftware.dev/vi-software/vis-launcher/termes-d-us\" style=\"color: purple;\">termes de servei</a> de VI Software"
+welcomeDescCTA = "La diversió és a la cantonada!"

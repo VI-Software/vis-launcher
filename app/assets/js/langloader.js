@@ -21,16 +21,29 @@ const fs = require('fs-extra')
 const path = require('path')
 const toml = require('toml')
 const merge = require('lodash.merge')
+const os = require('os')
 
 let lang
 
+const SUPPORTED_LANGUAGES = {
+    'en-US': { id: 'en_US', name: 'English (US)' },
+    'es-ES': { id: 'es_ES', name: 'Español (España)' },
+    'pt_PT': { id: 'pt_PT', name: 'Português (Portugal)' },
+    'ca_ES': { id: 'ca_ES', name: 'Català (Espanya)' }
+}
+
 exports.loadLanguage = function(id){
-    lang = merge(lang || {}, toml.parse(fs.readFileSync(path.join(__dirname, '..', 'lang', `${id}.toml`))) || {})
+    try {
+        lang = merge(lang || {}, toml.parse(fs.readFileSync(path.join(__dirname, '..', 'lang', `${id}.toml`))) || {})
+    } catch (error) {
+        console.error(`Failed to load language file: ${id}`, error)
+    }
 }
 
 exports.query = function(id, placeHolders){
     let query = id.split('.')
     let res = lang
+    
     for(let q of query){
         res = res[q]
     }
@@ -51,10 +64,108 @@ exports.queryEJS = function(id, placeHolders){
     return exports.query(`ejs.${id}`, placeHolders)
 }
 
-exports.setupLanguage = function(){
-    // Load Language Files
-    exports.loadLanguage('es_ES')
+exports.getLanguageOverride = function() {
+    const overridePath = path.join(exports.getLauncherDirectory(), 'langoverwrite.json')
+    try {
+        if (fs.existsSync(overridePath)) {
+            const data = fs.readFileSync(overridePath, 'utf8')
+            const override = JSON.parse(data)
+            if (override && override.language) {
+                return override.language
+            }
+        }
+    } catch (error) {
+        console.error('Error reading language override file:', error)
+    }
+    return null
+}
 
-    // Load Custom Language File for Launcher Customizer
+exports.setLanguageOverride = function(language) {
+    if (!language) return false
+    
+    // Validate that this is a supported language ID
+    const supportedIDs = Object.values(SUPPORTED_LANGUAGES)
+        .map(lang => lang.id)
+        .filter((id, index, self) => self.indexOf(id) === index) // Get unique values
+    
+    let isSupported = supportedIDs.includes(language)
+    if (!isSupported) {
+        console.error(`Attempted to set unsupported language: ${language}`)
+        return false
+    }
+    
+    const launcherDir = exports.getLauncherDirectory()
+    
+    // Ensure directory exists
+    try {
+        if (!fs.existsSync(launcherDir)) {
+            fs.mkdirSync(launcherDir, { recursive: true })
+            console.log(`Created launcher directory at: ${launcherDir}`)
+        }
+        
+        const overridePath = path.join(launcherDir, 'langoverwrite.json')
+        fs.writeFileSync(overridePath, JSON.stringify({ language }), 'utf8')
+        console.log(`Set language override to: ${language}, saved at: ${overridePath}`)
+        return true
+    } catch (error) {
+        console.error('Error writing language override file:', error)
+        console.error(error.stack)
+        return false
+    }
+}
+
+exports.getLauncherDirectory = function() {
+    try {
+        const { app } = process.type === 'browser' 
+            ? require('electron') 
+            : require('@electron/remote') || require('electron').remote;
+            
+        return app.getPath('userData');
+    } catch (err) {
+        return path.join(os.homedir(), '.vis-launcher');
+    }
+}
+
+exports.getSupportedLanguages = function() {
+    const result = {}
+    Object.values(SUPPORTED_LANGUAGES)
+        .forEach(lang => {
+            result[lang.id] = lang.name
+        })
+    
+    return result
+}
+
+exports.setupLanguage = function(systemLocale){
+    let langToUse = 'en_US' // fallback
+    
+    const override = exports.getLanguageOverride()
+    if (override) {
+        langToUse = override
+    } else if (systemLocale) {
+        if (SUPPORTED_LANGUAGES[systemLocale]) {
+            langToUse = SUPPORTED_LANGUAGES[systemLocale].id
+        } else {
+            // Try to match just the language part (e.g. "en-GB" -> "en")
+            const baseLang = systemLocale.split(/[-_]/)[0]
+            if (SUPPORTED_LANGUAGES[baseLang]) {
+                langToUse = SUPPORTED_LANGUAGES[baseLang].id
+            }
+        }
+    }
+    
+    try {
+        const langPath = path.join(__dirname, '..', 'lang', `${langToUse}.toml`)
+        if (!fs.existsSync(langPath)) {
+            console.warn(`Language file ${langToUse}.toml not found, falling back to es_ES`)
+            langToUse = 'es_ES'
+        }
+    } catch (error) {
+        console.error('Error checking language file:', error)
+        langToUse = 'es_ES'
+    }
+    
+    exports.loadLanguage(langToUse)
+
     exports.loadLanguage('settings')
 }

@@ -3742,7 +3742,6 @@ input:checked + .toggleSwitchSlider:before {
     color: rgba(165, 165, 165, 0.75);
 }
 
-/* Add spacing between overlay content elements. */
 #overlayContent > *:first-child {
     margin-top: 0px !important;
 }
@@ -3753,7 +3752,6 @@ input:checked + .toggleSwitchSlider:before {
     margin: 8px 0px;
 }
 
-/* Overlay title styles. */
 #overlayTitle {
     font-family: 'Avenir Medium';
     font-size: 20px;
@@ -3762,21 +3760,18 @@ input:checked + .toggleSwitchSlider:before {
     -webkit-user-select: initial;
 }
 
-/* Overlay description styles. */
 #overlayDesc {
     font-size: 12px;
     font-weight: bold;
     -webkit-user-select: initial;
 }
 
-/* Div which contains action buttons. */
 #overlayActionContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-/* Overlay acknowledge button styles. */
 #overlayAcknowledge {
     background: none;
     border: 1px solid #ffffff;
@@ -4369,6 +4364,123 @@ progress::-webkit-progress-value {
     backdrop-filter: blur(5px);
 }
 
+/* Language Dropdown Styling */
+#settingsLanguageOptions {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #222;
+    border: 1px solid #444;
+    border-top: none;
+    margin-top: 0;
+    width: 100%;
+}
+
+#settingsLanguageOptions div {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+#settingsLanguageOptions div:hover {
+    background-color: #333;
+}
+
+#settingsLanguageOptions div[selected] {
+    background-color: #444;
+}
+
+.settingsSelectContainer {
+    position: relative;
+    width: 100%;
+}
+
+.settingsSelectSelected {
+    background: #222;
+    border: 1px solid #444;
+    padding: 8px 12px;
+    cursor: pointer;
+    position: relative;
+}
+
+.settingsSelectSelected:after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-top-color: #fff;
+}
+
+.settingsSelectSelected.select-arrow-active:after {
+    transform: translateY(-75%);
+    border-top-color: transparent;
+    border-bottom-color: #fff;
+}
+
+/* Language dropdown styling */
+#settingsLanguageOptions {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#settingsLanguageOptions div {
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.1s ease-in-out;
+}
+
+#settingsLanguageOptions div:hover {
+    background-color: #383838;
+}
+
+#settingsLanguageOptions div[selected] {
+    background-color: #272727;
+    color: #fff;
+    font-weight: 500;
+}
+
+.settingsSelectContainer {
+    position: relative;
+    width: 100%;
+    user-select: none;
+}
+
+.settingsSelectSelected {
+    background-color: #222222;
+    border: 1px solid #383838;
+    border-radius: 4px;
+    padding: 8px 12px;
+    cursor: pointer;
+    position: relative;
+}
+
+.settingsSelectSelected:after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 6px solid transparent;
+    border-top-color: #fff;
+    pointer-events: none;
+}
+
+.settingsSelectSelected.select-arrow-active:after {
+    border-top-color: transparent;
+    border-bottom-color: #fff;
+    transform: translateY(-75%);
+}
+
+.settingsSelectOptions {
+    background-color: #222222;
+    border: 1px solid #383838;
+    border-radius: 4px;
+    position: absolute;
+    width: 100%;
+    z-index: 99;
+    margin-top: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
 
 .serverSearchBox {
     width: 375px;
@@ -4647,7 +4759,7 @@ progress::-webkit-progress-value {
     font-size: 16px;
     cursor: pointer;
     transition: var(--transition-normal);
-    box-shadow: var(--shadow-md);
+    box-shadow: var (--shadow-md);
     width: 100%;
 }
 
@@ -4693,6 +4805,6 @@ progress::-webkit-progress-value {
 }
 
 .button-utility:hover {
-    color: var(--color-text);
+    color: var (--color-text);
     text-decoration: underline;
 }

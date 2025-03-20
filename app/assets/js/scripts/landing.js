@@ -124,11 +124,11 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         const buildstatus = localStorage.getItem('buildstatus');
         if (buildstatus === 'notsupported') {
             loggerLanding.error('VI Software does no longer maintained this version of the launcher and will soon be unable to connect to the servers');
-            showLaunchFailure(Lang.queryJS('landing.unmantained.unmantainedErrorTitle'), Lang.queryJS('landing.unmantained.unmantainedErrorMessage'));
+            showLaunchFailure(Lang.queryJS('landing.launch.unmantainedErrorTitle'), Lang.queryJS('landing.launch.unmantainedErrorMessage'));
             return;
         } else if (buildstatus === 'forceupdate') {
             loggerLanding.error('VI Software has marked this version as unsupported, and it cannot be used to play servers.');
-            showLaunchFailure(Lang.queryJS('landing.forceupdate.forceupdateErrorTitle'), Lang.queryJS('landing.forceupdate.forceupdateErrorMessage'));
+            showLaunchFailure(Lang.queryJS('landing.launch.forceupdateErrorTitle'), Lang.queryJS('landing.launch.forceupdateErrorMessage'));
             return;
         }
     } catch (err) {

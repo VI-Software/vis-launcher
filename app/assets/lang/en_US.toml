@@ -1,0 +1,382 @@
+#
+#    ____   ____.___    _________       _____  __                                 
+# \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+#  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+#  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+#   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+#                         \/                                 \/            \/ 
+#                         
+#                         
+#    © 2025 VI Software. All rights reserved.
+#    
+#    GitHub: https://github.com/VI-Software
+#    Documentation: https://docs.visoftware.dev/vi-software/vis-launcher
+#    Web: https://visoftware.dev
+#    Project License: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+# 
+#    Translation by: VI Software
+
+[ejs.landing]
+updateAvailableTooltip = "Update available"
+usernamePlaceholder = "Account name"
+usernameEditButton = "Edit"
+settingsTooltip = "Settings"
+serverStatus = "SERVER"
+serverStatusPlaceholder = "Offline"
+visStatus = "VI SOFTWARE STATUS"
+visStatusTooltipTitle = "Services"
+vistatusNETitle = "Non&nbsp;Essential"
+newsButton = "NEWS"
+launchButton = "PLAY"
+launchButtonPlaceholder = "&#8226; No server selected"
+launchDetails = "Please wait.."
+newsNavigationStatus = "{currentPage} of {totalPages}"
+newsErrorLoadSpan = "Checking news.."
+newsErrorFailedSpan = "Failed to load news"
+newsErrorRetryButton = "Try again"
+newsErrorNoneSpan = "No news"
+
+[ejs.login]
+loginCancelText = "Cancel"
+loginSubheader = "Logging in with VI Software Yggdrasil"
+loginEmailError = "* Invalid value"
+loginEmailPlaceholder = "USERNAME"
+loginPasswordError = "* Required"
+loginPasswordPlaceholder = "PASSWORD"
+loginForgotPasswordLink = "https://docs.visoftware.dev/vi-software/vis-yggdrasil-auth/view-my-account-information"
+loginForgotPasswordText = "Check your data"
+loginRememberMeText = "Remember me"
+loginButtonText = "LOG IN"
+loginNeedAccountLink = "https://puf.visoftware.dev"
+loginNeedAccountText = "Need an account?"
+loginPasswordDisclaimer1 = "Your password is sent directly to the VI Software server and is never stored."
+loginPasswordDisclaimer2 = "&copy 2025 VI Software and contributors. All rights reserved."
+
+[ejs.loginOptions]
+loginOptionsTitle = "Login options"
+loginWithMicrosoft = "Log in with Microsoft"
+loginWithVISWeb = "Log in with VI Software Web oAuth 2.0"
+loginWithVIS = "Log in with VI Software Legacy"
+cancelButton = "Cancel"
+
+[ejs.overlay]
+serverSelectHeader = "VI Software server list"
+serverSelectConfirm = "Select"
+serverSelectCancel = "Cancel"
+accountSelectHeader = "Select an account"
+accountSelectConfirm = "Select"
+accountSelectCancel = "Cancel"
+
+[ejs.settings]
+navHeaderText = "Settings"
+navAccount = "Account"
+navMinecraft = "Game"
+navMods = "Mods"
+navJava = "Java"
+navLauncher = "Launcher"
+navAbout = "About"
+navUpdates = "Updates"
+navDone = "Done"
+tabAccountHeaderText = "Account Settings"
+tabAccountHeaderDesc = "Add new accounts or manage existing ones."
+microsoftAccount = "Microsoft"
+addMicrosoftAccount = "+ Add Microsoft Account"
+VISAccount = "VI Software"
+addVISAccount = "+ Add VI Software Account"
+minecraftTabHeaderText = "Game Settings"
+minecraftTabHeaderDesc = "Options related to game launch."
+gameResolutionTitle = "Game resolution"
+launchFullscreenTitle = "Launch in fullscreen"
+autoConnectTitle = "Automatically connect to server on game launch if available."
+autoConnectDesc = "Automatically connects to the server if the functionality is available on the selected server. (Must be enabled by the experience administrator)"
+MinimizeLauncherOnLaunch = "Minimize launcher to system tray on game launch."
+MinimizeLauncherOnLaunchDesc = "Keep the launcher in the system tray when launching the game. It will automatically open when the game closes."
+launchDetachedTitle = "(Advanced) Separate game process from launcher process"
+launchDetachedDesc = "If launcher and game processes are not separated, closing the launcher will also close the game."
+tabModsHeaderText = "Mods Settings"
+tabModsHeaderDesc = "Enable or disable mods."
+switchServerButton = "Switch"
+requiredMods = "Required Mods"
+requiredDesc = "These mods are mandatory as set by your experience administrator. They will always be included when you launch the game."
+optionalMods = "Optional Mods"
+optionalDesc = "These mods are included with the experience designed by your administrator, some of which may be enabled by default. It's your choice to enable or disable them."
+dropinMods = "Drop-in Mods"
+dropinModsDesc = "Customize the experience to your liking! Add mods that your administrator doesn't include with the experience here."
+addMods = "Add mods"
+dropinRefreshNote = "(F5 to Refresh)"
+shaderpacks = "Shader Packs"
+shaderpackDesc = "Enable or disable shaders. Note that shaders will only run smoothly on powerful configurations. You can add custom packs here."
+selectShaderpack = "Select Shader Pack"
+tabJavaHeaderText = "Java Settings"
+tabJavaHeaderDesc = "Manage advanced Java settings."
+memoryTitle = "Memory"
+maxRAM = "Max RAM"
+minRAM = "Min RAM"
+memoryDesc = "A minimum of 3 gigabytes of RAM is recommended. Setting minimum and maximum values to the same value can reduce lag."
+memoryTotalTitle = "Total"
+memoryAvailableTitle = "Available"
+javaExecutableTitle = "Java Executable"
+javaExecSelDialogTitle = "Select Java executable"
+javaExecSelButtonText = "Choose file"
+javaExecDesc = "The Java executable is validated before game launch."
+javaPathDesc = "The path must end with <strong>{pathSuffix}</strong>."
+jvmOptsTitle = "Additional JVM Options"
+jvmOptsDesc = "Options to be provided to the JVM at runtime. <em>-Xms</em> and <em>-Xmx</em> should not be included."
+launcherTabHeaderText = "Launcher Settings"
+launcherTabHeaderDesc = "Options related to the launcher itself."
+allowPrereleaseTitle = "Nightly update channel."
+allowPrereleaseDesc = "Nightly versions include new features that may not have been fully tested or integrated.<br>This option will be considered active whenever you are on a nightly version."
+dataDirectoryTitle = "Data Directory"
+selectDataDirectory = "Select Data Directory"
+chooseFolder = "Choose Folder"
+dataDirectoryDesc = "All game files and local Java installations will be stored in the data directory.<br>Screenshots and world saves are stored in the instance folder for the corresponding server configuration."
+aboutTabHeaderText = "About"
+aboutTabHeaderDesc = "View information and release notes for the current version."
+aboutTitle = "{appName}"
+stableRelease = "Stable Version"
+versionText = "Version "
+sourceGithub = "Source (GitHub)"
+soporte = "Support"
+devToolsConsole = "Developer Tools Console"
+releaseNotes = "Release notes"
+changelog = "Changelog"
+noReleaseNotes = "No release notes"
+viewReleaseNotes = "View release notes on GitHub"
+launcherUpdatesHeaderText = "Launcher Updates"
+launcherUpdatesHeaderDesc = "Download, install, and review launcher updates."
+checkForUpdates = "Check for updates"
+whatsNew = "What's new?"
+updateReleaseNotes = "Update release notes"
+languageTitle = "Language"
+languageDesc = "Select the language you want to use in the launcher."
+
+[ejs.waiting]
+waitingText = "Waiting for VI Software..."
+
+[ejs.welcome]
+continueButton = "CONTINUE"
+welcomeHeader = "Welcome to VI Software Launcher"
+welcomeDescription = 'This launcher was developed by the <a href="https://github.com/orgs/VI-Software/people" style="color: purple;">VI Software team</a> to facilitate modpack management in server experiences. By using this launcher, you accept the <a style="color: purple;" href="https://docs.visoftware.dev/vi-software/vis-launcher/privacy-policy">privacy policy</a> and <a href="https://docs.visoftware.dev/vi-software/vis-launcher/terms-of-service" style="color: purple;">terms of service</a> of <a href="https://visoftware.dev" style="color: purple;">VI Software</a>.'
+welcomeDescCTA = "Fun is just around the corner!"
+
+
+[js.discord]
+waiting = "Waiting for client.."
+state = "Server: {shortId}"
+
+[js.index]
+microsoftLoginTitle = "Microsoft Login"
+microsoftLogoutTitle = "Microsoft Logout"
+
+[js.login]
+login = "LOG IN"
+loggingIn = "LOGGING IN"
+success = "SUCCESS"
+tryAgain = "Try Again"
+
+[js.login.error]
+invalidValue = "* Invalid value"
+requiredValue = "* Required"
+
+[js.login.error.unknown]
+title = "Unknown error during login"
+desc = "An unknown error occurred. Check the console for more details (CTRL + Shift + i)"
+
+[js.landing.launch]
+pleaseWait = "Please wait..."
+checkingClient = "Checking instance..."
+checkingAccount = "Authenticating..."
+failureTitle = "Error during launch"
+failureText = "Check the console (CTRL + Shift + i) for more details."
+noaccessTitle = "Error during launch"
+noaccessText = "The selected account does not have permission to access the selected server."
+NoCheckModErrorTitle = "Error during launch"
+NoCheckModErrorText = "Could not verify account in the VI Software moderation system. <br>Check the console (CTRL + Shift + i) for more details."
+WarnsnotreadErrorTitle = "Error during launch"
+WarnsnotreadErrorText = 'There are one or more pending sanctions to be viewed by you. <a href="https://puf.visoftware.dev" style="color: red">You can check them in the VI Software end-user panel</a>'
+AccountDisabledErrorTitle = "Error during launch"
+AccountDisabledErrorText = 'The selected account is currently disabled <span style="color: pink;">by the experience administrator</span>. You can find more information about your accounts at <a href="https://puf.visoftware.dev" style="color: pink;">the VI Software end-user panel</a>. <br>VI Software <span style="color: red";>CANNOT</span> assist you with this matter.'
+TeamBannedErrorTitle = "Error during launch"
+TeamBannedErrorText = 'The server owner team is currently suspended <span style="color: pink;">by VI Software</span>. <br>This is a sanction imposed on the server owner team, not on your account.'
+GlobalAccountDisabledErrorTitle = "401 | Unauthorized"
+GlobalAccountDisabledErrorText = 'You do not have sufficient permissions to access the requested resource. <br> Check the console for more details (CTRL + Shift + i)'
+ErrorCantCheckTeamOnApiErrorTitle = "Error during launch"
+ErrorCantCheckTeamOnApiErrorText = "We could not verify the activity status of the server team. <br>Check the console (CTRL + Shift + i) for more details."
+serverNotFoundErrorTitle = "Error during launch"
+serverNotFoundErrorText = "The selected server could not be found for the selected account. <br>Check the console (CTRL + Shift + i) for more details."
+okay = "OK"
+unmantainedErrorTitle = "Unmaintained version"
+unmantainedErrorMessage = 'You are using an outdated version of VI Software Launcher, which is no longer maintained by VI Software and does not offer support. New versions may bring new features, bug fixes, and patches for vulnerabilities. It is important to stay with the latest stable version. You can download the latest stable version <a href="https://github.com/VI-Software/vis-launcher/releases/latest" style="color: red">here</a>'
+forceupdateErrorTitle = "Unsupported version"
+forceupdateErrorMessage = 'The current version of the launcher is not supported and VI Software has ordered migration to a newer, preferably maintained version. You can download the latest stable version <a href="https://visoftware.dev/launcher" style="color: red">here</a>.'
+
+[js.landing.selectedAccount]
+noAccountSelected = "No account selected"
+
+[js.landing.selectedServer]
+noSelection = "No server selected"
+loading = "Loading..."
+
+[js.landing.serverStatus]
+server = "SERVER"
+offline = "Offline"
+players = "PLAYERS"
+
+[js.landing.systemScan]
+checking = "Checking system information.."
+noCompatibleJava = "No compatible Java installation found."
+installJavaMessage = "To launch Minecraft, you need a 64-bit installation of Java {major}. Would you like us to install a copy?"
+installJava = "Install Java"
+installJavaManually = "Install Manually"
+javaDownloadPrepare = "Preparing Java download.."
+javaDownloadFailureTitle = "Error during Java download"
+javaDownloadFailureText = "Check the console (CTRL + Shift + i) for more details."
+javaRequired = "Java is Required<br>to launch"
+javaRequiredMessage = 'A valid x64 installation of Java {major} is required to launch.<br><br>Check this <a href="https://github.com/dscalzi/HeliosLauncher/wiki/Java-Management#manually-installing-a-valid-version-of-java">Java Management Guide</a> for instructions on how to install Java manually.'
+javaRequiredDismiss = "I understand"
+javaRequiredCancel = "Go back"
+
+[js.landing.downloadJava]
+findJdkFailure = "Could not find an OpenJDK distribution."
+javaDownloadCorruptedError = "The downloaded JDK has an incorrect hash, the file may be corrupted."
+extractingJava = "Extracting Java"
+javaInstalled = "Java Installed!"
+
+[js.landing.dlAsync]
+loadingServerInfo = "Loading information..."
+fatalError = "Fatal error"
+unableToLoadDistributionIndex = "Could not load a copy of the distribution index. Check the console (CTRL + Shift + i) for more details."
+pleaseWait = "Please wait..."
+errorDuringLaunchTitle = "Error during launch"
+seeConsoleForDetails = "Check the console (CTRL + Shift + i) for more details."
+validatingFileIntegrity = "Validating files..."
+errorDuringFileVerificationTitle = "Error during file verification"
+downloadingFiles = "Downloading files..."
+errorDuringFileDownloadTitle = "Error during file download"
+preparingToLaunch = "Preparing to launch..."
+launchingGame = "Launching game..."
+launchWrapperNotDownloaded = "The main file, LaunchWrapper, was not downloaded correctly. As a result, the game cannot be launched.<br><br>To fix this issue, temporarily disable your antivirus software and restart the game.<br><br>If you have time, please <a href=\"https://github.com/VI-Software/vis-launcher/issues\">open an issue on our GitHub</a> and let us know which antivirus software you are using. We will contact them and try to resolve the issue."
+doneEnjoyServer = "Done. Enjoy the server!"
+checkConsoleForDetails = "Please check the console (CTRL + Shift + i) for more details."
+
+[js.landing.news]
+checking = "Checking news..."
+
+[js.landing.discord]
+loading = "Loading game..."
+joining = "Connecting to server..."
+joined = "In a multiplayer server"
+
+[js.overlay]
+dismiss = "Dismiss"
+
+[js.processbuilder.exit]
+exitErrorHeader = "The game closed with an error code"
+message = "The game unexpectedly closed with the following code: "
+copyCode = "Copy code"
+copyCodeText = "Unexpected game closure code: "
+visnosupport = '<br><br><small>This is an error with the experience modpack, not the VI Software launcher. Contact your experience administrator, <span style="color: red;">DO NOT</span> contact VI Software for support on this error.</small>'
+
+[js.settings.fileSelectors]
+executables = "Executables"
+allFiles = "All files"
+
+[js.settings.mstfLogin]
+errorTitle = "Something went wrong"
+errorMessage = "Microsoft authentication failed. Please try again."
+okButton = "OK"
+
+[js.settings.mstfLogout]
+errorTitle = "Something went wrong"
+errorMessage = "Microsoft logout failed. Please try again."
+okButton = "OK"
+
+[js.settings.authAccountSelect]
+selectButton = "Select Account"
+selectedButton = "Account Selected ✓"
+
+[js.settings.authAccountLogout]
+lastAccountWarningTitle = "Warning<br>This is your last account"
+lastAccountWarningMessage = "To use the launcher, you must be logged in to at least one account. You will need to log in again afterward.<br><br>Are you sure you want to log out?"
+confirmButton = "I'm Sure"
+cancelButton = "Cancel"
+
+[js.settings.authAccountPopulate]
+username = "Account name"
+rank = "Rank"
+uuid = "UUID"
+selectAccount = "Select Account"
+selectedAccount = "Account Selected ✓"
+logout = "Log Out"
+
+[js.settings.dropinMods]
+removeButton = "Remove"
+deleteFailedTitle = "Failed to delete<br>drop-in mod {fullName}"
+deleteFailedMessage = "Make sure the file is not in use and try again."
+failedToggleTitle = "Failed to toggle<br>One or more drop-in mods"
+okButton = "OK"
+
+[js.settings.serverListing]
+mainServer = "Main Server"
+info = 'You can manage your servers at <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
+noServers = 'We have no servers to show you. <br>You can manage the servers that appear here in the <a style="color: pink;" href="https://puf.visoftware.dev/servers">VI Software end-user panel</a>.</div>'
+
+[js.settings.java]
+selectedJava = "Selected: Java {version} ({vendor})"
+invalidSelection = "Invalid selection"
+requiresJava = "Requires Java {major} x64."
+availableOptions = "Available options for Java {major} (HotSpot VM)"
+
+[js.settings.about]
+preReleaseTitle = "Nightly version"
+stableReleaseTitle = "Stable version"
+releaseNotesFailed = "Failed to load release notes."
+
+[js.settings.updates]
+newReleaseTitle = "New version available"
+newPreReleaseTitle = "New pre-release version available"
+downloadingButton = "Downloading..."
+downloadButton = 'Download from GitHub<span style="font-size: 10px;color: gray;text-shadow: none !important;">Close the launcher and run the dmg file to update.</span>'
+latestVersionTitle = "You are using the latest version"
+checkForUpdatesButton = "Check for updates"
+checkingForUpdatesButton = "Checking for updates..."
+
+[js.uibinder.startup]
+fatalErrorTitle = "Fatal Error: Cannot load distribution index"
+fatalErrorMessage = "Could not establish a connection to our servers to download the distribution index. No local copies were available to load. <br><br>The distribution index is an essential file that provides the latest server information. The launcher cannot start without it. Make sure you are connected to the Internet and restart the application."
+closeButton = "Close"
+
+[js.uibinder.unmantained]
+
+[js.uibinder.bgservicewarning]
+bgservicewarningErrorTitle = "An error occurred"
+bgservicewarningErrorMessage = 'An error occurred while trying to connect to VI Software Background Services. As a result, we could not load a dynamic background. We have applied a static offline background, this may be due to an incident in the service infrastructure, but if there is no reported incident, this could be a problem on your end. You can find more information about this error <a href="https://docs.visoftware.dev/vi-software/vis-launcher/error-trying-to-connect-to-vi-software-background-services" style="color: red">here</a>'
+ignoreButton = "Continue"
+
+[js.uibinder.fatalapierror]
+fatalapierrorErrorTitle = "Catastrophic error"
+fatalapierrorErrorMessage = "Could not connect to the VI Software API. We cannot proceed in any way. If there is no incident on VI Software's part, it could be a problem on your end. You can find more information <a href=\"https://github.com/VI-Software/vis-launcher/releases/latest\" style=\"color: red\">here</a>"
+closeButton = "Close"
+
+[js.uibinder.validateAccount]
+failedMessageTitle = "Failed to update login"
+failedMessage = "We could not update the login for <strong>{account}</strong>. Please select another account or log in again."
+failedMessageSelectAnotherAccount = "We could not update the login for <strong>{account}</strong>. Please log in again."
+loginButton = "Log in"
+selectAnotherAccountButton = "Select another account"
+
+[js.uicore.autoUpdate]
+checkingForUpdateButton = "Checking for updates..."
+installNowButton = "Install now"
+checkForUpdatesButton = "Check for updates"
+
+[js.uicore.loading]
+LoadingText = "Loading"
+LoaidingTakingTooLong = "The loading process is taking longer than expected. Is your internet connectivity stable?"
+
+[js.settings.language]
+restartRequiredTitle = "Restart Required"
+restartRequiredMessage = "You need to restart the launcher for the language change to take effect."
+restartNowButton = "Restart Now"
+restartLaterButton = "Later"
+
