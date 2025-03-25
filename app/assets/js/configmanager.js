@@ -115,7 +115,7 @@ const DEFAULT_CONFIG = {
         dismissed: false
     },
     clientToken: null,
-    selectedServer: null, // Resolved
+    selectedServer: null,
     selectedAccount: null,
     authenticationDatabase: {},
     modConfigurations: [],
