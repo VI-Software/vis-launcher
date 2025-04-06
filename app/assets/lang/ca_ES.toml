@@ -357,8 +357,8 @@ fatalapierrorErrorMessage = "No s'ha pogut connectar amb l'API de VI Software. N
 closeButton = "Tancar"
 
 [js.uibinder.validateAccount]
-failedMessageTitle = "No s'ha pogut actualitzar l'inici de sessió"
-failedMessage = "No hem pogut actualitzar l'inici de sessió per a <strong>{account}</strong>. Si us plau, selecciona un altre compte o inicia sessió de nou."
+failedMessageTitle = "Autenticació fallida"
+failedMessage = "La teva sessió ha superat els límits, i no hem pogut regenerar un nou token. Si us plau, selecciona un altre compte o inicia sessió de nou."
 failedMessageSelectAnotherAccount = "No hem pogut actualitzar l'inici de sessió per a <strong>{account}</strong>. Si us plau, inicia sessió de nou."
 loginButton = "Iniciar sessió"
 selectAnotherAccountButton = "Seleccionar un altre compte"

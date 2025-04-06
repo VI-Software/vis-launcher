@@ -121,6 +121,9 @@ function setLaunchEnabled(val){
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
     try {
+        setLaunchDetails(Lang.queryJS('landing.launch.checkingClient'))
+        toggleLaunchArea(true)
+        setLaunchPercentage(0, 100)
         const buildstatus = localStorage.getItem('buildstatus');
         if (buildstatus === 'notsupported') {
             loggerLanding.error('VI Software does no longer maintained this version of the launcher and will soon be unable to connect to the servers');
@@ -136,7 +139,58 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'));
         return;
     }
-    loggerLanding.info('Launching game..')
+    
+    try {
+        setLaunchDetails(Lang.queryJS('landing.launch.checkingAccount'))
+        toggleLaunchArea(true)
+        setLaunchPercentage(0, 100)
+
+        await new Promise(resolve => setTimeout(resolve, 2000)) 
+
+        const isValid = await AuthManager.validateSelected()
+        if (!isValid) {
+            loggerLanding.error('Selected account is no longer valid.')
+
+            const selectedAccount = ConfigManager.getSelectedAccount()
+
+            setOverlayContent(
+                Lang.queryJS('uibinder.validateAccount.failedMessageTitle'),
+                Lang.queryJS('uibinder.validateAccount.failedMessage', { 'account': selectedAccount.displayName }),
+                Lang.queryJS('uibinder.validateAccount.loginButton'),
+                Lang.queryJS('settings.authAccountLogout.cancelButton')
+            )
+            
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+
+                // Redirect to login options
+                
+                loginOptionsViewOnLoginSuccess = VIEWS.landing
+                loginOptionsViewOnLoginCancel = VIEWS.landing
+                switchView(getCurrentView(), VIEWS.loginOptions)
+
+                // Reset the launch area when the user dismisses the notification
+                toggleLaunchArea(false)
+                setLaunchEnabled(true)
+            })
+            
+            setDismissHandler(() => {
+                toggleOverlay(false)
+                // Reset the launch area when the user dismisses the notification
+                toggleLaunchArea(false)
+                setLaunchEnabled(true)
+            })
+            
+            toggleOverlay(true, true)
+            return
+        }
+    } catch (err) {
+        loggerLanding.error('Unhandled error during launch process.', err)
+        showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'))
+        return
+    }
+
+    loggerLanding.info('Launching game...')
     try {
         const server = (await DistroAPI.getDistribution()).getServerById(ConfigManager.getSelectedServer())
         const jExe = ConfigManager.getJavaExecutable(ConfigManager.getSelectedServer())

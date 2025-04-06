@@ -358,8 +358,8 @@ fatalapierrorErrorMessage = 'No se ha podido conectar al API de VI Software. No 
 closeButton = "Cerrar"
 
 [js.uibinder.validateAccount]
-failedMessageTitle = "Error al actualizar el inicio de sesión"
-failedMessage = "No pudimos actualizar el inicio de sesión para <strong>{account}</strong>. Por favor, selecciona otra cuenta o inicia sesión nuevamente."
+failedMessageTitle = "Autenticación Fallida"
+failedMessage = "Tu sesión ha excedido los límites y no pudimos regenerar un nuevo token. Por favor, selecciona otra cuenta o inicia sesión nuevamente."
 failedMessageSelectAnotherAccount = "No pudimos actualizar el inicio de sesión para <strong>{account}</strong>. Por favor, inicia sesión nuevamente."
 loginButton = "Iniciar sesión"
 selectAnotherAccountButton = "Seleccionar otra cuenta"
