@@ -359,8 +359,8 @@ fatalapierrorErrorMessage = "Could not connect to the VI Software API. We cannot
 closeButton = "Close"
 
 [js.uibinder.validateAccount]
-failedMessageTitle = "Failed to update login"
-failedMessage = "We could not update the login for <strong>{account}</strong>. Please select another account or log in again."
+failedMessageTitle = "Authentication Failed"
+failedMessage = "Your session has exceeded the limits, and we couldn't regenerate a new token. Please select another account or log in again."
 failedMessageSelectAnotherAccount = "We could not update the login for <strong>{account}</strong>. Please log in again."
 loginButton = "Log in"
 selectAnotherAccountButton = "Select another account"
