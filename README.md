@@ -31,9 +31,8 @@
 - No Java installation required to run the launcher
 
 ### Additional Features
-- 📰 Native news service integration
 - ⚙️ Intuitive configuration management with Java control panel
-- 🎮 Support for all our servers
+- 🎮 Support for all servers inside the platform
   - Switch between server configurations easily 
   - View total players connected on selected server
 - 🔄 Automatic launcher updates
@@ -47,7 +46,16 @@ Need help? [Check out our wiki](https://docs.visoftware.dev/vi-software/vis-laun
 
 ## 📥 Downloads
 
-Get the latest version from [GitHub Releases](https://github.com/VI-Software/vis-launcher)
+You can download the launcher from:
+- [VI Software Website](https://visoftware.dev/launcher) - Latest stable version
+- [GitHub Releases](https://github.com/VI-Software/vis-launcher/releases) - All versions
+
+## 📜 User Agreement
+
+By using VI Software Launcher, you agree to:
+- [Terms of Service](https://docs.visoftware.dev/vi-software/guidelines/terms-of-service)
+- [Privacy Policy](https://docs.visoftware.dev/vi-software/guidelines/privacy-policy)
+- [Platform License Agreement](https://docs.visoftware.dev/vi-software/guidelines/platform-license-agreement)
 
 ## 🔧 Loader Support List
 
