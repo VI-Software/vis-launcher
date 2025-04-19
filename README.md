@@ -90,7 +90,7 @@ permissions and limitations under the License.
 
 ## Credits
 
-- VIS Launcher uses Authlib Injector 1.2.5, an authentication injection library for VI Software's custom services, licensed under AGPL-3.0. Learn more about Authlib Injector on its official [GitHub repository](https://github.com/yushijinhun/authlib-injector).
+- VIS Launcher uses Authlib Injector 1.2.5, an authentication injection library for VI Software's custom services, licensed under AGPL-3.0 with the "AUTHLIB-INJECTOR" exception. Learn more about Authlib Injector on its official [GitHub repository](https://github.com/yushijinhun/authlib-injector).
 
 - Based on [HeliosLauncher (v2.1.0)](https://github.com/dscalzi/helioslauncher)
 
