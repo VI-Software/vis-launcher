@@ -20,7 +20,7 @@ win:
       arch: 'x64'
   cscLink: './cert/certificate.pfx'
   signtoolOptions:
-    name: 'VI Software'
+    publisherName: 'VI Software'
 
 # Windows Installer Configuration
 nsis:
