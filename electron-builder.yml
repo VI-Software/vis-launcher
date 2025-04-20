@@ -9,10 +9,6 @@ compression: 'maximum'
 
 files:
   - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,.eslintrc.json}'
-  - '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}/**'
-  - '!**/node_modules/.bin'
-  - '!**/*.{o,obj,log}'
-  - '!**/node_modules/*/node_modules/**' 
 
 extraResources:
   - 'libraries'
