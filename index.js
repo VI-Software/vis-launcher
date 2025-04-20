@@ -271,7 +271,14 @@ function createWindow() {
     /*win.once('ready-to-show', () => {
         win.show()
     })*/
-   
+   /*
+        win.once('ready-to-show', () => {
+            // show dev tools
+            if (isDev) {
+                win.webContents.openDevTools({ mode: 'detach' })
+            }
+        })
+    */
     win.removeMenu()
 
     win.resizable = true
