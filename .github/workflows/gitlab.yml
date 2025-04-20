@@ -1,9 +1,7 @@
-name: Sync with GitLab
 on:
   push:
     branches:
-      - main
-
+      - main 
 jobs:
   sync:
     runs-on: ubuntu-latest
@@ -16,3 +14,4 @@ jobs:
           REMOTE: 'https://gitlab.com/visoftware/vis-launcher.git'
           GIT_USERNAME: VI-Software-Bot
           GIT_PASSWORD: ${{ secrets.GIT_PASSWORD }}
+          PUSH_ALL_REFS: "false"
