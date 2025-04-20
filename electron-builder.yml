@@ -9,6 +9,10 @@ compression: 'maximum'
 
 files:
   - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,.eslintrc.json}'
+  - '!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}/**'
+  - '!**/node_modules/.bin'
+  - '!**/*.{o,obj,log}'
+  - '!**/node_modules/*/node_modules/**' 
 
 extraResources:
   - 'libraries'
@@ -18,8 +22,10 @@ win:
   target: 
     - target: 'nsis'
       arch: 'x64'
-  certificateFile: './cert/certificate.pfx'
-  publisherName: 'VI Software'
+  cscLink: './cert/certificate.pfx'
+  signtoolOptions:
+    publisherName: 'VI Software'
+
 # Windows Installer Configuration
 nsis:
   oneClick: false
