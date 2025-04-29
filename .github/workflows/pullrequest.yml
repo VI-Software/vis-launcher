@@ -1,0 +1,192 @@
+name: Pull Request Automation
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, labeled, unlabeled]
+
+jobs:
+  triage:
+    name: PR Triage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send CLA and Code of Conduct message on PR open
+        if: github.event.action == 'opened'
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const prAuthor = context.payload.pull_request.user.login;
+            await github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `Hello @${prAuthor}, thank you for your contribution to VIS Launcher!
+
+Before we can review your pull request, please be aware of the following important documents that govern contributions to this project:
+
+1. **Contributor License Agreement (CLA)**: By submitting this pull request, you agree to the [VI Software Contributor License Agreement](https://docs.visoftware.dev/vi-software/guidelines/contributor-license-agreement). This agreement ensures that your contributions can be properly integrated into our project.
+
+2. **Code of Conduct**: All contributors are expected to adhere to our [Code of Conduct](https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct), which promotes a respectful and inclusive environment.
+
+Please take a moment to review these documents. If you have any questions or concerns, please let us know.
+
+Thank you again for your contribution!`
+            });
+
+      - name: Label PR based on title
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const title = context.payload.pull_request.title.toLowerCase();
+            let labelsToAdd = [];
+            
+            // Label based on PR title patterns
+            if (title.includes('feat') || title.includes('feature') || title.includes('add')) {
+              labelsToAdd.push('enhancement');
+            } else if (title.includes('fix') || title.includes('bug') || title.includes('issue')) {
+              labelsToAdd.push('bug');
+            } else if (title.includes('docs') || title.includes('documentation')) {
+              labelsToAdd.push('documentation');
+            } else if (title.includes('crash')) {
+              labelsToAdd.push('crash');
+            } else if (title.includes('chore') || title.includes('refactor')) {
+              labelsToAdd.push('dependencies');
+            } else if (title.includes('question') || title.includes('?')) {
+              labelsToAdd.push('question');
+            }
+            
+            if (labelsToAdd.length > 0) {
+              github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labelsToAdd
+              });
+            }
+
+      - name: Add size label
+        uses: codelytv/pr-size-labeler@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+          xs_label: 'size/xs'
+          xs_max_size: '10'
+          s_label: 'size/s'
+          s_max_size: '100'
+          m_label: 'size/m'
+          m_max_size: '500'
+          l_label: 'size/l'
+          l_max_size: '1000'
+          xl_label: 'size/xl'
+          fail_if_xl: 'false'
+          message_if_xl: 'This PR exceeds the recommended size of 1000 lines. Please consider splitting it into smaller PRs.'
+      
+      - name: Assign author
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const author = context.payload.pull_request.user.login;
+            github.rest.issues.addAssignees({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              assignees: [author]
+            });
+      
+      - name: Check for conventional commit
+        id: conventional
+        uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
+        with:
+          types:
+            - feat
+            - fix
+            - docs
+            - style
+            - refactor
+            - perf
+            - test
+            - build
+            - ci
+            - chore
+            - revert
+          requireScope: false
+          
+      - name: Comment on non-conventional PR
+        if: ${{ failure() && steps.conventional.outcome == 'failure' }}
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Please use the conventional commit format for your PR title: `type(scope): description`\n\nExamples: `feat: add new feature` or `fix(login): correct password validation`'
+            });
+
+      - name: Apply standard tags and labels
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.BOT_TOKEN }}
+          script: |
+            const prBody = context.payload.pull_request.body || '';
+            const prTitle = context.payload.pull_request.title || '';
+            const labelsToAdd = [];
+            
+            // Check for VIS standard labels based on PR content
+            if (prTitle.match(/\bWIP\b/i) || prTitle.toLowerCase().includes('work in progress') || prBody.toLowerCase().includes('work in progress')) {
+              labelsToAdd.push('wontfix');
+            }
+            
+            if (prBody.includes('BREAKING CHANGE') || prTitle.includes('BREAKING CHANGE') || prTitle.match(/!:/)) {
+              labelsToAdd.push('manual verification');
+            }
+            
+            if (prBody.toLowerCase().includes('help wanted') || prBody.toLowerCase().includes('help needed')) {
+              labelsToAdd.push('help wanted');
+            }
+            
+            if (prBody.toLowerCase().includes('good first issue') || prBody.toLowerCase().includes('beginner friendly')) {
+              labelsToAdd.push('good first issue');
+            }
+            
+            if (prTitle.includes('?') || prBody.toLowerCase().includes('question:')) {
+              labelsToAdd.push('question');
+            }
+            
+            // If it's a draft PR, add 'wontfix' label
+            if (context.payload.pull_request.draft) {
+              labelsToAdd.push('wontfix');
+            }
+            
+            // Check for specific keywords in PR body
+            if (prBody.toLowerCase().includes('crash') || prTitle.toLowerCase().includes('crash')) {
+              labelsToAdd.push('crash');
+            }
+            
+            if (prTitle.toLowerCase().includes('docs') || 
+                prBody.toLowerCase().includes('documentation') || 
+                prBody.toLowerCase().includes('readme')) {
+              labelsToAdd.push('documentation');
+            }
+            
+            if (prBody.toLowerCase().includes('duplicate') || prTitle.toLowerCase().includes('duplicate')) {
+              labelsToAdd.push('duplicate');
+            }
+            
+            if (prBody.toLowerCase().includes('ready to merge') || prBody.toLowerCase().includes('ready for review')) {
+              labelsToAdd.push('merge ready');
+            }
+            
+            // Add labels if we have any to add
+            if (labelsToAdd.length > 0) {
+              await github.rest.issues.addLabels({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: labelsToAdd
+              });
+            }
