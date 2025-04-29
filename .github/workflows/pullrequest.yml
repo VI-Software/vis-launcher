@@ -22,15 +22,15 @@ jobs:
               repo: context.repo.repo,
               body: `Hello @${prAuthor}, thank you for your contribution to VIS Launcher!
 
-Before we can review your pull request, please be aware of the following important documents that govern contributions to this project:
+            Before we can review your pull request, please be aware of the following important documents that govern contributions to this project:
 
-1. **Contributor License Agreement (CLA)**: By submitting this pull request, you agree to the [VI Software Contributor License Agreement](https://docs.visoftware.dev/vi-software/guidelines/contributor-license-agreement). This agreement ensures that your contributions can be properly integrated into our project.
+            1. **Contributor License Agreement (CLA)**: By submitting this pull request, you agree to the [VI Software Contributor License Agreement](https://docs.visoftware.dev/vi-software/guidelines/contributor-license-agreement). This agreement ensures that your contributions can be properly integrated into our project.
 
-2. **Code of Conduct**: All contributors are expected to adhere to our [Code of Conduct](https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct), which promotes a respectful and inclusive environment.
+            2. **Code of Conduct**: All contributors are expected to adhere to our [Code of Conduct](https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct), which promotes a respectful and inclusive environment.
 
-Please take a moment to review these documents. If you have any questions or concerns, please let us know.
+            Please take a moment to review these documents. If you have any questions or concerns, please let us know.
 
-Thank you again for your contribution!`
+            Thank you again for your contribution!`
             });
 
       - name: Label PR based on title
@@ -100,7 +100,7 @@ Thank you again for your contribution!`
         env:
           GITHUB_TOKEN: ${{ secrets.BOT_TOKEN }}
         with:
-          types:
+          types: |
             - feat
             - fix
             - docs
@@ -115,7 +115,7 @@ Thank you again for your contribution!`
           requireScope: false
           
       - name: Comment on non-conventional PR
-        if: ${{ failure() && steps.conventional.outcome == 'failure' }}
+        if: ${{ steps.conventional.outcome == 'failure' }}
         uses: actions/github-script@v6
         with:
           github-token: ${{ secrets.BOT_TOKEN }}

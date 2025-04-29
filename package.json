@@ -33,6 +33,7 @@
     "lodash.merge": "^4.6.2",
     "semver": "^7.6.3",
     "toml": "^3.0.0",
+    "vis-launcher": "file:",
     "vis-launcher-core": "^2.10.2",
     "vis-launcher-distribution-manager": "^1.3.3"
   },
