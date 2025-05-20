@@ -14,18 +14,38 @@ Please be advised that by using the product "VI Software Launcher" (VIS Launcher
 VI Software Launcher (VIS Launcher) is licensed under the Mozilla Public License Version 2.0. For more details, see the full license at our GitHub repo (https://github.com/VI-Software/vis-launcher/)
 
 
-Mozilla Public License Version 2.0
+GNU AFFERO GENERAL PUBLIC LICENSE
 =========================================================
 
-This source code is licensed under the Mozilla Public License, v. 2.0.
-You may obtain a copy of the License at:
+    Copyright (C) 2025 VI Software
 
-    http://mozilla.org/MPL/2.0/
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
 
-Copyright (C) 2025 VI Software
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Affero General Public License for more details.
 
-Software distributed under the License is distributed on an "AS IS" basis,
-WITHOUT WARRANTY OF ANY KIND, either express or implied, including but not
-limited to the warranties of merchantability, fitness for a particular purpose
-and noninfringement. See the License for the specific language governing
-permissions and limitations under the License.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+VIS LAUNCHER COMMERCIAL LICENSE
+=========================================================
+
+Entities may purchase a commercial license from VI Software that grants 
+permission to use VIS Launcher for commercial purposes without the requirement 
+to distribute the source code. This license:
+
+1. Is granted on a case-by-case basis through a formal agreement
+2. May be revoked if license terms are violated
+3. Must be renewed according to the terms specified in the license agreement
+4. Allows for specified modifications without triggering AGPL requirements
+
+To inquire about purchasing a commercial license, contact VI Software at:
+licensing (at) visoftware (dot) dev
+
+Without a valid commercial license, all use of VIS Launcher is governed by
+the terms of the AGPL-3.0 license in full.
