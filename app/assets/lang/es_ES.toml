@@ -244,7 +244,7 @@ extractingJava = "Extrayendo Java"
 javaInstalled = "¡Java Instalado!"
 
 [js.landing.dlAsync]
-loadingServerInfo = "Cargando información..."
+loadingServerInfo = "Cargando informacción..."
 fatalError = "Error fatal"
 unableToLoadDistributionIndex = "No se pudo cargar una copia del índice de distribución. Consulta la consola (CTRL + Shift + i) para obtener más detalles."
 pleaseWait = "Por favor espera..."
