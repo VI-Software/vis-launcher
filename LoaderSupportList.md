@@ -6,8 +6,8 @@ This document outlines the version support for this specific launcher release.
 
 - 🟢 Supported  
 - 🟡 Minimal support  
-- 🟠 Works, but might not have the latest technologies and is not officially supported. It might be supported by community members.  
-- 🔴 Not supported  
+- 🟠 The game launches but is not supported officially. It might be supported by community members.
+- 🔴 Not supported
 
 > **Note:** If a specific sub-version is not listed (e.g., `1.20.3`), it inherits the status from its major version group (e.g., `1.20.X`). Only explicitly listed versions differ in status from their general version line.
 
@@ -76,4 +76,4 @@ This document outlines the version support for this specific launcher release.
 
 > The goal is to establish guidelines and standards for loading mods. Currently, we officially support only two mod loaders because our team is small, and we don't have the resources to support every mod loader for Minecraft.  
 > 
-> In some cases, like with QuiltMC, the code might not need any changes. You could simply upload the QuiltMC files to the CDN instead of the Fabric ones, and the launcher will likely work without issues. The same applies to NeoForge, based on the current state of the project at the time of writing this document.
+> In some cases, like with QuiltMC, the code might not need any changes. You could simply upload the QuiltMC files to the CDN instead of the Fabric ones, and the launcher will likely work without issues. This is based on the current state of the project at the time of writing this document.
