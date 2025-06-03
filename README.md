@@ -92,7 +92,7 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 
 ### Why AGPL Instead of GPL?
 
-The GNU Affero General Public License (AGPL) was chosen over the standard GPL because VIS Launcher connects to online services. AGPL extends GPL's protections to network services, ensuring that if someone modifies our code and provides it as a network service, they must make those modifications available to users. This ensures transparency and maintains our open-source commitment even in cloud/service deployments.
+The GNU Affero General Public License (AGPL) was chosen over the standard GPL because VIS Launcher connects to online services. AGPL extends GPL's protections to network services.
 
 ### Commercial Use License
 
