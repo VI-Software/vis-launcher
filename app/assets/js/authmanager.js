@@ -336,7 +336,17 @@ exports.addVISWebAccount = async function() {
             throw new Error('Invalid account data received')
         }
 
-        const ret = await addMojangAccount(accountInfo.data.username, accountInfo.data.login)
+        let ret
+        try {
+            ret = await addMojangAccount(accountInfo.data.username, accountInfo.data.login)
+        } catch (err) {
+            cleanup()
+            log.error('Error adding Mojang account:', err)
+            return Promise.reject({
+                title: 'Login Failed',
+                message: err && err.message ? err.message : 'Failed to add account. Please try again.'
+            })
+        }
         
         if(ConfigManager.getClientToken() == null) {
             ConfigManager.setClientToken(uuidv4())
