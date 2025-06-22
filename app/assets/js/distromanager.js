@@ -10,7 +10,7 @@
     © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
-    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
     Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
@@ -25,8 +25,6 @@ const { CDN_URL } = require('./apiconstants')
 const defaultAuthHeaders = {  
     'authorization': 'public-servers',
 }
-
-console.log('defaultAuthHeaders', defaultAuthHeaders)
 
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
