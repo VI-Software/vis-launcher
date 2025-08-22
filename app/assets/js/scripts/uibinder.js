@@ -10,7 +10,7 @@
     © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
-    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
     Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
@@ -157,7 +157,6 @@ async function showMainUI(data) {
 function continueMainUILogic(checkver) {
     const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
-    // Performs various checks to verify the version status
     if(checkver==true){
     checkVersionStatus()
         .then(status => {
@@ -289,7 +288,6 @@ function showAPIError() {
 // Connects to the API server of the launcher and checks the current version status
 
 function checkVersionStatus() {
-    // Parse the API_BASE_URL
     const apiUrl = new URL(API_BASE_URL);
     
     const options = {

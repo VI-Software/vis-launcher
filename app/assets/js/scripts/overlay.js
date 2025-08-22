@@ -10,7 +10,7 @@
     © 2025 VI Software. Todos los derechos reservados.
     
     GitHub: https://github.com/VI-Software
-    Documentación: https://docs-vis.galnod.com/vi-software/vis-launcher
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
     Web: https://visoftware.dev
     Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
 
@@ -258,7 +258,6 @@ function setServerListingHandlers(){
             const distro = await DistroAPI.getDistribution()
             selectedServer = distro.getServerById(serverId)
             
-            // Populate server details
             document.getElementById('serverDetailsIcon').src = selectedServer.rawServer.icon
             document.getElementById('serverDetailsName').textContent = selectedServer.rawServer.name
             document.getElementById('serverDetailsDescription').textContent = selectedServer.rawServer.description
@@ -266,19 +265,15 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsMinecraft').textContent = selectedServer.rawServer.minecraftVersion
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
-            // Add website button handler
             document.getElementById('serverDetailsWebsite').onclick = () => {
-                // Using Electron shell to open external URL
                 require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
             }
 
-            // Show dialog
             document.getElementById('serverDetailsDialog').style.display = 'flex'
         }
     })
 }
 
-// Add handlers for the detail dialog buttons
 document.getElementById('serverDetailsConfirm').addEventListener('click', async () => {
     if(selectedServer) {
         updateSelectedServer(selectedServer)
@@ -292,7 +287,6 @@ document.getElementById('serverDetailsCancel').addEventListener('click', () => {
     selectedServer = null
 })
 
-// Add resource modal functionality
 document.getElementById('serverDetailsResources').addEventListener('click', () => {
     document.getElementById('serverResourcesModal').style.display = 'flex'
     populateResources(selectedServer)
@@ -302,14 +296,12 @@ document.querySelector('.modalClose').addEventListener('click', () => {
     document.getElementById('serverResourcesModal').style.display = 'none'
 })
 
-// Close modal when clicking outside
 document.getElementById('serverResourcesModal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('serverResourcesModal')) {
         document.getElementById('serverResourcesModal').style.display = 'none'
     }
 })
 
-// Handle resource tab switching
 document.querySelectorAll('.resourceTab').forEach(tab => {
     tab.addEventListener('click', () => {
         document.querySelectorAll('.resourceTab').forEach(t => t.classList.remove('active'))
@@ -353,7 +345,6 @@ function populateResources(server, category = 'required') {
     })
 }
 
-// Add search functionality
 document.getElementById('resourceSearch').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase()
     const items = document.querySelectorAll('.resourceItem')
