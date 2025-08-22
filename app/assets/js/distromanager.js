@@ -26,8 +26,6 @@ const defaultAuthHeaders = {
     'authorization': 'public-servers',
 }
 
-console.log('defaultAuthHeaders', defaultAuthHeaders)
-
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
     null, // Injected forcefully by the preloader.
