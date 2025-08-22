@@ -56,6 +56,21 @@ By using VI Software Launcher, you agree to:
 - [Terms of Service](https://docs.visoftware.dev/vi-software/guidelines/terms-of-service)
 - [Privacy Policy](https://docs.visoftware.dev/vi-software/guidelines/privacy-policy)
 - [Platform License Agreement](https://docs.visoftware.dev/vi-software/guidelines/platform-license-agreement)
+- [Code of Conduct](https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct)
+
+## Legal Notice
+
+NOTICE: By downloading, installing, or using the VIS Launcher you acknowledge and agree that your use is governed by VI Software's platform policies (including the Terms of Service, Platform License Agreement, and Code of Conduct) which are incorporated by reference and form part of your legal obligations when interacting with VI Software services.
+
+The VIS Launcher software is distributed under the GNU Affero General Public License v3.0 (AGPLv3). The AGPLv3 governs the distribution, modification, and use of the software code itself; however, any access to or use of VI Software's online services, hosted infrastructure, accounts, or other platform resources ("Services") is governed in full by the Platform License Agreement and Terms of Service. In the event of any inconsistency between the AGPLv3 and the PLA or ToS, the PLA and ToS shall prevail solely with respect to the Services.
+
+For the full, authoritative terms see:
+
+- https://docs.visoftware.dev/vi-software/guidelines/terms-of-service
+- https://docs.visoftware.dev/vi-software/guidelines/platform-license-agreement
+- https://docs.visoftware.dev/vi-software/guidelines/code-of-conduct
+
+By continuing to use the VIS Launcher and VI Software services you confirm that you have read, understood, and agreed to these terms.
 
 ## 🔧 Loader Support List
 
@@ -90,33 +105,10 @@ GNU AFFERO GENERAL PUBLIC LICENSE
 
 ```
 
-### Why AGPL Instead of GPL?
+## DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY
 
-The GNU Affero General Public License (AGPL) was chosen over the standard GPL because VIS Launcher connects to online services. AGPL extends GPL's protections to network services.
+VIS Launcher is provided “AS IS”, WITHOUT WARRANTY OF ANY KIND, either express or implied, including, without limitation, warranties of merchantability, fitness for a particular purpose, non-infringement, uninterrupted operation, or error-free functionality. To the maximum extent permitted by applicable law, under no circumstances shall VI Software, its contributors, licensors, affiliates, officers, or agents be liable for any claim, damages, or other liability, whether in contract, tort, or otherwise, arising from, out of, or in connection with the software or the use, performance, or inability to use the same.
 
-### Commercial Use License
-
-While VIS Launcher is primarily licensed under AGPL-3.0, VI Software offers a separate commercial license that can be purchased:
-
-```text
-VIS LAUNCHER COMMERCIAL LICENSE
-=========================================================
-
-Entities may purchase a commercial license from VI Software that grants 
-permission to use VIS Launcher for commercial purposes without the requirement 
-to distribute the source code. This license:
-
-1. Is granted on a case-by-case basis through a formal agreement
-2. May be revoked if license terms are violated
-3. Must be renewed according to the terms specified in the license agreement
-4. Allows for specified modifications without triggering AGPL requirements
-
-To inquire about purchasing a commercial license, contact VI Software at:
-licensing (at) visoftware (dot) dev
-
-Without a valid commercial license, all use of VIS Launcher is governed by
-the terms of the AGPL-3.0 license in full.
-```
 
 ## Credits
 
