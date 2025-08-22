@@ -157,7 +157,6 @@ async function showMainUI(data) {
 function continueMainUILogic(checkver) {
     const isLoggedIn = Object.keys(ConfigManager.getAuthAccounts()).length > 0
 
-    // Performs various checks to verify the version status
     if(checkver==true){
     checkVersionStatus()
         .then(status => {
@@ -289,7 +288,6 @@ function showAPIError() {
 // Connects to the API server of the launcher and checks the current version status
 
 function checkVersionStatus() {
-    // Parse the API_BASE_URL
     const apiUrl = new URL(API_BASE_URL);
     
     const options = {

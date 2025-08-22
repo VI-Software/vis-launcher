@@ -15,7 +15,7 @@ assignees: ''
 ## System Information
 <!-- Please complete the following information -->
 - OS: [e.g. Windows 10, macOS 12.0]
-- VIS Launcher Version: [e.g. 2.1.0]
+- VI Software Launcher Version: [e.g. 2.1.0]
 - Java Version: [e.g. 17.0.1]
 
 ## Screenshots

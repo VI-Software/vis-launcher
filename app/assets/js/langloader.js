@@ -83,10 +83,9 @@ exports.getLanguageOverride = function() {
 exports.setLanguageOverride = function(language) {
     if (!language) return false
     
-    // Validate that this is a supported language ID
     const supportedIDs = Object.values(SUPPORTED_LANGUAGES)
         .map(lang => lang.id)
-        .filter((id, index, self) => self.indexOf(id) === index) // Get unique values
+        .filter((id, index, self) => self.indexOf(id) === index)
     
     let isSupported = supportedIDs.includes(language)
     if (!isSupported) {
@@ -137,7 +136,7 @@ exports.getSupportedLanguages = function() {
 }
 
 exports.setupLanguage = function(systemLocale){
-    let langToUse = 'en_US' // fallback
+    let langToUse = 'en_US'
     
     const override = exports.getLanguageOverride()
     if (override) {

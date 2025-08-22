@@ -42,14 +42,12 @@ const { AUTH_BASE_URL }     = require('./apiconstants')
  */
 
 async function authLibArgs(args) {
-            // Sets the path to the Authlib Injector jar
             let authlibInjectorPath;
             if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
                 authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
             } else {
                 authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
             }
-            // Add the Authlib Injector as a Java agent
             args.unshift(`-javaagent:${authlibInjectorPath}=${AUTH_BASE_URL}/authlib-injector`);
             args.push('-Dauthlibinjector.noShowServerName')
             if(disableHttpd){
