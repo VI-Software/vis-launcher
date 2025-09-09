@@ -1,10 +1,10 @@
 {
   "name": "vis-launcher",
-  "version": "2.1.8",
+  "version": "2.1.9",
   "productName": "VI Software Launcher",
   "description": "VI Software Launcher",
   "author": "VI Software",
-  "license": "MPL-2.0",
+  "license": "AGPL-3.0-only",
   "private": true,
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
