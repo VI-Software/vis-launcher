@@ -117,11 +117,11 @@ exports.getLauncherDirectory = function() {
     try {
         const { app } = process.type === 'browser' 
             ? require('electron') 
-            : require('@electron/remote') || require('electron').remote;
+            : require('@electron/remote') || require('electron').remote
             
-        return app.getPath('userData');
+        return app.getPath('userData')
     } catch (err) {
-        return path.join(os.homedir(), '.vis-launcher');
+        return path.join(os.homedir(), '.vis-launcher')
     }
 }
 

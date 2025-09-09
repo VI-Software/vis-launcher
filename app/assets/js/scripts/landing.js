@@ -124,20 +124,20 @@ document.getElementById('launch_button').addEventListener('click', async e => {
         setLaunchDetails(Lang.queryJS('landing.launch.checkingClient'))
         toggleLaunchArea(true)
         setLaunchPercentage(0, 100)
-        const buildstatus = localStorage.getItem('buildstatus');
+        const buildstatus = localStorage.getItem('buildstatus')
         if (buildstatus === 'notsupported') {
-            loggerLanding.error('VI Software does no longer maintained this version of the launcher and will soon be unable to connect to the servers');
-            showLaunchFailure(Lang.queryJS('landing.launch.unmantainedErrorTitle'), Lang.queryJS('landing.launch.unmantainedErrorMessage'));
-            return;
+            loggerLanding.error('VI Software does no longer maintained this version of the launcher and will soon be unable to connect to the servers')
+            showLaunchFailure(Lang.queryJS('landing.launch.unmantainedErrorTitle'), Lang.queryJS('landing.launch.unmantainedErrorMessage'))
+            return
         } else if (buildstatus === 'forceupdate') {
-            loggerLanding.error('VI Software has marked this version as unsupported, and it cannot be used to play servers.');
-            showLaunchFailure(Lang.queryJS('landing.launch.forceupdateErrorTitle'), Lang.queryJS('landing.launch.forceupdateErrorMessage'));
-            return;
+            loggerLanding.error('VI Software has marked this version as unsupported, and it cannot be used to play servers.')
+            showLaunchFailure(Lang.queryJS('landing.launch.forceupdateErrorTitle'), Lang.queryJS('landing.launch.forceupdateErrorMessage'))
+            return
         }
     } catch (err) {
-        loggerLanding.error('Unhandled error in during launch process.', err);
-        showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'));
-        return;
+        loggerLanding.error('Unhandled error in during launch process.', err)
+        showLaunchFailure(Lang.queryJS('landing.launch.failureTitle'), Lang.queryJS('landing.launch.failureText'))
+        return
     }
     
     try {
@@ -239,7 +239,7 @@ function updateSelectedAccount(authUser){
             username = authUser.displayName
         }
         if (authUser.uuid != null) {
-            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.dev/2d/skin/${authUser.uuid}/head?scale=5)`;
+            document.getElementById('avatarContainer').style.backgroundImage = `url(https://skins.visoftware.dev/2d/skin/${authUser.uuid}/head?scale=5)`
         }        
     }
     user_text.innerHTML = username
