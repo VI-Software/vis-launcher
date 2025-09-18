@@ -28,6 +28,7 @@ const os                    = require('os')
 const path                  = require('path')
 const win                   = remote.getCurrentWindow()
 const ConfigManager         = require('./configmanager')
+// eslint-disable-next-line
 const net                   = require('net')
 const logger = LoggerUtil.getLogger('ProcessBuilder')
 const disableHttpd         = localStorage.getItem('disableHttpd')

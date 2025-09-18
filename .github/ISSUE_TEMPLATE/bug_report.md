@@ -24,7 +24,7 @@ assignees: ''
 
 ## System Information
 <!-- Please complete the following information -->
-- OS: [e.g. Windows 11, macOS 12.0]
+- OS: [e.g. Windows 11, macOS 12.0, Ubuntu (AppImage / Flatpack)]
 - VI Software Launcher Version: [e.g. 2.1.0]
 - Java Version: [e.g. 17.0.1]
 

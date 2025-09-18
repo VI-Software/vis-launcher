@@ -95,7 +95,6 @@ exports.setLanguageOverride = function(language) {
     
     const launcherDir = exports.getLauncherDirectory()
     
-    // Ensure directory exists
     try {
         if (!fs.existsSync(launcherDir)) {
             fs.mkdirSync(launcherDir, { recursive: true })
@@ -136,7 +135,7 @@ exports.getSupportedLanguages = function() {
 }
 
 exports.setupLanguage = function(systemLocale){
-    let langToUse = 'en_US'
+    let langToUse = 'en_US' // fallback
     
     const override = exports.getLanguageOverride()
     if (override) {

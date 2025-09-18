@@ -248,7 +248,7 @@ document.getElementById('accountSelectCancel').addEventListener('click', () => {
     })
 })
 
-let selectedServer = null;
+let selectedServer = null
 
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
@@ -258,6 +258,7 @@ function setServerListingHandlers(){
             const distro = await DistroAPI.getDistribution()
             selectedServer = distro.getServerById(serverId)
             
+            // Populate server details
             document.getElementById('serverDetailsIcon').src = selectedServer.rawServer.icon
             document.getElementById('serverDetailsName').textContent = selectedServer.rawServer.name
             document.getElementById('serverDetailsDescription').textContent = selectedServer.rawServer.description
@@ -269,11 +270,13 @@ function setServerListingHandlers(){
                 require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
             }
 
+            // Show dialog
             document.getElementById('serverDetailsDialog').style.display = 'flex'
         }
     })
 }
 
+// Add handlers for the detail dialog buttons
 document.getElementById('serverDetailsConfirm').addEventListener('click', async () => {
     if(selectedServer) {
         updateSelectedServer(selectedServer)
@@ -287,6 +290,7 @@ document.getElementById('serverDetailsCancel').addEventListener('click', () => {
     selectedServer = null
 })
 
+// Add resource modal functionality
 document.getElementById('serverDetailsResources').addEventListener('click', () => {
     document.getElementById('serverResourcesModal').style.display = 'flex'
     populateResources(selectedServer)
@@ -296,12 +300,14 @@ document.querySelector('.modalClose').addEventListener('click', () => {
     document.getElementById('serverResourcesModal').style.display = 'none'
 })
 
+// Close modal when clicking outside
 document.getElementById('serverResourcesModal').addEventListener('click', (e) => {
     if (e.target === document.getElementById('serverResourcesModal')) {
         document.getElementById('serverResourcesModal').style.display = 'none'
     }
 })
 
+// Handle resource tab switching
 document.querySelectorAll('.resourceTab').forEach(tab => {
     tab.addEventListener('click', () => {
         document.querySelectorAll('.resourceTab').forEach(t => t.classList.remove('active'))
@@ -423,30 +429,6 @@ async function populateAccountListings(){
         </button>`
     }
     document.getElementById('accountSelectListScrollable').innerHTML = htmlString
-}
-
-async function prepareServerSelectionList(){
-    await populateServerListings()
-    setServerListingHandlers()
-}
-
-function prepareAccountSelectionList(){
-    populateAccountListings()
-    setAccountListingHandlers()
-}
-
-function populateAccountListings(){
-    const accountsObj = ConfigManager.getAuthAccounts()
-    const accounts = Array.from(Object.keys(accountsObj), v=>accountsObj[v])
-    let htmlString = ''
-    for(let i=0; i<accounts.length; i++){
-        htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://skins.visoftware.dev/2d/skin/${accounts[i].uuid}/head?scale=5">
-            <div class="accountListingName">${accounts[i].displayName}</div>
-        </button>`
-    }
-    document.getElementById('accountSelectListScrollable').innerHTML = htmlString
-
 }
 
 async function prepareServerSelectionList(){
