@@ -204,41 +204,6 @@ async function checkChallenge(challengeId, secret) {
     }
 }
 
-/**
- * Create a temporary web server to handle the OAuth callback
- */
-function createOAuthServer(port) {
-    return new Promise((resolve, reject) => {
-        const server = http.createServer((req, res) => {
-            const url = new URL(req.url, `http://localhost:${port}`)
-            
-            if (url.pathname === '/callback') {
-                const token = url.searchParams.get('token')
-                if (token) {
-                    res.writeHead(200, { 'Content-Type': 'text/html' })
-                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authorization successful!</h1><p>You may now close this window now.</p></body></html>')
-                    server.close()
-                    resolve({ token, server }) 
-                } else {
-                    server.close()
-                    reject(new Error('No token received'))
-                }
-            }
-        })
-
-        server.listen(port, 'localhost', () => {
-            log.info(`OAuth server listening on port ${port}`)
-        })
-
-        server.on('error', (err) => {
-            reject(err)
-        })
-
-        // Return server instance so it can be cleaned up if needed
-        return server
-    })
-}
-
 exports.addVISWebAccount = async function() {
     let pollInterval
     let challengeValid = true
@@ -261,7 +226,6 @@ exports.addVISWebAccount = async function() {
             tokenReject = reject
         })
 
-        // Create server first
         serverInstance = http.createServer((req, res) => {
             const url = new URL(req.url, `http://localhost:${port}`)
             
@@ -287,12 +251,10 @@ exports.addVISWebAccount = async function() {
             tokenReject(err)
         })
 
-        // Start listening
         serverInstance.listen(port, 'localhost', async () => {
             log.info(`OAuth server listening on port ${port}`)
             
             try {
-                // Get challenge after server is ready
                 const challengeResponse = await got.get(`${API_BASE_URL}/services/launcher/v2/requestchallenge?version=${require('../../../package.json').version}`).json()
                 
                 if(!challengeResponse || challengeResponse.status !== 'Success') {
@@ -302,10 +264,8 @@ exports.addVISWebAccount = async function() {
                 const { challengeId, secret } = challengeResponse
                 const authUrl = `${WEBLOGIN_URL}?challenge=${challengeId}`
 
-                // Open browser after everything is ready
                 shell.openExternal(authUrl)
 
-                // Start polling
                 pollInterval = setInterval(async () => {
                     const isValid = await checkChallenge(challengeId, secret)
                     if (!isValid && challengeValid) {
@@ -321,11 +281,9 @@ exports.addVISWebAccount = async function() {
             }
         })
 
-        // Wait for authentication
         const token = await tokenPromise
         cleanup()
 
-        // Rest of the function remains the same...
         const accountInfo = await got.get(`${API_BASE_URL}/services/launcher/v2/whoami`, {
             headers: {
                 'authorization': token
@@ -353,7 +311,6 @@ exports.addVISWebAccount = async function() {
         }
         
         ConfigManager.save()
-
         updateSelectedAccount(ret)
         await prepareSettings(true)
         

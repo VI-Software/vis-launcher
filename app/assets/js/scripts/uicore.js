@@ -244,30 +244,30 @@ document.addEventListener('keydown', function (e) {
  * Handles the loading text animation and updates the loading text with dots.
  */
 
-let dotCount = 0;
-let timeoutanimation = false;
+let dotCount = 0
+let timeoutanimation = false
 function updateLoadingText() {
-    dotCount = (dotCount + 1) % 4;
-    const dots = '.'.repeat(dotCount);
-    const loadingText = document.getElementById('loadingText');
+    dotCount = (dotCount + 1) % 4
+    const dots = '.'.repeat(dotCount)
+    const loadingText = document.getElementById('loadingText')
     if (!timeoutanimation) {
         if (!timeoutanimation) {
-            loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoadingText')}${dots}`;
+            loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoadingText')}${dots}`
         }
     }
 }
 
 // Start the dot animation
-setInterval(updateLoadingText, 350);
+setInterval(updateLoadingText, 350)
 
 // Timeout
 setTimeout(function() {
-    const loadingText = document.getElementById('loadingText');
+    const loadingText = document.getElementById('loadingText')
     if (loadingText) {
         timeoutanimation = TreeWalker
-        loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoaidingTakingTooLong')}`;
+        loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoaidingTakingTooLong')}`
     }
-}, 10000);
+}, 10000)
 
 
 

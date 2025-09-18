@@ -83,10 +83,9 @@ exports.getLanguageOverride = function() {
 exports.setLanguageOverride = function(language) {
     if (!language) return false
     
-    // Validate that this is a supported language ID
     const supportedIDs = Object.values(SUPPORTED_LANGUAGES)
         .map(lang => lang.id)
-        .filter((id, index, self) => self.indexOf(id) === index) // Get unique values
+        .filter((id, index, self) => self.indexOf(id) === index)
     
     let isSupported = supportedIDs.includes(language)
     if (!isSupported) {
@@ -96,7 +95,6 @@ exports.setLanguageOverride = function(language) {
     
     const launcherDir = exports.getLauncherDirectory()
     
-    // Ensure directory exists
     try {
         if (!fs.existsSync(launcherDir)) {
             fs.mkdirSync(launcherDir, { recursive: true })
@@ -118,11 +116,11 @@ exports.getLauncherDirectory = function() {
     try {
         const { app } = process.type === 'browser' 
             ? require('electron') 
-            : require('@electron/remote') || require('electron').remote;
+            : require('@electron/remote') || require('electron').remote
             
-        return app.getPath('userData');
+        return app.getPath('userData')
     } catch (err) {
-        return path.join(os.homedir(), '.vis-launcher');
+        return path.join(os.homedir(), '.vis-launcher')
     }
 }
 

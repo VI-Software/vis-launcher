@@ -88,9 +88,9 @@ async function showMainUI(data) {
     }
     try {
         // Clear the server list and build status from the local storage to prevent any issues and abuse
-        localStorage.removeItem('serverList');
-        localStorage.removeItem('buildstatus');
-        localStorage.removeItem('disableHttpd');
+        localStorage.removeItem('serverList')
+        localStorage.removeItem('buildstatus')
+        localStorage.removeItem('disableHttpd')
         localStorage.removeItem('authlibDebug')
     }catch(err){
         console.error(err)
@@ -159,21 +159,21 @@ function continueMainUILogic(checkver) {
 
     // Performs various checks to verify the version status
     if(checkver==true){
-    checkVersionStatus()
-        .then(status => {
-            if(status.maintained==true){
-                console.log('This version is officially maintained by VI Software')
-                localStorage.setItem('buildstatus', 'maintained')
-            }else if(status.maintained==false && status.forceupdate==false){
-                localStorage.setItem('buildstatus', 'notsupported')
-            }else{
-                localStorage.setItem('buildstatus', 'forceupdate')
-            }
-        })
-        .catch(error => {
-            console.error('Couldn\'t verify the version status:', error)
-            showForceUpdate()
-        })
+        checkVersionStatus()
+            .then(status => {
+                if(status.maintained==true){
+                    console.log('This version is officially maintained by VI Software')
+                    localStorage.setItem('buildstatus', 'maintained')
+                }else if(status.maintained==false && status.forceupdate==false){
+                    localStorage.setItem('buildstatus', 'notsupported')
+                }else{
+                    localStorage.setItem('buildstatus', 'forceupdate')
+                }
+            })
+            .catch(error => {
+                console.error('Couldn\'t verify the version status:', error)
+                showForceUpdate()
+            })
     }
     // If this is enabled in a development environment we'll get ratelimited.
     // The relaunch frequency is usually far too high.
@@ -290,7 +290,7 @@ function showAPIError() {
 
 function checkVersionStatus() {
     // Parse the API_BASE_URL
-    const apiUrl = new URL(API_BASE_URL);
+    const apiUrl = new URL(API_BASE_URL)
     
     const options = {
         hostname: apiUrl.hostname,
@@ -682,7 +682,7 @@ ipcRenderer.on('distributionIndexDone', async (event, res) => {
 /* Sets a custom port for the httpd server used by the authlib injector
  Value is null by default, which means the port will be randomly chosen */
 
- async function debug_getHelp() {
+async function debug_getHelp() {
     console.log('function debug_getHelp() - shows this help message')
     console.log('function debug_devModeToggle() - toggles distro dev mode')
     console.log('function debug_toggledisableHttpd() - toggles the flag disableHttpd for the authlib injector')
@@ -702,7 +702,7 @@ async function debug_devModeToggle() {
 
 /* Toggles the flag disableHttpd for authlib injector */
 
- async function debug_toggledisableHttpd() {
+async function debug_toggledisableHttpd() {
     if(localStorage.getItem('disableHttpd')){
         localStorage.removeItem('disableHttpd')
         console.log('Httpd server enabled')

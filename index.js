@@ -30,8 +30,8 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
-const pjson = require('./package.json');
-let isExitingThroughTray = false;
+const pjson = require('./package.json')
+let isExitingThroughTray = false
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -242,8 +242,8 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
 let win
 
 function createWindow() {
-        // Determine if the version includes 'nightly' to enable nightly features
-    const isNightly = pjson.version.includes('nightly');
+    // Determine if the version includes 'nightly' to enable nightly features
+    const isNightly = pjson.version.includes('nightly')
 
     win = new BrowserWindow({
         width: 980,
@@ -271,7 +271,7 @@ function createWindow() {
     /*win.once('ready-to-show', () => {
         win.show()
     })*/
-   /*
+    /*
         win.once('ready-to-show', () => {
             // show dev tools
             if (isDev) {
@@ -285,12 +285,12 @@ function createWindow() {
 
     win.on('close', (event) => {
         if (!app.isQuitting && !isExitingThroughTray) {
-            event.preventDefault();
-            win.hide();
+            event.preventDefault()
+            win.hide()
         }
     
-        return false;
-    });
+        return false
+    })
 
     win.on('closed', () => {
         win = null
@@ -378,7 +378,7 @@ function getPlatformIcon(filename){
 }
 
 function createTray() {    
-    tray = new Tray(path.join(__dirname, 'app', 'assets', 'images', `vis-tray.png`))
+    tray = new Tray(path.join(__dirname, 'app', 'assets', 'images', 'vis-tray.png'))
 
     const trayMenuTemplate = [
         {
@@ -390,7 +390,7 @@ function createTray() {
         {
             label: 'Salir',
             click: function () {
-                isExitingThroughTray = true;
+                isExitingThroughTray = true
                 app.quit()
             }
         }
@@ -421,27 +421,27 @@ if (!gotTheLock) {
     
     // Initialize language and then create the window when app is ready
     app.whenReady().then(() => {
-        let locale = '';
+        let locale = ''
         try {
             if (process.platform === 'win32') {
-                locale = app.getLocale();
+                locale = app.getLocale()
             } else {
                 // macOS/Linux
                 locale = process.env.LANG || 
                          process.env.LC_ALL || 
                          process.env.LC_MESSAGES || 
-                         process.env.LANGUAGE;
+                         process.env.LANGUAGE
                 
                 if (locale) {
                     // Format: en_US.UTF-8 -> en-US
-                    locale = locale.split('.')[0].replace('_', '-');
+                    locale = locale.split('.')[0].replace('_', '-')
                 } else {
-                    locale = app.getLocale();
+                    locale = app.getLocale()
                 }
             }
         } catch (error) {
-            console.error('Error detecting system locale:', error);
-            locale = 'en_US';
+            console.error('Error detecting system locale:', error)
+            locale = 'en_US'
         }
         
         LangLoader.setupLanguage(locale)

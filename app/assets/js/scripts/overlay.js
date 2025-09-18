@@ -248,7 +248,7 @@ document.getElementById('accountSelectCancel').addEventListener('click', () => {
     })
 })
 
-let selectedServer = null;
+let selectedServer = null
 
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
@@ -266,9 +266,7 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsMinecraft').textContent = selectedServer.rawServer.minecraftVersion
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
-            // Add website button handler
             document.getElementById('serverDetailsWebsite').onclick = () => {
-                // Using Electron shell to open external URL
                 require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
             }
 
@@ -353,7 +351,6 @@ function populateResources(server, category = 'required') {
     })
 }
 
-// Add search functionality
 document.getElementById('resourceSearch').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase()
     const items = document.querySelectorAll('.resourceItem')
@@ -432,30 +429,6 @@ async function populateAccountListings(){
         </button>`
     }
     document.getElementById('accountSelectListScrollable').innerHTML = htmlString
-}
-
-async function prepareServerSelectionList(){
-    await populateServerListings()
-    setServerListingHandlers()
-}
-
-function prepareAccountSelectionList(){
-    populateAccountListings()
-    setAccountListingHandlers()
-}
-
-function populateAccountListings(){
-    const accountsObj = ConfigManager.getAuthAccounts()
-    const accounts = Array.from(Object.keys(accountsObj), v=>accountsObj[v])
-    let htmlString = ''
-    for(let i=0; i<accounts.length; i++){
-        htmlString += `<button class="accountListing" uuid="${accounts[i].uuid}" ${i===0 ? 'selected' : ''}>
-            <img src="https://skins.visoftware.dev/2d/skin/${accounts[i].uuid}/head?scale=5">
-            <div class="accountListingName">${accounts[i].displayName}</div>
-        </button>`
-    }
-    document.getElementById('accountSelectListScrollable').innerHTML = htmlString
-
 }
 
 async function prepareServerSelectionList(){

@@ -26,11 +26,12 @@ const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-lau
 const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
-const win                   = remote.getCurrentWindow();
+const win                   = remote.getCurrentWindow()
 const ConfigManager         = require('./configmanager')
-const net                   = require('net');
+// eslint-disable-next-line
+const net                   = require('net')
 const logger = LoggerUtil.getLogger('ProcessBuilder')
-const disableHttpd         = localStorage.getItem('disableHttpd');
+const disableHttpd         = localStorage.getItem('disableHttpd')
 const authlibDebug          = localStorage.getItem('authlibDebug')
 const { AUTH_BASE_URL }     = require('./apiconstants')
 
@@ -42,22 +43,20 @@ const { AUTH_BASE_URL }     = require('./apiconstants')
  */
 
 async function authLibArgs(args) {
-            // Sets the path to the Authlib Injector jar
-            let authlibInjectorPath;
-            if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
-                authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar');
-            } else {
-                authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar');
-            }
-            // Add the Authlib Injector as a Java agent
-            args.unshift(`-javaagent:${authlibInjectorPath}=${AUTH_BASE_URL}/authlib-injector`);
-            args.push('-Dauthlibinjector.noShowServerName')
-            if(disableHttpd){
-                args.push(args.push('-Dauthlibinjector.disableHttpd'))
-            }
-            if(authlibDebug){
-                args.push('-Dauthlibinjector.debug=' + authlibDebug)
-            }
+    let authlibInjectorPath
+    if (process.env.NODE_ENV === 'development' || !app.isPackaged) {
+        authlibInjectorPath = path.join(app.getAppPath(), 'libraries', 'java', 'authlibinjector.jar')
+    } else {
+        authlibInjectorPath = path.join(process.resourcesPath, 'libraries', 'java', 'authlibinjector.jar')
+    }
+    args.unshift(`-javaagent:${authlibInjectorPath}=${AUTH_BASE_URL}/authlib-injector`)
+    args.push('-Dauthlibinjector.noShowServerName')
+    if(disableHttpd){
+        args.push(args.push('-Dauthlibinjector.disableHttpd'))
+    }
+    if(authlibDebug){
+        args.push('-Dauthlibinjector.debug=' + authlibDebug)
+    }
 }
 
 /**
@@ -130,7 +129,7 @@ class ProcessBuilder {
         }
 
         if(ConfigManager.getMinimizeOnLaunch()){
-            win.hide();
+            win.hide()
         }
 
         child.stdout.setEncoding('utf8')
@@ -144,7 +143,7 @@ class ProcessBuilder {
             data.trim().split('\n').forEach(x => console.log(`\x1b[31m[Minecraft]\x1b[0m ${x}`))
         })
         child.on('close', (code, signal) => {
-            win.show();
+            win.show()
             logger.info('Exited with code', code)
             if(code != 0){
                 setOverlayContent(
