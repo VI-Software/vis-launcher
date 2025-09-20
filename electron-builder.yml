@@ -48,6 +48,7 @@ linux:
   synopsis: 'Modded Minecraft Launcher'
   description: 'Conéctate a los servidores de VI Software sin preocupaciones, permite al VIS Launcher actualizar, pre configurar tus instalaciones de mods de las experiencias VIS por ti.'
   category: 'Game'
+  compression: 'normal' # Override default compression level for AppImage
 
 
 directories:
