@@ -305,12 +305,12 @@ function createMenu() {
         let applicationSubMenu = {
             label: 'VI Software Launcher',
             submenu: [{
-                label: 'Acerca de la aplicación',
+                label: 'About VI Software Launcher',
                 selector: 'orderFrontStandardAboutPanel:'
             }, {
                 type: 'separator'
             }, {
-                label: 'Abandonar',
+                label: 'Quit VI Software Launcher',
                 accelerator: 'Command+Q',
                 click: () => {
                     app.quit()
@@ -382,13 +382,13 @@ function createTray() {
 
     const trayMenuTemplate = [
         {
-            label: 'Abrir',
+            label: 'Open',
             click: function () {
                 win.show()
             }
         },
         {
-            label: 'Salir',
+            label: 'Quit',
             click: function () {
                 isExitingThroughTray = true
                 app.quit()
