@@ -200,6 +200,7 @@ async function checkChallenge(challengeId, secret) {
         }
         return false
     } catch (err) {
+        log.error('Error checking challenge validity:', err)
         return false
     }
 }
@@ -447,6 +448,7 @@ async function validateSelectedMicrosoftAccount(){
             ConfigManager.save()
             return true
         } catch(err) {
+            log.error('Error during Microsoft full token refresh:', err)
             return false
         }
     } else {
@@ -466,6 +468,7 @@ async function validateSelectedMicrosoftAccount(){
             return true
         }
         catch(err) {
+            log.error('Error during Microsoft MC token refresh:', err)
             return false
         }
     }

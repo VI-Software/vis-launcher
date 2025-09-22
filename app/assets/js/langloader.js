@@ -22,6 +22,7 @@ const path = require('path')
 const toml = require('toml')
 const merge = require('lodash.merge')
 const os = require('os')
+const { log } = require('console')
 
 let lang
 
@@ -119,7 +120,8 @@ exports.getLauncherDirectory = function() {
             : require('@electron/remote') || require('electron').remote
             
         return app.getPath('userData')
-    } catch (err) {
+    } catch {
+        log.warn('Electron app path not accessible, using home directory for launcher data.')
         return path.join(os.homedir(), '.vis-launcher')
     }
 }

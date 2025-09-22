@@ -296,6 +296,7 @@ class ProcessBuilder {
                     return true
                 }
             }
+        // eslint-disable-next-line no-unused-vars
         } catch (err) {
             // We know old forge versions follow this format.
             // Error must be caused by newer version.
