@@ -117,3 +117,5 @@ VIS Launcher is provided “AS IS”, WITHOUT WARRANTY OF ANY KIND, either expre
 - Based on [HeliosLauncher (v2.1.0)](https://github.com/dscalzi/helioslauncher)
 
 - All third parties licenses can be found [here](./THIRD-PARTIES-LICENSES.md)
+
+- We thank all of our contributors. The full list is available on the [Contributors Graphs](https://github.com/VI-Software/vis-launcher/graphs/contributors)
