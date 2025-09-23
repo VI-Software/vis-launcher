@@ -159,6 +159,11 @@ welcomeHeader = "Benvingut/da a VI Software Launcher"
 welcomeDescription = "Aquest launcher va ser desenvolupat per l'<a href=\"https://github.com/orgs/VI-Software/people\" style=\"color: purple;\">equip de VI Software</a> per facilitar la gestió de modpacks a les experiències del servidor. En utilitzar aquest launcher, acceptes la <a style=\"color: purple;\" href=\"https://docs.visoftware.dev/vi-software/vis-launcher/privacy-policy\">política de privacitat</a> i els <a href=\"https://docs.visoftware.dev/vi-software/vis-launcher/terms-of-service\" style=\"color: purple;\">termes de servei</a> de <a href=\"https://visoftware.dev\" style=\"color: purple;\">VI Software</a>."
 welcomeDescCTA = "La diversió és a la cantonada!"
 
+[ejs.app]
+canary_warning_title = "Advertència: versió Canary"
+canary_warning_text = "Estàs executant una versió canary (pre-llançament) del launcher <strong style='color:#b33838'>que pot ser inestable i pot malmetre o inutilitzar la teva instal·lació de VI Software Launcher.</strong> Si no estàs familiaritzat amb fer una reinstal·lació neta, no continuïs: tanca l'aplicació i descarrega una versió estable des de {websiteURL}."
+canary_warning_dontask = "No mostris aquesta advertència de nou"
+
 [js.discord]
 waiting = "Esperant al client.."
 state = "Servidor: {shortId}"

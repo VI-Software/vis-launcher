@@ -115,7 +115,8 @@ const DEFAULT_CONFIG = {
         launcher: {
             allowPrerelease: false,
             dataDirectory: dataPath,
-            legalAccepted: false
+            legalAccepted: false,
+            canaryAcknowledged: false
         }
     },
     newsCache: {
@@ -888,6 +889,23 @@ exports.getLegalAccepted = function(def = false){
  */
 exports.setLegalAccepted = function(accepted){
     config.settings.launcher.legalAccepted = !!accepted
+    exports.save()
+}
+
+/**
+ * Check if the user has acknowledged canary warnings.
+ * @returns {boolean}
+ */
+exports.getCanaryAcknowledged = function(def = false){
+    return !def ? (config.settings.launcher.canaryAcknowledged || false) : (DEFAULT_CONFIG.settings.launcher.canaryAcknowledged || false)
+}
+
+/**
+ * Set the canary acknowledged flag and persist immediately.
+ * @param {boolean} acknowledged
+ */
+exports.setCanaryAcknowledged = function(acknowledged){
+    config.settings.launcher.canaryAcknowledged = !!acknowledged
     exports.save()
 }
 

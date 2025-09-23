@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VI Software Launcher - Warning</title>
+    <link rel="stylesheet" href="./assets/css/canary.css">
+</head>
+<body>
+    <div class="dialog">
+        <div class="top">
+            <img src="./assets/images/logo-icon.png" alt="VI"/>
+            <div>
+                <h2 class="title"><%= lang('app.canary_warning_title') %></h2>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="notice"><%- lang('app.canary_warning_text', { websiteURL: `<a href="${websiteURL}" target="_blank" rel="noopener noreferrer">${websiteURL}</a>` }) %></div>
+        </div>
+
+        <div class="footer">
+            <label class="checkbox"><input type="checkbox" id="dontAsk"> <span><%= lang('app.canary_warning_dontask') %></span></label>
+            <div class="actions">
+                <button id="declineBtn">Close launcher</button>
+                <button id="acceptBtn" disabled>Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <script>require('./assets/js/scripts/canary.js')</script>
+</body>
+</html>

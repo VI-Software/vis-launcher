@@ -32,7 +32,9 @@
             <div id="frameContentWin">
                 <div id="frameTitleDock">
 
-                    <% if (!isNightly) { %>
+                    <% if (isCanary) { %>
+                    <span id="frameTitleText"><%= lang('app.title_canary') %></span>
+                    <% } else if (!isNightly) { %>
                     <span id="frameTitleText"><%= lang('app.title') %></span>
                     <% } else { %>
                     <span id="frameTitleText"><%= lang('app.title_nightly') %></span>

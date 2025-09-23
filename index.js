@@ -274,8 +274,9 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
 let win
 
 function createWindow() {
-    // Determine if the version includes 'nightly' to enable nightly features
+    // Determine if the version includes 'nightly' or 'canary' to enable prerelease features
     const isNightly = pjson.version.includes('nightly')
+    const isCanary = pjson.version.includes('canary')
 
     win = new BrowserWindow({
         width: 980,
@@ -294,7 +295,8 @@ function createWindow() {
     const data = {
         bkid: Math.floor((Math.random() * fs.readdirSync(path.join(__dirname, 'app', 'assets', 'images', 'backgrounds')).length)),
         lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders),
-        isNightly: isNightly
+        isNightly: isNightly,
+        isCanary: isCanary
     }
     Object.entries(data).forEach(([key, val]) => ejse.data(key, val))
 
@@ -481,6 +483,61 @@ if (!gotTheLock) {
         // If legal not accepted, show legal window first, otherwise create main window
         try {
             ConfigManager.load()
+            // If this is a canary build, and user has not acknowledged canary warnings,
+            // show a short modal that warns about possible instability. The dialog
+            // requires at least 3 seconds before the user can accept and has a
+            // "don't show again" checkbox.
+            const isCanaryBuild = pjson.version.includes('canary')
+            if (isCanaryBuild && !ConfigManager.getCanaryAcknowledged()) {
+                // Create a small modal window with a simple UI so we can enforce the 3s delay
+                let canaryWin = new BrowserWindow({
+                    width: 520,
+                    height: 260,
+                    resizable: false,
+                    modal: true,
+                    parent: win || null,
+                    show: false,
+                    icon: getPlatformIcon('vis-icon'),
+                    webPreferences: {
+                        nodeIntegration: true,
+                        contextIsolation: false
+                    }
+                })
+                remoteMain.enable(canaryWin.webContents)
+
+                // Make EJS helper and a canary-specific website URL available to the template
+                ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
+                const canaryWebsiteURL = 'https://visoftware.dev/launcher'
+                ejse.data('websiteURL', canaryWebsiteURL)
+
+                // Load the canary EJS template
+                canaryWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'canary.ejs')).toString())
+                canaryWin.removeMenu()
+                canaryWin.once('ready-to-show', () => canaryWin.show())
+
+                // Handlers from the canary window
+                const { ipcMain } = require('electron')
+                ipcMain.once('canary-ack', (evt, dontAsk) => {
+                    if (dontAsk) ConfigManager.setCanaryAcknowledged(true)
+                    // Restore default website URL for the rest of the app
+                    ejse.data('websiteURL', 'https://visoftware.dev')
+                    try { canaryWin.close() } catch (err) { console.error('Error closing canary window', err) }
+                    // proceed to create main window
+                    createWindow()
+                    createMenu()
+                    createTray()
+                })
+                ipcMain.once('canary-close', () => {
+                    // Restore default website URL (app will quit shortly)
+                    ejse.data('websiteURL', 'https://visoftware.dev')
+                    // Close the app (user opted to not use canary)
+                    try { canaryWin.close() } catch (err) { console.error('Error closing canary window', err) }
+                    app.quit()
+                })
+
+                // Wait here and skip creating the main window until user responds
+                return
+            }
             if (!ConfigManager.getLegalAccepted()) {
                 legalWin = new BrowserWindow({
                     width: 960,

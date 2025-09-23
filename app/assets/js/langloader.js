@@ -48,10 +48,12 @@ exports.query = function(id, placeHolders){
     for(let q of query){
         res = res[q]
     }
-    let text = res === lang ? '' : res
+    // Ensure we always work with a string to avoid errors when a key is missing
+    let text = (typeof res === 'string') ? res : ''
     if (placeHolders) {
         Object.entries(placeHolders).forEach(([key, value]) => {
-            text = text.replace(`{${key}}`, value)
+            // replace all occurrences of the placeholder
+            text = text.split(`{${key}}`).join(String(value))
         })
     }
     return text
