@@ -30,6 +30,7 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const { AZURE_CLIENT_ID, MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR, SHELL_OPCODE } = require('./app/assets/js/ipcconstants')
 const LangLoader                        = require('./app/assets/js/langloader')
+const ConfigManager                     = require('./app/assets/js/configmanager')
 const pjson = require('./package.json')
 let isExitingThroughTray = false
 
@@ -104,6 +105,37 @@ ipcMain.on('autoUpdateAction', (event, arg, data) => {
 // Redirect distribution index event from preloader to renderer.
 ipcMain.on('distributionIndexDone', (event, res) => {
     event.sender.send('distributionIndexDone', res)
+})
+
+// Handle legal acceptance/decline from legal window
+let legalWin
+ipcMain.on('legal-accepted', (event) => {
+    try {
+        ConfigManager.load()
+    } catch (err) {
+        console.error('Error loading config before setting legal acceptance', err)
+    }
+    ConfigManager.setLegalAccepted(true)
+    if (legalWin) {
+        legalWin.close()
+    }
+    // Show main window after legal acceptance
+    try {
+        if (!win) {
+            createWindow()
+            createMenu()
+            createTray()
+        } else {
+            win.show()
+        }
+    } catch (err) {
+        console.error('Error starting launcher after legal acceptance', err)
+    }
+})
+
+ipcMain.on('legal-declined', (event) => {
+    // User declined legal notices. We'll just quit the app.
+    app.quit()
 })
 
 // Handle trash item.
@@ -358,8 +390,8 @@ function createMenu() {
         Menu.setApplicationMenu(menuObject)
 
     }
-
 }
+
 
 function getPlatformIcon(filename){
     let ext
@@ -446,9 +478,55 @@ if (!gotTheLock) {
         
         LangLoader.setupLanguage(locale)
         
-        createWindow()
-        createMenu()
-        createTray()
+        // If legal not accepted, show legal window first, otherwise create main window
+        try {
+            ConfigManager.load()
+            if (!ConfigManager.getLegalAccepted()) {
+                legalWin = new BrowserWindow({
+                    width: 960,
+                    height: 720,
+                    resizable: false,
+                    modal: true,
+                    parent: win || null,
+                    show: false,
+                    icon: getPlatformIcon('vis-icon'),
+                    webPreferences: {
+                        nodeIntegration: true,
+                        contextIsolation: false
+                    }
+                })
+                remoteMain.enable(legalWin.webContents)
+                legalWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
+                legalWin.removeMenu()
+                legalWin.once('ready-to-show', () => legalWin.show())
+                legalWin.on('closed', () => { legalWin = null })
+            } else {
+                createWindow()
+                createMenu()
+                createTray()
+            }
+        } catch (err) {
+            console.error('Failed to load configuration for legal check', err)
+            // If anything goes wrong, show legal window as safe default
+            legalWin = new BrowserWindow({
+                width: 960,
+                height: 720,
+                resizable: false,
+                modal: true,
+                parent: win || null,
+                show: false,
+                icon: getPlatformIcon('vis-icon'),
+                webPreferences: {
+                    nodeIntegration: true,
+                    contextIsolation: false
+                }
+            })
+            remoteMain.enable(legalWin.webContents)
+            legalWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
+            legalWin.removeMenu()
+            legalWin.once('ready-to-show', () => legalWin.show())
+            legalWin.on('closed', () => { legalWin = null })
+        }
     })
 }
 
@@ -467,4 +545,3 @@ app.on('activate', () => {
         createWindow()
     }
 })
-

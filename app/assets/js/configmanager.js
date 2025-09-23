@@ -27,7 +27,15 @@ const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.e
 
 const dataPath = path.join(sysRoot, '.visdev-launcher')
 
-const launcherDir = require('@electron/remote').app.getPath('userData')
+let launcherDir
+try {
+    // In renderer processes the '@electron/remote' package is used.
+    // In the main process require('@electron/remote') will throw, so fall back to electron.app
+    launcherDir = require('@electron/remote').app.getPath('userData')
+} catch {
+    const { app: electronApp } = require('electron')
+    launcherDir = electronApp.getPath('userData')
+}
 
 
 /**
@@ -106,7 +114,8 @@ const DEFAULT_CONFIG = {
         },
         launcher: {
             allowPrerelease: false,
-            dataDirectory: dataPath
+            dataDirectory: dataPath,
+            legalAccepted: false
         }
     },
     newsCache: {
@@ -863,6 +872,23 @@ exports.getAllowPrerelease = function(def = false){
  */
 exports.setAllowPrerelease = function(allowPrerelease){
     config.settings.launcher.allowPrerelease = allowPrerelease
+}
+
+/**
+ * Check whether the user previously accepted the legal notices.
+ * @returns {boolean} True if accepted, false otherwise.
+ */
+exports.getLegalAccepted = function(def = false){
+    return !def ? (config.settings.launcher.legalAccepted || false) : (DEFAULT_CONFIG.settings.launcher.legalAccepted || false)
+}
+
+/**
+ * Set the legal acceptance flag and save immediately.
+ * @param {boolean} accepted
+ */
+exports.setLegalAccepted = function(accepted){
+    config.settings.launcher.legalAccepted = !!accepted
+    exports.save()
 }
 
 /**
