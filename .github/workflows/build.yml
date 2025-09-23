@@ -54,5 +54,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CERTIFICATE_FILE: ${{ github.workspace }}/cert/certificate.pfx
+          npm_config_arch: ${{ matrix.arch }}
+          TARGET_ARCH: ${{ matrix.arch }}
         run: npm run dist
         shell: bash
