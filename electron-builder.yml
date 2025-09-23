@@ -39,7 +39,7 @@ mac:
       arch:
         - 'x64'
         - 'arm64'
-  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
+  artifactName: '${productName}-${version}-${arch}.${ext}'
   category: 'public.app-category.games'
 
 # Linux Configuration
@@ -49,11 +49,11 @@ linux:
       arch:
         - 'x64'
         - 'arm64'
-        # Note: building for 32-bit ARM (armv7l) is possible but less commonly supported by recent Electron versions.
   maintainer: 'VI Software'
   vendor: 'VI Software'
   synopsis: 'Modded Minecraft Launcher'
   description: 'Conéctate a los servidores de VI Software sin preocupaciones, permite al VIS Launcher actualizar, pre configurar tus instalaciones de mods de las experiencias VIS por ti.'
+  artifactName: '${productName}-${version}-${arch}.${ext}'
   category: 'Game'
   compression: 'normal' # Override default compression level for AppImage
 
