@@ -20,7 +20,6 @@ win:
     - target: 'nsis'
       arch:
         - 'x64'
-        - 'arm64'
   cscLink: './cert/certificate.pfx'
   signtoolOptions:
     publisherName: 'VI Software'
