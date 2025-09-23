@@ -1,7 +1,7 @@
 appId: 'vi-software-launcher'
 productName: 'VI Software Launcher'
 # Include architecture in artifact filenames by default so linux/windows artifacts are arch-qualified
-artifactName: '${productName}-setup-${version}-${arch}.${ext}'
+artifactName: '${productName}-setup-${version}.${ext}'
 
 copyright: 'Copyright © 2025 VI Software'
 

@@ -11,15 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        include:
-          - os: macos-latest
-            arch: x64
-          - os: ubuntu-latest
-            arch: x64
-          - os: ubuntu-latest
-            arch: arm64
-          - os: windows-latest
-            arch: x64
+        os: [macos-latest, ubuntu-latest, windows-latest]
 
     steps:
       - name: Check out Git repository
@@ -28,7 +20,7 @@ jobs:
       - name: Install and setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '22.x'
+          node-version: 20
 
       - name: Create certificate folder
         run: mkdir -p cert
@@ -45,8 +37,6 @@ jobs:
           python-version: 3.x
 
       - name: Install dependencies
-        env:
-          npm_config_arch: ${{ matrix.arch }}
         run: npm ci
         shell: bash
 
@@ -54,7 +44,5 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CERTIFICATE_FILE: ${{ github.workspace }}/cert/certificate.pfx
-          npm_config_arch: ${{ matrix.arch }}
-          TARGET_ARCH: ${{ matrix.arch }}
         run: npm run dist
         shell: bash
