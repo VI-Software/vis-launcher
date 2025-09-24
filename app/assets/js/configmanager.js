@@ -22,6 +22,7 @@ const os   = require('os')
 const path = require('path')
 
 const logger = LoggerUtil.getLogger('ConfigManager')
+const pjson = require('../../../package.json')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
@@ -115,8 +116,8 @@ const DEFAULT_CONFIG = {
         launcher: {
             allowPrerelease: false,
             dataDirectory: dataPath,
-            legalAccepted: false,
-            canaryAcknowledged: false
+            legalAcceptedVersion: null,
+            canaryAcknowledgedVersion: null,
         }
     },
     newsCache: {
@@ -879,16 +880,35 @@ exports.setAllowPrerelease = function(allowPrerelease){
  * Check whether the user previously accepted the legal notices.
  * @returns {boolean} True if accepted, false otherwise.
  */
+/**
+ * Check whether the user previously accepted the legal notices for the
+ * current application version. We store the version string when the user
+ * accepts; only a match to the current application version returns true.
+ *
+ * @param {boolean} def Optional. If true, return the default config value.
+ * @returns {boolean} True if accepted for current version, false otherwise.
+ */
 exports.getLegalAccepted = function(def = false){
-    return !def ? (config.settings.launcher.legalAccepted || false) : (DEFAULT_CONFIG.settings.launcher.legalAccepted || false)
+    if(def) return DEFAULT_CONFIG.settings.launcher.legalAcceptedVersion != null || DEFAULT_CONFIG.settings.launcher.legalAccepted || false
+    const v = config.settings.launcher.legalAcceptedVersion
+    if(!v) return !!config.settings.launcher.legalAccepted
+    return v === pjson.version
 }
 
 /**
  * Set the legal acceptance flag and save immediately.
  * @param {boolean} accepted
  */
-exports.setLegalAccepted = function(accepted){
-    config.settings.launcher.legalAccepted = !!accepted
+/**
+ * Record that the user accepted the legal notices for a specific version.
+ * Pass the app version string (for example, require('../../../package.json').version).
+ *
+ * @param {string} version The version string for which acceptance applies.
+ */
+exports.setLegalAccepted = function(version){
+    config.settings.launcher.legalAcceptedVersion = version
+    // keep legacy flag for UI/state but prefer versioned value
+    config.settings.launcher.legalAccepted = true
     exports.save()
 }
 
@@ -896,16 +916,34 @@ exports.setLegalAccepted = function(accepted){
  * Check if the user has acknowledged canary warnings.
  * @returns {boolean}
  */
+/**
+ * Check if the user has acknowledged canary warnings for the current
+ * application version.
+ *
+ * @param {boolean} def Optional. If true, return the default config value.
+ * @returns {boolean}
+ */
 exports.getCanaryAcknowledged = function(def = false){
-    return !def ? (config.settings.launcher.canaryAcknowledged || false) : (DEFAULT_CONFIG.settings.launcher.canaryAcknowledged || false)
+    if(def) return DEFAULT_CONFIG.settings.launcher.canaryAcknowledgedVersion != null || DEFAULT_CONFIG.settings.launcher.canaryAcknowledged || false
+    const v = config.settings.launcher.canaryAcknowledgedVersion
+    if(!v) return !!config.settings.launcher.canaryAcknowledged
+    return v === pjson.version
 }
 
 /**
  * Set the canary acknowledged flag and persist immediately.
  * @param {boolean} acknowledged
  */
-exports.setCanaryAcknowledged = function(acknowledged){
-    config.settings.launcher.canaryAcknowledged = !!acknowledged
+/**
+ * Record that the user acknowledged canary warnings for a specific version.
+ * Pass the app version string (for example, require('../../../package.json').version).
+ *
+ * @param {string} version The version string for which acknowledgement applies.
+ */
+exports.setCanaryAcknowledged = function(version){
+    config.settings.launcher.canaryAcknowledgedVersion = version
+    // keep legacy flag for UI/state but prefer versioned value
+    config.settings.launcher.canaryAcknowledged = true
     exports.save()
 }
 

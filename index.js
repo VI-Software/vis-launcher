@@ -115,7 +115,7 @@ ipcMain.on('legal-accepted', (event) => {
     } catch (err) {
         console.error('Error loading config before setting legal acceptance', err)
     }
-    ConfigManager.setLegalAccepted(true)
+    ConfigManager.setLegalAccepted(pjson.version)
     if (legalWin) {
         legalWin.close()
     }
@@ -480,16 +480,48 @@ if (!gotTheLock) {
         
         LangLoader.setupLanguage(locale)
         
+        function startAfterPrechecks(){
+            try {
+                ConfigManager.load()
+            } catch (err) {
+                console.error('Error loading config before post-canary checks', err)
+            }
+
+            if (!ConfigManager.getLegalAccepted()) {
+                legalWin = new BrowserWindow({
+                    width: 960,
+                    height: 720,
+                    resizable: false,
+                    modal: true,
+                    parent: win || null,
+                    show: false,
+                    icon: getPlatformIcon('vis-icon'),
+                    webPreferences: {
+                        nodeIntegration: true,
+                        contextIsolation: false
+                    }
+                })
+                remoteMain.enable(legalWin.webContents)
+                legalWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
+                legalWin.removeMenu()
+                legalWin.once('ready-to-show', () => legalWin.show())
+                legalWin.on('closed', () => { legalWin = null })
+            } else {
+                createWindow()
+                createMenu()
+                createTray()
+            }
+        }
+
         // If legal not accepted, show legal window first, otherwise create main window
         try {
             ConfigManager.load()
             // If this is a canary build, and user has not acknowledged canary warnings,
             // show a short modal that warns about possible instability. The dialog
-            // requires at least 3 seconds before the user can accept and has a
+            // requires at least 10 seconds before the user can accept and has a
             // "don't show again" checkbox.
             const isCanaryBuild = pjson.version.includes('canary')
             if (isCanaryBuild && !ConfigManager.getCanaryAcknowledged()) {
-                // Create a small modal window with a simple UI so we can enforce the 3s delay
                 let canaryWin = new BrowserWindow({
                     width: 520,
                     height: 260,
@@ -505,32 +537,27 @@ if (!gotTheLock) {
                 })
                 remoteMain.enable(canaryWin.webContents)
 
-                // Make EJS helper and a canary-specific website URL available to the template
                 ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
                 const canaryWebsiteURL = 'https://visoftware.dev/launcher'
                 ejse.data('websiteURL', canaryWebsiteURL)
 
-                // Load the canary EJS template
                 canaryWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'canary.ejs')).toString())
                 canaryWin.removeMenu()
                 canaryWin.once('ready-to-show', () => canaryWin.show())
 
-                // Handlers from the canary window
                 const { ipcMain } = require('electron')
                 ipcMain.once('canary-ack', (evt, dontAsk) => {
-                    if (dontAsk) ConfigManager.setCanaryAcknowledged(true)
-                    // Restore default website URL for the rest of the app
+                    if (dontAsk) ConfigManager.setCanaryAcknowledged(pjson.version)
                     ejse.data('websiteURL', 'https://visoftware.dev')
                     try { canaryWin.close() } catch (err) { console.error('Error closing canary window', err) }
-                    // proceed to create main window
-                    createWindow()
-                    createMenu()
-                    createTray()
+                    // After canary dialog, we must re-check legal acceptance and
+                    // only create the main window if legal was accepted for this
+                    // version. This prevents the canary dialog from skipping the
+                    // legal acceptance flow.
+                    startAfterPrechecks()
                 })
                 ipcMain.once('canary-close', () => {
-                    // Restore default website URL (app will quit shortly)
                     ejse.data('websiteURL', 'https://visoftware.dev')
-                    // Close the app (user opted to not use canary)
                     try { canaryWin.close() } catch (err) { console.error('Error closing canary window', err) }
                     app.quit()
                 })
