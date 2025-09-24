@@ -13,10 +13,10 @@
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- -w",
     "dist:mac": " npm run dist -- -m",
-  "dist:linux": "npm run dist -- -l",
-  "dist:linux:arm64": "npm run dist -- -l --arm64",
-  "dist:win:arm64": "npm run dist -- -w --arm64",
-  "dist:arm64": "npm run dist -- --arm64",
+    "dist:linux": "npm run dist -- -l",
+    "dist:linux:arm64": "npm run dist -- -l --arm64",
+    "dist:win:arm64": "npm run dist -- -w --arm64",
+    "dist:arm64": "npm run dist -- --arm64",
     "lint": "eslint --config ./eslint.config.mjs ."
   },
   "engines": {
