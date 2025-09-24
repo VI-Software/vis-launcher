@@ -4,18 +4,35 @@ const path = require('path')
 
 function loadFileOrDefault(relPath, defaultText) {
     const candidates = []
-    candidates.push(path.join(__dirname, '..', '..', '..', relPath))
-    candidates.push(path.join(__dirname, '..', '..', relPath))
-    candidates.push(path.join(__dirname, relPath))
-    if (process.resourcesPath) {
+    if (process && process.resourcesPath) {
         candidates.push(path.join(process.resourcesPath, relPath))
         candidates.push(path.join(process.resourcesPath, 'app', relPath))
+        candidates.push(path.join(process.resourcesPath, 'app.asar', relPath))
     }
+
+    try {
+        candidates.push(path.join(process.cwd(), relPath))
+    } catch {
+        // ignore if process.cwd() is unavailable for some runtime
+    }
+
+    candidates.push(path.join(__dirname, '..', '..', '..', relPath))
+    candidates.push(path.join(__dirname, '..', '..', '..', '..', relPath))
+    candidates.push(path.join(__dirname, '..', '..', relPath))
+    candidates.push(path.join(__dirname, relPath))
 
     for (const p of candidates) {
         try {
             if (fs.existsSync(p)) {
-                return fs.readFileSync(p, 'utf-8')
+                const content = fs.readFileSync(p, 'utf-8')
+                try {
+                    if (process && process.env && process.env.NODE_ENV === 'development') {
+                        console.debug('loadFileOrDefault: loaded', relPath, 'from', p, 'size=', content.length)
+                    }
+                } catch {
+                    // ignore logging errors
+                }
+                return content
             }
         } catch {
             // ignore
