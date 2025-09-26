@@ -38,6 +38,7 @@ const http                   = require('http')
 const { shell }              = require('electron')
 const { API_BASE_URL, WEBLOGIN_URL } = require('./apiconstants')
 const got                    = require('got')
+const LangLoader             = require('./langloader')
 
 const log = LoggerUtil.getLogger('AuthManager')
 
@@ -228,7 +229,7 @@ exports.addVISWebAccount = async function() {
         })
 
         serverInstance = http.createServer((req, res) => {
-            const url = new URL(req.url, `http://localhost:${port}`)
+            const url = new URL(req.url, `http://127.0.0.1:${port}`)
             
             if (url.pathname === '/callback') {
                 const token = url.searchParams.get('token')
@@ -252,7 +253,7 @@ exports.addVISWebAccount = async function() {
             tokenReject(err)
         })
 
-        serverInstance.listen(port, 'localhost', async () => {
+        serverInstance.listen(port, '127.0.0.1', async () => {
             log.info(`OAuth server listening on port ${port}`)
             
             try {
@@ -322,10 +323,28 @@ exports.addVISWebAccount = async function() {
     } catch (err) {
         cleanup()
         log.error('Error during VI Software Web OAuth:', err)
+
+        try {
+            if (err && err.name === 'HTTPError' && err.response && err.response.statusCode === 429) {
+                const title = LangLoader.queryJS('auth.visweb.tooManyRequestsTitle')
+                const message = LangLoader.queryJS('auth.visweb.tooManyRequestsMessage')
+                const action = LangLoader.queryJS('auth.visweb.tooManyRequestsAction')
+
+                return Promise.reject({
+                    title,
+                    message: `${message}`,
+                    action
+                })
+            }
+        } catch (langErr) {
+            // If localization fails, fall through to generic message
+            log.error('Error while querying localization for VIS Web OAuth 429 message:', langErr)
+        }
+
         return Promise.reject({
             title: 'Login Failed',
-            message: err.message === 'Challenge expired' 
-                ? 'Authentication timeout. Please try again.' 
+            message: err.message === 'Challenge expired'
+                ? 'Authentication timeout. Please try again.'
                 : 'Failed to authenticate with VI Software. Please try again.'
         })
     }

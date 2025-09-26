@@ -379,6 +379,11 @@ checkForUpdatesButton = "Check for updates"
 LoadingText = "Loading"
 LoaidingTakingTooLong = "The loading process is taking longer than expected. Is your internet connectivity stable?"
 
+[js.auth.visweb]
+tooManyRequestsTitle = "Service busy"
+tooManyRequestsMessage = "The authentication service is receiving too many requests right now. Please wait a few minutes and try again. If the problem persists, check our status page or try again later."
+tooManyRequestsAction = "Try again"
+
 [js.settings.language]
 restartRequiredTitle = "Restart Required"
 restartRequiredMessage = "You need to restart the launcher for the language change to take effect."

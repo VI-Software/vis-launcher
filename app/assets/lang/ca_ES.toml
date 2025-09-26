@@ -377,6 +377,11 @@ checkForUpdatesButton = "Comprovar actualitzacions"
 LoadingText = "Carregant"
 LoaidingTakingTooLong = "El procés de càrrega està trigant més del esperat. La teva connexió a Internet és estable?"
 
+[js.auth.visweb]
+tooManyRequestsTitle = "Servei ocupat"
+tooManyRequestsMessage = "El servei d'autenticació està rebent massa sol·licituds en aquest moment. Si us plau, esperi uns minuts i torni-ho a intentar. Si el problema persisteix, consulti la nostra pàgina d'estat o torni-ho a provar més tard."
+tooManyRequestsAction = "Tornar-ho a intentar"
+
 [js.settings.language]
 restartRequiredTitle = "Cal reiniciar"
 restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi d'idioma tingui efecte."

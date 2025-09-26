@@ -378,6 +378,11 @@ checkForUpdatesButton = "Buscar actualizaciones"
 LoadingText = "Cargando"
 LoaidingTakingTooLong = "El procceso de carga está tardando más de lo esperado. ¿Es su conectividad a internet estable?"
 
+[js.auth.visweb]
+tooManyRequestsTitle = "Servicio ocupado"
+tooManyRequestsMessage = "El servicio de autenticación está recibiendo demasiadas solicitudes en este momento. Espere unos minutos e inténtelo de nuevo. Si el problema persiste, consulte nuestra página de estado o inténtelo más tarde."
+tooManyRequestsAction = "Intentar de nuevo"
+
 [js.settings.language]
 restartRequiredTitle = "Reinicio Requerido"
 restartRequiredMessage = "Necesitas reiniciar el lanzador para que el cambio de idioma surta efecto."
