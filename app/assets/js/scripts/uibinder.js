@@ -101,11 +101,84 @@ async function showMainUI(data) {
     refreshServerStatus()
 
     try {
-        const response = await fetch(API_BASE_URL+'/services/images/random')
+        const response = await fetch(API_BASE_URL + '/services/images/all')
         if (!response.ok) throw new Error('Network response was not ok')
-        
+
+        const data = await response.json()
+        if (!data || !Array.isArray(data.images) || data.images.length === 0) {
+            throw new Error('No images returned from API')
+        }
+
+        const images = data.images
+        const rand = Math.floor(Math.random() * images.length)
+        const chosen = images[rand]
+
+        let bgUrl = null
+        if (chosen && typeof chosen === 'object') {
+            if (chosen.url && typeof chosen.url === 'string' && chosen.url.trim() !== '') {
+                bgUrl = chosen.url
+            } else if (chosen.name && typeof chosen.name === 'string' && chosen.name.trim() !== '') {
+                const base = API_BASE_URL.replace(/\/+$|\/$/g, '')
+                bgUrl = `${base}/backgrounds/${encodeURIComponent(chosen.name)}`
+            }
+        }
+
+        if (!bgUrl) throw new Error('Invalid image data')
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        document.body.style.backgroundImage = `url('${response.url}')`
+
+        try {
+            const cacheKey = 'bgCache'
+            const cacheRaw = localStorage.getItem(cacheKey)
+            const cache = cacheRaw ? JSON.parse(cacheRaw) : {}
+            const entry = cache[bgUrl]
+
+            const TTL = 24 * 60 * 60 * 1000 // 24 hours
+            if (entry && entry.timestamp && (Date.now() - entry.timestamp) < TTL) {
+                document.body.style.backgroundImage = `url('${entry.dataUrl}')`
+            } else {
+                const headers = {}
+                if (entry && entry.etag) headers['If-None-Match'] = entry.etag
+                if (entry && entry.lastModified) headers['If-Modified-Since'] = entry.lastModified
+
+                let resp
+                try {
+                    resp = await fetch(bgUrl, { headers, cache: 'no-store' })
+                } catch (err) {
+                    if (entry && entry.dataUrl) document.body.style.backgroundImage = `url('${entry.dataUrl}')`
+                    else { document.body.style.backgroundImage = `url('${bgUrl}')`; showBGSWarning() }
+                    resp = null
+                }
+
+                if (resp) {
+                    if (resp.status === 304 && entry && entry.dataUrl) {
+                        // server says not modified: extend TTL and reuse
+                        entry.timestamp = Date.now()
+                        try { localStorage.setItem(cacheKey, JSON.stringify(cache)) } catch (e) { console.warn('save bg cache failed', e) }
+                        document.body.style.backgroundImage = `url('${entry.dataUrl}')`
+                    } else if (resp.ok) {
+                        const blob = await resp.blob()
+                        const dataUrl = await new Promise((res, rej) => {
+                            const reader = new FileReader()
+                            reader.onload = () => res(reader.result)
+                            reader.onerror = rej
+                            reader.readAsDataURL(blob)
+                        })
+                        const newEtag = resp.headers.get('etag') || null
+                        const newLM = resp.headers.get('last-modified') || null
+                        cache[bgUrl] = { dataUrl, etag: newEtag, lastModified: newLM, timestamp: Date.now() }
+                        try { localStorage.setItem(cacheKey, JSON.stringify(cache)) } catch (e) { console.warn('save bg cache failed', e) }
+                        document.body.style.backgroundImage = `url('${dataUrl}')`
+                    } else {
+                        if (entry && entry.dataUrl) document.body.style.backgroundImage = `url('${entry.dataUrl}')`
+                        else { document.body.style.backgroundImage = `url('${bgUrl}')`; showBGSWarning() }
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Background cache error:', e)
+            document.body.style.backgroundImage = `url('${bgUrl}')`
+            showBGSWarning()
+        }
     } catch (error) {
         // On any error, fallback to offline background
         console.error('Failed to fetch background image:', error)
