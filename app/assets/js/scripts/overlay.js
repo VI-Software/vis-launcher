@@ -131,6 +131,14 @@ function toggleOverlay(toggleState, dismissable = false, content = 'overlayConte
                 } else {
                     $('#overlayDismiss').hide()
                 }
+
+                try {
+                    const sd = document.getElementById('serverDetailsDialog')
+                    if(sd) sd.style.display = 'none'
+                } catch (e) {
+                    // doop
+                }
+                selectedServer = null
             }
         })
     }
