@@ -45,4 +45,9 @@ window.addEventListener('DOMContentLoaded', () => {
             try { shell.openExternal(a.href) } catch (e) { /* noop */ }
         }
     })
+
+    // Disable right-click context menu
+    document.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+    })
 })

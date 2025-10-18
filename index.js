@@ -683,8 +683,8 @@ if (!gotTheLock) {
             const isCanaryBuildEarly = pjson.version.includes('canary')
             if (isCanaryBuildEarly && !ConfigManager.getCanaryAcknowledged()) {
                 let canaryWinEarly = new BrowserWindow({
-                    width: 520,
-                    height: 260,
+                    width: 600,
+                    height: 300,
                     resizable: false,
                     modal: !!(win || splashWin),
                     parent: win || splashWin || null,
@@ -932,8 +932,8 @@ if (!gotTheLock) {
             const isCanaryBuild = pjson.version.includes('canary')
             if (!ranInitialDialogs && isCanaryBuild && !ConfigManager.getCanaryAcknowledged()) {
                 let canaryWin = new BrowserWindow({
-                    width: 520,
-                    height: 260,
+                    width: 600,
+                    height: 400,
                     resizable: false,
                     modal: !!(win || splashWin),
                     parent: win || splashWin || null,
