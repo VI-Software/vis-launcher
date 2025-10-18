@@ -23,37 +23,50 @@
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
             </div>
+            <div id="noServersMessage" style="display: none;">
+                <svg viewBox="0 0 24 24" width="64" height="64" style="opacity: 0.3; margin-bottom: 16px;">
+                    <path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,7H13V13H11V7M11,15H13V17H11V15Z"/>
+                </svg>
+                <span id="noServersMessageText">No servers found</span>
+                <span id="noServersMessageHint">Try adjusting your search</span>
+            </div>
         </div>
         <div id="serverDetailsDialog" style="display: none;">
             <div class="serverDetailsContent">
-                <img id="serverDetailsIcon" class="serverDetailsIcon">
-                <h2 id="serverDetailsName"></h2>
-                <p id="serverDetailsDescription"></p>
-                <div class="serverDetailsMeta">
-                    <div class="serverDetailsItem">
-                        <span class="label">Version:</span>
-                        <span id="serverDetailsVersion"></span>
-                    </div>
-                    <div class="serverDetailsItem">
-                        <span class="label">Minecraft:</span>
-                        <span id="serverDetailsMinecraft"></span>
-                    </div>
-                    <div class="serverDetailsItem">
-                        <span class="label">Address:</span>
-                        <span id="serverDetailsAddress"></span>
+                <div class="serverDetailsHeader">
+                    <img id="serverDetailsIcon" class="serverDetailsIcon" alt="Server Icon">
+                    <div class="serverDetailsOverlay">
+                        <h2 id="serverDetailsName"></h2>
+                        <p id="serverDetailsDescription"></p>
                     </div>
                 </div>
-                <div class="serverDetailsActions">
-                    <button id="serverDetailsConfirm" class="button-primary">Select Server</button>
-                    <button id="serverDetailsCancel" class="button-secondary">Cancel</button>
+                <div class="serverDetailsBody">
+                    <div class="serverDetailsMeta">
+                        <div class="serverDetailsItem">
+                            <span class="label">Version</span>
+                            <span id="serverDetailsVersion"></span>
+                        </div>
+                        <div class="serverDetailsItem">
+                            <span class="label">Minecraft</span>
+                            <span id="serverDetailsMinecraft"></span>
+                        </div>
+                        <div class="serverDetailsItem">
+                            <span class="label">Server ID</span>
+                            <span id="serverDetailsAddress"></span>
+                        </div>
+                    </div>
+                    <div class="serverDetailsActions">
+                        <button id="serverDetailsConfirm" class="button-primary">Select Server</button>
+                        <button id="serverDetailsCancel" class="button-secondary">Cancel</button>
+                    </div>
                     <div class="button-group-utilities">
-                        <button id="serverDetailsWebsite" class="button-utility">View on web</button>
+                        <button id="serverDetailsWebsite" class="button-utility">View Website</button>
                         <button id="serverDetailsResources" class="button-utility">Resources</button>
                     </div>
                 </div>
             </div>
 
-            <!-- Add the resources modal -->
+            <!-- Resources modal -->
             <div id="serverResourcesModal" style="display: none;">
                 <div class="modalContent">
                     <div class="modalHeader">

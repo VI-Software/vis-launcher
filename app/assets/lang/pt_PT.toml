@@ -320,9 +320,13 @@ failedToggleTitle = "Falha ao alternar<br>Um ou mais mods drop-in"
 okButton = "OK"
 
 [js.settings.serverListing]
-mainServer = "Servidor Principal"
+mainServer = "Servidor em Destaque"
 info = 'Pode gerir os seus servidores em <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
 noServers = 'Não temos servidores para lhe mostrar. <br>Pode gerir os servidores que aparecem aqui no <a style="color: pink;" href="https://puf.visoftware.dev/servers">painel de utilizador final VI Software</a>.</div>'
+noServersFound = "Nenhum servidor encontrado"
+noServersAvailable = "Nenhum servidor disponível"
+adjustSearch = "Tente ajustar sua pesquisa"
+checkBackLater = "Por favor, volte mais tarde"
 
 [js.settings.java]
 selectedJava = "Selecionado: Java {version} ({vendor})"

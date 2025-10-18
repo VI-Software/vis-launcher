@@ -3844,237 +3844,237 @@ input:checked + .toggleSwitchSlider:before {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-height: 65%;
-    min-height: 40%;
+    max-height: 75%;
+    min-height: 55%;
+    width: 100%;
+    max-width: 95%;
     backdrop-filter: blur(5px);
+    position: relative;
+}
+
+/* No servers message */
+#noServersMessage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+    padding: 60px 40px;
+    pointer-events: none;
+    width: 100%;
+    min-height: 300px;
+}
+
+#noServersMessageText {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+    margin-bottom: 8px;
+}
+
+#noServersMessageHint {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 /* Scrollable div which lists the available servers. */
 #serverSelectListScrollable,
 #accountSelectListScrollable {
-    padding: 0px 5px;
-    overflow-y: scroll;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    padding: 10px;
+    padding: 16px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    max-width: 1000px;
+    width: 100%;
 }
 #serverSelectListScrollable::-webkit-scrollbar,
 #accountSelectListScrollable::-webkit-scrollbar {
-    width: 2px;
+    width: 8px;
 }
 #serverSelectListScrollable::-webkit-scrollbar-track,
 #accountSelectListScrollable::-webkit-scrollbar-track {
-    display: none;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    margin: 4px;
 }
 #serverSelectListScrollable::-webkit-scrollbar-thumb,
 #accountSelectListScrollable::-webkit-scrollbar-thumb {
+    background: rgba(138, 43, 226, 0.6);
     border-radius: 10px;
-    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.50);
+}
+#serverSelectListScrollable::-webkit-scrollbar-thumb:hover,
+#accountSelectListScrollable::-webkit-scrollbar-thumb:hover {
+    background: rgba(138, 43, 226, 0.8);
 }
 
-/* Content container for a server listing. */
+/* Content container for a server listing */
 .serverListing {
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    padding: 12px 15px;
-    width: 375px;
-    min-height: 60px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 0;
+    width: 100%;
+    min-height: 80px;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: row;
     align-items: center;
     opacity: 0.95;
-    transition: all 0.3s ease;
+    transition: all 0.15s ease;
     cursor: pointer;
     position: relative;
-    background: rgba(20, 20, 40, 0.4);
-    border-radius: 8px;
-    margin: 8px 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    background: rgba(20, 20, 35, 0.6);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .serverListing[selected] {
     opacity: 1;
-    border-color: var(--color-primary);
-    background: rgba(138, 43, 226, 0.15);
-    box-shadow: 0 0 15px rgba(138, 43, 226, 0.15);
+    border-color: rgba(138, 43, 226, 0.7);
+    background: rgba(138, 43, 226, 0.2);
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.3);
 }
 
 .serverListing:hover,
 .serverListing:focus {
     opacity: 1;
-    transform: translateY(-2px);
-    border-color: var(--color-primary-light);
-    background: rgba(30, 30, 50, 0.5);
+    border-color: rgba(138, 43, 226, 0.4);
+    background: rgba(30, 30, 50, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* Server listing image */
+/* Server listing image - ICON SIZE FOR TABLE ROW */
 .serverListingImg {
-    margin: 0 15px 0 0;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    height: 55px;
-    width: 55px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
+    width: 64px;
+    height: 64px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin: 0 20px;
+    flex-shrink: 0;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.15s ease;
 }
 
 .serverListing:hover .serverListingImg {
-    border-color: var(--color-primary-light);
+    border-color: rgba(138, 43, 226, 0.5);
 }
 
 /* Content container for the server listing's details */
 .serverListingDetails {
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 12px 0;
+    min-width: 0;
 }
 
 /* Server name style */
 .serverListingName {
-    font-size: 16px;
-    font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
-    margin-bottom: 4px;
+    font-size: 17px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.98);
     letter-spacing: 0.3px;
+    line-height: 1.2;
 }
 
 /* Server description style */
 .serverListingDescription {
-    font-size: 12px;
+    font-size: 13px;
     line-height: 1.4;
-    color: rgba(255, 255, 255, 0.7);
-    font-weight: normal;
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Server listing info container */
+.serverListingInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    margin-right: 20px;
+    flex-shrink: 0;
+    min-width: 120px;
 }
 
 /* Version badge */
 .serverListingVersion {
     font-size: 11px;
-    padding: 3px 8px;
+    padding: 5px 12px;
     border-radius: 4px;
-    background: var(--color-primary);
+    background: rgba(76, 175, 80, 0.9);
     color: white;
-    font-weight: 500;
+    font-weight: 700;
     letter-spacing: 0.3px;
+    white-space: nowrap;
 }
 
 .serverListingRevision {
     color: rgba(255, 255, 255, 0.5);
-    font-size: 11px;
-    margin-left: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 /* Server selection list container */
 #serverSelectListScrollable {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 15px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
 }
 
-/* Add spacing between server listings. */
-#serverSelectListScrollable > .serverListing:not(:first-child):not(:last-child),
-#accountSelectListScrollable > .accountListing:not(:first-child):not(:last-child) {
-    margin: 5px 0px;
-}
-#serverSelectListScrollable > .serverListing:first-child,
-#accountSelectListScrollable > .accountListing:first-child {
-    margin-bottom: 5px;
-}
 #serverSelectListScrollable > .serverListing:last-child,
 #accountSelectListScrollable > .accountListing:last-child {
-    margin-top: 5px;
+    margin-bottom: 0;
 }
 
-/* Server listing image. */
-.serverListingImg {
-    margin: 0px 10px 0px 5px;
-    border: 1px solid #fff;
-    height: 50px;
-    width: 50px;
-}
-
-/* Content container for the server listing's details. */
-.serverListingDetails {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-between;
-    height: 50px;
-}
-
-/* The name of the server listing. */
-.serverListingName {
-    font-size: 14px;
-    font-weight: bold;
-}
-
-/* Description for the server listing. */
-.serverListingDescription {
-    font-size: 10px;
-    line-height: 10px;
-    font-weight: bold;
-    text-align: left;
-}
-
-/* Content container for the server listing's information. */
-.serverListingInfo {
-    width: 100%;
-    display: flex;
-    justify-content: flex-start;
-}
-
-/* The minecraft version of the server listing. */
-.serverListingVersion {
-    font-size: 10px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 12px;
-    height: 12px;
-    border-radius: 2px;
-    background: var(--color-success);
-    padding: 0px 2px;
-}
-
-/* The revision version of the server's manifest. */
-.serverListingRevision {
-    color: var(--color-text-secondary);
-    font-size: 10px;
-    line-height: 12px;
-    padding: 0px 5px;
-}
-
-/* Star which indicates the default (main) server. */
+/* Star which indicates the featured server. */
 .serverListingStarWrapper {
     display: flex;
     align-items: center;
-    cursor: pointer;
-    height: 12px;
+    justify-content: center;
+    cursor: help;
+    height: 18px;
     position: relative;
+}
+.serverListingStarWrapper svg {
+    filter: drop-shadow(0 0 4px rgba(255, 215, 0, 0.6));
 }
 /* Tooltip which displays when hovering over the star. */
 .serverListingStarTooltip {
     visibility: hidden;
     opacity: 0;
-    width: 65px;
-    background-color: var(--color-overlay);
-    border: 1px solid var(--color-border);
+    min-width: 100px;
+    background-color: rgba(0, 0, 0, 0.95);
+    border: 1px solid rgba(255, 215, 0, 0.6);
     text-align: center;
-    border-radius: 4px;
+    border-radius: 6px;
     position: absolute;
-    z-index: 1;
-    left: 130%;
-    font-size: 10px;
+    z-index: 100;
+    right: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 6px 12px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
-    backdrop-filter: blur(5px);
+    backdrop-filter: blur(10px);
+    white-space: nowrap;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
 }
 .serverListingStarTooltip::after {
     content: " ";
     position: absolute;
     top: 50%;
-    right: 100%;
-    margin-top: -5px;
-    border-width: 5px;
+    left: 100%;
+    margin-top: -6px;
+    border-width: 6px;
     border-style: solid;
-    border-color: transparent var(--color-border) transparent transparent;
+    border-color: transparent transparent transparent rgba(255, 215, 0, 0.6);
 }
 .serverListingStarWrapper:hover .serverListingStarTooltip {
     visibility: visible;
@@ -4503,61 +4503,172 @@ progress::-webkit-progress-value {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.85);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1000;
 }
 
 .serverDetailsContent {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-md);
-    padding: 20px;
-    width: 400px;
-    text-align: center;
+    background: linear-gradient(135deg, rgba(30, 30, 50, 0.85) 0%, rgba(25, 25, 40, 0.85) 100%);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    border-radius: 12px;
+    padding: 30px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Server details header with icon */
+.serverDetailsHeader {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .serverDetailsIcon {
-    width: 96px;
-    height: 96px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
     border-radius: 8px;
-    margin-bottom: 15px;
+    border: 2px solid rgba(138, 43, 226, 0.3);
+    flex-shrink: 0;
+}
+
+.serverDetailsOverlay {
+    flex: 1;
 }
 
 #serverDetailsName {
     font-size: 24px;
-    margin-bottom: 10px;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    color: white;
 }
 
 #serverDetailsDescription {
-    color: var(--color-text-secondary);
-    margin-bottom: 20px;
+    color: rgba(255, 255, 255, 0.65);
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.serverDetailsBody {
+    padding: 0;
 }
 
 .serverDetailsMeta {
-    text-align: left;
-    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 25px;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .serverDetailsItem {
     display: flex;
     justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid var(--color-border);
+    align-items: center;
 }
 
 .serverDetailsItem .label {
-    color: var(--color-text-secondary);
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.serverDetailsItem span:not(.label) {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 14px;
+    font-weight: 600;
 }
 
 .serverDetailsActions {
     display: flex;
     gap: 12px;
     justify-content: center;
-    margin-top: 20px;
-    align-items: center;
+    flex-wrap: wrap;
+}
+
+.serverDetailsActions button {
+    flex: 1;
+    min-width: 120px;
+}
+
+#serverDetailsConfirm {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.9), rgba(100, 30, 180, 0.9));
+    color: white;
+    border: 1px solid rgba(138, 43, 226, 0.5);
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#serverDetailsConfirm:hover {
+    background: linear-gradient(135deg, rgba(138, 43, 226, 1), rgba(100, 30, 180, 1));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+}
+
+#serverDetailsCancel {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 14px 28px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#serverDetailsCancel:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.button-group-utilities {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.button-utility {
+    flex: 1;
+    background: rgba(0, 0, 0, 0.3);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.button-utility:hover {
+    background: rgba(0, 0, 0, 0.5);
+    color: rgba(255, 255, 255, 0.9);
+    border-color: rgba(138, 43, 226, 0.5);
 }
 
 .button-good {
