@@ -68,6 +68,60 @@ function initAutoUpdater(event, data) {
     }) 
 }
 
+// Configure auto-updater specifically for the splash flow. This forwards
+// autoUpdater events to the splash renderer and triggers a check immediately.
+function configureAutoUpdaterForSplash(allowPrerelease = false) {
+    try {
+        autoUpdater.allowPrerelease = !!allowPrerelease
+        if (isDev) {
+            autoUpdater.autoInstallOnAppQuit = false
+            autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
+        }
+
+        autoUpdater.on('checking-for-update', () => {
+            try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'checking-for-update') } catch { void 0 }
+        })
+
+        autoUpdater.on('update-available', (info) => {
+            try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'update-available', info) } catch { void 0 }
+        })
+
+        autoUpdater.on('update-not-available', (info) => {
+            try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'update-not-available', info) } catch { void 0 }
+        })
+
+        autoUpdater.on('error', (err) => {
+            try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'realerror', err) } catch { void 0 }
+        })
+
+        // progress during download
+        autoUpdater.on('download-progress', (progress) => {
+            try {
+                const percent = progress && progress.percent ? Math.floor(progress.percent) : 0
+                if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-progress', { percent, message: 'Downloading update...' })
+                if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'download-progress', progress)
+            } catch { void 0 }
+        })
+
+        autoUpdater.on('update-downloaded', (info) => {
+            try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'update-downloaded', info) } catch { void 0 }
+            // Mandatory install when running a production build. In dev we don't auto-install.
+            if (!isDev) {
+                // give a brief moment to let the UI update
+                setTimeout(() => {
+                    try { autoUpdater.quitAndInstall() } catch (err) { console.error('Failed to install update', err) }
+                }, 500)
+            }
+        })
+
+        try {
+            autoUpdater.checkForUpdates().catch(() => { /* best-effort */ })
+        } catch { /* ignore */ }
+    } catch (err) {
+        console.error('Failed to configure auto-updater for splash', err)
+    }
+}
+
 // Open channel to listen for update actions.
 ipcMain.on('autoUpdateAction', (event, arg, data) => {
     switch(arg){
@@ -107,9 +161,34 @@ ipcMain.on('distributionIndexDone', (event, res) => {
     event.sender.send('distributionIndexDone', res)
 })
 
+// Forward splash progress/messages from preloader (which sends to main)
+// back to the splash window renderer so the UI can update.
+ipcMain.on('splash-progress', (_event, payload) => {
+    try {
+        if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-progress', payload)
+    } catch { /* best-effort forward */ }
+})
+ipcMain.on('splash-message', (_event, message) => {
+    try {
+        if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', message)
+    } catch { /* best-effort forward */ }
+})
+ipcMain.on('splash-done', (_event) => {
+    try {
+        if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-done')
+    } catch { /* best-effort forward */ }
+})
+
 // Handle legal acceptance/decline from legal window
 let legalWin
+// When true, temporarily suppress global dialog IPC handlers because
+// we are running the early dialog flow which awaits those same events.
+let suppressDialogIPC = false
+let ranInitialDialogs = false
 ipcMain.on('legal-accepted', (event) => {
+    if (suppressDialogIPC) {
+        return
+    }
     try {
         ConfigManager.load()
     } catch (err) {
@@ -117,16 +196,37 @@ ipcMain.on('legal-accepted', (event) => {
     }
     ConfigManager.setLegalAccepted(pjson.version)
     if (legalWin) {
-        legalWin.close()
+        try { legalWin.close() } catch (e) { console.error('Error closing legal window after acceptance', e) }
     }
+
     // Show main window after legal acceptance
     try {
         if (!win) {
             createWindow()
             createMenu()
             createTray()
+
+            // If the splash is already closed, show main window once it's ready
+            if (!splashWin && win) {
+                try {
+                    win.once && win.once('ready-to-show', () => {
+                        try { if (win.isMinimized && win.isMinimized()) win.restore(); win.show(); win.focus() } catch (e) { console.error('Error showing main window after ready-to-show', e) }
+                    })
+                } catch (e) { console.error('Error attaching ready-to-show for main window', e) }
+                // Also attempt an immediate show/focus with a brief alwaysOnTop
+                // toggle to force the window to the foreground on platforms where
+                // windows may remain in background but only if splash is no longer visible.
+                if (!splashWin) {
+                    try {
+                        try { if (win.isMinimized && win.isMinimized()) win.restore() } catch { void 0 }
+                        try { win.setAlwaysOnTop(true) } catch { void 0 }
+                        try { win.show(); win.focus() } catch (e) { console.error('Error forcing main window visible immediately after creation', e) }
+                        setTimeout(() => { try { win.setAlwaysOnTop(false) } catch { void 0 } }, 250)
+                    } catch (e) { console.error('Immediate show/focus attempt failed', e) }
+                }
+            }
         } else {
-            win.show()
+            try { if (win.isMinimized && win.isMinimized()) win.restore(); win.show(); win.focus() } catch (e) { console.error('Error showing existing main window after legal acceptance', e) }
         }
     } catch (err) {
         console.error('Error starting launcher after legal acceptance', err)
@@ -272,6 +372,9 @@ ipcMain.on(MSFT_OPCODE.OPEN_LOGOUT, (ipcEvent, uuid, isLastAccount) => {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+let splashWin
+// Timestamp (ms) when splash was shown. Used to enforce a minimum display time.
+let splashShownAt = 0
 
 function createWindow() {
     // Determine if the version includes 'nightly' or 'canary' to enable prerelease features
@@ -283,6 +386,7 @@ function createWindow() {
         height: 552,
         icon: getPlatformIcon('vis-icon'),
         frame: false,
+        show: false,
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
             nodeIntegration: true,
@@ -302,8 +406,11 @@ function createWindow() {
 
     win.loadURL(pathToFileURL(path.join(__dirname, 'app', 'app.ejs')).toString())
 
+    // Intentionally do not show main window here. The splash controls
+    // when the main window becomes visible to avoid exposing the UI
+    // before startup checks finish.
     /*win.once('ready-to-show', () => {
-        win.show()
+        // will be shown after splash closes
     })*/
     /*
         win.once('ready-to-show', () => {
@@ -329,6 +436,33 @@ function createWindow() {
     win.on('closed', () => {
         win = null
     })
+}
+
+function createSplashWindow(){
+    splashWin = new BrowserWindow({
+        width: 640,
+        height: 420,
+        frame: false,
+        resizable: false,
+        alwaysOnTop: true,
+        modal: false,
+        show: false,
+        webPreferences: {
+            preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
+            nodeIntegration: true,
+            contextIsolation: false
+        }
+    })
+    remoteMain.enable(splashWin.webContents)
+    splashWin.removeMenu()
+    splashWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'splash.ejs')).toString())
+    // record shown time now as a fallback in case 'ready-to-show' fires later
+    splashShownAt = Date.now()
+    splashWin.once('ready-to-show', () => {
+        splashShownAt = Date.now()
+        splashWin.show()
+    })
+    splashWin.on('closed', () => { splashWin = null })
 }
 
 function createMenu() {
@@ -454,7 +588,7 @@ if (!gotTheLock) {
     })
     
     // Initialize language and then create the window when app is ready
-    app.whenReady().then(() => {
+    app.whenReady().then(async () => {
         let locale = ''
         try {
             if (process.platform === 'win32') {
@@ -488,12 +622,15 @@ if (!gotTheLock) {
             }
 
             if (!ConfigManager.getLegalAccepted()) {
+                // Parent the legal window to the main window if it exists,
+                // otherwise parent to the splash so it will appear above it
+                // during startup.
                 legalWin = new BrowserWindow({
                     width: 960,
                     height: 720,
                     resizable: false,
-                    modal: true,
-                    parent: win || null,
+                    modal: !!(win || splashWin),
+                    parent: win || splashWin || null,
                     show: false,
                     icon: getPlatformIcon('vis-icon'),
                     webPreferences: {
@@ -504,15 +641,287 @@ if (!gotTheLock) {
                 remoteMain.enable(legalWin.webContents)
                 legalWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
                 legalWin.removeMenu()
-                legalWin.once('ready-to-show', () => legalWin.show())
+                // Show the legal dialog once ready; it will appear above the
+                // splash if parented correctly.
+                legalWin.once('ready-to-show', () => { legalWin.show() })
                 legalWin.on('closed', () => { legalWin = null })
             } else {
                 createWindow()
                 createMenu()
                 createTray()
+                // If splash was used previously, ensure the main window is shown
+                try {
+                    if (!splashWin && win) {
+                        win.once && win.once('ready-to-show', () => {
+                            try { if (win.isMinimized && win.isMinimized()) win.restore(); win.show() } catch { void 0 }
+                        })
+                    }
+                } catch { void 0 }
+                // Attempt an immediate show/focus with a brief alwaysOnTop toggle
+                // but only if splash is no longer visible.
+                if (!splashWin) {
+                    try {
+                        try { if (win && win.isMinimized && win.isMinimized()) win.restore() } catch { void 0 }
+                        try { if (win) win.setAlwaysOnTop(true) } catch { void 0 }
+                        try { if (win) { win.show(); win.focus() } } catch (e) { console.error('Error forcing main window visible in startAfterPrechecks', e) }
+                        setTimeout(() => { try { if (win) win.setAlwaysOnTop(false) } catch { void 0 } }, 250)
+                    } catch (e) { console.error('Immediate show/focus attempt in startAfterPrechecks failed', e) }
+                }
             }
         }
 
+        // Run initial dialogs (canary -> legal) before showing the splash.
+        try {
+            try { ConfigManager.load() } catch { /* best-effort */ }
+            // Temporarily suppress global dialog IPC handlers while we await replies
+            suppressDialogIPC = true
+
+            // Helper to await an IPC once event and report which channel fired
+            const waitOnce = (channel) => new Promise((resolve) => ipcMain.once(channel, (...args) => resolve({ channel, args })))
+
+            // Canary flow: if a canary build and not acknowledged, show the canary dialog
+            const isCanaryBuildEarly = pjson.version.includes('canary')
+            if (isCanaryBuildEarly && !ConfigManager.getCanaryAcknowledged()) {
+                let canaryWinEarly = new BrowserWindow({
+                    width: 520,
+                    height: 260,
+                    resizable: false,
+                    modal: !!(win || splashWin),
+                    parent: win || splashWin || null,
+                    show: false,
+                    icon: getPlatformIcon('vis-icon'),
+                    webPreferences: {
+                        nodeIntegration: true,
+                        contextIsolation: false
+                    }
+                })
+                remoteMain.enable(canaryWinEarly.webContents)
+                ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
+                ejse.data('websiteURL', 'https://visoftware.dev/launcher')
+                canaryWinEarly.loadURL(pathToFileURL(path.join(__dirname, 'app', 'canary.ejs')).toString())
+                canaryWinEarly.removeMenu()
+                canaryWinEarly.once('ready-to-show', () => canaryWinEarly.show())
+
+                // Wait for either ack or close
+                const canaryRes = await Promise.race([
+                    waitOnce('canary-ack'),
+                    waitOnce('canary-close')
+                ])
+
+                try { canaryWinEarly.close() } catch { void 0 }
+                // If ack resolved and the first argument is truthy (don't ask), persist
+                if (canaryRes && canaryRes.channel === 'canary-ack' && canaryRes.args && canaryRes.args.length > 0 && canaryRes.args[0]) {
+                    try { ConfigManager.setCanaryAcknowledged(pjson.version) } catch (e) { console.error('Failed to persist canary acknowledgment', e) }
+                }
+            }
+
+            // Legal flow: if legal not accepted, show it and wait
+            if (!ConfigManager.getLegalAccepted()) {
+                let legalWinEarly = new BrowserWindow({
+                    width: 960,
+                    height: 720,
+                    resizable: false,
+                    modal: !!(win || splashWin),
+                    parent: win || splashWin || null,
+                    show: false,
+                    icon: getPlatformIcon('vis-icon'),
+                    webPreferences: {
+                        nodeIntegration: true,
+                        contextIsolation: false
+                    }
+                })
+                remoteMain.enable(legalWinEarly.webContents)
+                legalWinEarly.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
+                legalWinEarly.removeMenu()
+                legalWinEarly.once('ready-to-show', () => legalWinEarly.show())
+
+                const legalRes = await Promise.race([
+                    waitOnce('legal-accepted'),
+                    waitOnce('legal-declined')
+                ])
+
+                try { legalWinEarly.close() } catch { void 0 }
+                if (legalRes && legalRes.channel === 'legal-declined') {
+                    // If declined we quit
+                    app.quit()
+                    return
+                }
+                // Mark accepted
+                try { ConfigManager.setLegalAccepted(pjson.version) } catch { /* ignore */ }
+            }
+        } catch (err) {
+            console.error('Error during initial dialogs', err)
+        } finally {
+            // Re-enable global IPC handlers
+            suppressDialogIPC = false
+            ranInitialDialogs = true
+        }
+
+        // Create and show splash after initial dialogs, preloader will send 'distributionIndexDone'
+        try {
+            createSplashWindow()
+            // Start auto-update check for splash UI immediately
+            try { configureAutoUpdaterForSplash(true) } catch { void 0 }
+            // When preloader signals distributionIndexDone, close splash and continue
+            ipcMain.once('distributionIndexDone', async (evt, res) => {
+                // Ensure the splash is visible for at least 2.5 seconds to avoid flicker
+                const minShowMs = 3000
+                const elapsed = splashShownAt ? (Date.now() - splashShownAt) : minShowMs
+                const remaining = Math.max(0, minShowMs - elapsed)
+
+                // First: perform update check and, if an update is downloaded,
+                // apply it (production) before continuing startup. This blocks
+                // the boot until update resolution per user request.
+                try {
+                    if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'Checking for updates...')
+
+                    const waitForUpdateResolution = () => new Promise((resolve) => {
+                        // Resolve values: { status: 'no-update' } | { status: 'downloaded' } | { status: 'error', error }
+                        let resolved = false
+                        function cleanup() {
+                            try { autoUpdater.removeListener('update-not-available', onNotAvailable) } catch { void 0 }
+                            try { autoUpdater.removeListener('update-downloaded', onDownloaded) } catch { void 0 }
+                            try { autoUpdater.removeListener('error', onError) } catch { void 0 }
+                        }
+                        const onNotAvailable = () => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'no-update' }) }
+                        const onDownloaded = (info) => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'downloaded', info }) }
+                        const onError = (err) => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'error', error: err }) }
+
+                        autoUpdater.once('update-not-available', onNotAvailable)
+                        autoUpdater.once('update-downloaded', onDownloaded)
+                        autoUpdater.once('error', onError)
+
+                        // Trigger check (best-effort). If checkForUpdates rejects,
+                        // the onError handler will resolve the promise.
+                        try {
+                            autoUpdater.checkForUpdates().catch((err) => { onError(err) })
+                        } catch (err) {
+                            onError(err)
+                        }
+                    })
+
+                    // Wait for update resolution. In dev mode skip blocking.
+                    let updateResult = { status: 'no-update' }
+                    if (!isDev) {
+                        updateResult = await waitForUpdateResolution()
+                    } else {
+                        // Dev env, still allow auto-updater to run in background but don't block boot.
+                        try { autoUpdater.checkForUpdates().catch(()=>{}) } catch { void 0 }
+                    }
+
+                    if (updateResult.status === 'downloaded') {
+                        try {
+                            if (splashWin && splashWin.webContents) {
+                                splashWin.webContents.send('splash-progress', { percent: 100, message: 'Update downloaded — applying now...' })
+                                splashWin.webContents.send('splash-message', 'Applying update...')
+                            }
+                        } catch { void 0 }
+                        // In production, quit and install immediately to apply the update.
+                        try {
+                            autoUpdater.quitAndInstall()
+                            return
+                        } catch (err) {
+                            console.error('Failed to quit and install update', err)
+                            // Quitting failed?
+                            // Fallthrough to continue startup
+                        }
+                    } else if (updateResult.status === 'error') {
+                        console.error('Auto-update failed during check/download:', updateResult.error)
+                        try { if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'Update check failed (continuing)') } catch { void 0 }
+                    } else {
+                        try { if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'No updates found') } catch { void 0 }
+                    }
+                } catch (err) {
+                    console.error('Error while waiting for update resolution', err)
+                }
+
+                // First, perform the normal startup checks
+                try {
+                    startAfterPrechecks()
+                } catch (e) {
+                    console.error('Error during post-splash startup', e)
+                }
+
+                // Then wait until either the main window or legal window exists
+                // before closing the splash so app doesn't receive window-all-closed.
+                const maxWait = 5000 // ms
+                const pollInterval = 100
+                let waited = 0
+                const checkAndClose = () => {
+                    const elapsedNow = splashShownAt ? (Date.now() - splashShownAt) : minShowMs
+                    // Close only when min display time has passed and a main/legal window exists
+                    if ((elapsedNow >= minShowMs) && (win || legalWin)) {
+                        // Make sure the UI the user should see is visible before
+                        // closing the splash. Prefer legal dialog if present,
+                        // otherwise show the main window.
+                        try {
+                            if (legalWin) {
+                                try {
+                                    // Only force the legal window to front if the splash is
+                                    // not visible if the splash is still shown we should
+                                    // avoid taking focus away from it.
+                                    if (!splashWin) {
+                                        try { legalWin.setAlwaysOnTop(true) } catch { void 0 }
+                                        legalWin.show()
+                                        try { legalWin.focus() } catch { void 0 }
+                                        // Restore alwaysOnTop state
+                                        setTimeout(() => { try { legalWin.setAlwaysOnTop(false) } catch { void 0 } }, 250)
+                                    } else {
+                                        // If splash is still visible, just ensure legalWin is
+                                        // shown once the splash closes (handled elsewhere).
+                                        try { /* no-op: wait for splash to close */ } catch { void 0 }
+                                    }
+                                } catch (e) { console.error('Error showing legalWin before splash close', e) }
+                            } else if (win) {
+                                try {
+                                    if (win.isMinimized && win.isMinimized()) win.restore()
+                                    win.show()
+                                } catch (e) { console.error('Error showing main window before splash close', e) }
+                            }
+                        } catch (e) { console.error('Error during splash close show logic', e) }
+
+                        // After attempting to show the intended window, set a
+                        // short fallback to ensure the main window is visible
+                        // in case the previous show attempts failed for any platform-specific reason.
+                        try {
+                            setTimeout(() => {
+                                try {
+                                    const anyVisible = (win && win.isVisible && win.isVisible()) || (legalWin && legalWin.isVisible && legalWin.isVisible())
+                                    if (!anyVisible) {
+                                        console.warn('No visible window after splash close attempts; creating and showing main window as fallback')
+                                        if (!win) {
+                                            try { createWindow(); createMenu(); createTray() } catch (e) { console.error('Fallback failed to create main window', e) }
+                                        }
+                                        try { if (win) { win.show(); win.focus() } } catch (e) { console.error('Fallback failed to show main window', e) }
+                                    }
+                                } catch (e) { console.error('Error during post-splash fallback check', e) }
+                            }, 750)
+                        } catch { void 0 }
+
+                        try { if (splashWin) { splashWin.close(); splashWin = null } } catch { void 0 }
+                        clearInterval(timer)
+                        return
+                    }
+                    waited += pollInterval
+                    if (waited >= maxWait) {
+                        // give up and close splash to avoid blocking forever
+                        try { if (splashWin) { splashWin.close(); splashWin = null } } catch { void 0 }
+                        clearInterval(timer)
+                    }
+                }
+
+                const timer = setInterval(checkAndClose, pollInterval)
+                // start checking after remaining ms to respect min display
+                setTimeout(() => checkAndClose(), remaining)
+            })
+            // We created the splash and will continue startup once the preloader
+            // signals completion. Return here to avoid running the duplicate
+            // legal/createWindow logic below and accidentally creating two apps.
+            return
+        } catch (err) {
+            console.error('Failed to create splash window', err)
+            startAfterPrechecks()
+        }
         // If legal not accepted, show legal window first, otherwise create main window
         try {
             ConfigManager.load()
@@ -521,13 +930,13 @@ if (!gotTheLock) {
             // requires at least 10 seconds before the user can accept and has a
             // "don't show again" checkbox.
             const isCanaryBuild = pjson.version.includes('canary')
-            if (isCanaryBuild && !ConfigManager.getCanaryAcknowledged()) {
+            if (!ranInitialDialogs && isCanaryBuild && !ConfigManager.getCanaryAcknowledged()) {
                 let canaryWin = new BrowserWindow({
                     width: 520,
                     height: 260,
                     resizable: false,
-                    modal: true,
-                    parent: win || null,
+                    modal: !!(win || splashWin),
+                    parent: win || splashWin || null,
                     show: false,
                     icon: getPlatformIcon('vis-icon'),
                     webPreferences: {
@@ -547,7 +956,12 @@ if (!gotTheLock) {
 
                 const { ipcMain } = require('electron')
                 ipcMain.once('canary-ack', (evt, dontAsk) => {
-                    if (dontAsk) ConfigManager.setCanaryAcknowledged(pjson.version)
+                    if (suppressDialogIPC) {
+                        return
+                    }
+                    if (dontAsk) {
+                        try { ConfigManager.setCanaryAcknowledged(pjson.version) } catch (e) { console.error('Failed to persist canary acknowledgement', e) }
+                    }
                     ejse.data('websiteURL', 'https://visoftware.dev')
                     try { canaryWin.close() } catch (err) { console.error('Error closing canary window', err) }
                     // After canary dialog, we must re-check legal acceptance and
@@ -565,13 +979,13 @@ if (!gotTheLock) {
                 // Wait here and skip creating the main window until user responds
                 return
             }
-            if (!ConfigManager.getLegalAccepted()) {
+            if (!ranInitialDialogs && !ConfigManager.getLegalAccepted()) {
                 legalWin = new BrowserWindow({
                     width: 960,
                     height: 720,
                     resizable: false,
-                    modal: true,
-                    parent: win || null,
+                    modal: !!(win || splashWin),
+                    parent: win || splashWin || null,
                     show: false,
                     icon: getPlatformIcon('vis-icon'),
                     webPreferences: {
@@ -588,6 +1002,13 @@ if (!gotTheLock) {
                 createWindow()
                 createMenu()
                 createTray()
+                try {
+                    if (!splashWin && win) {
+                        win.once && win.once('ready-to-show', () => {
+                            try { if (win.isMinimized && win.isMinimized()) win.restore(); win.show() } catch { void 0 }
+                        })
+                    }
+                } catch { void 0 }
             }
         } catch (err) {
             console.error('Failed to load configuration for legal check', err)
@@ -596,7 +1017,7 @@ if (!gotTheLock) {
                 width: 960,
                 height: 720,
                 resizable: false,
-                modal: true,
+                modal: !!win,
                 parent: win || null,
                 show: false,
                 icon: getPlatformIcon('vis-icon'),
