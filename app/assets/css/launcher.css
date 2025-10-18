@@ -26,18 +26,18 @@
  ******************************************************************************/
 
  @font-face {
-    font-family: 'Avenir Book';
-    src: url('../fonts/Avenir-Book.ttf');
+    font-family: 'Sen';
+    src: url('../fonts/Sen-Regular.ttf');
 }
 
 @font-face {
-    font-family: 'Avenir Medium';
-    src: url('../fonts/Avenir-Medium.ttf');
+    font-family: 'Sen Medium';
+    src: url('../fonts/Sen-Medium.ttf');
 }
 
 @font-face {
-    font-family: 'Ringbearer';
-    src: url('../fonts/Ringbearer.ttf');
+    font-family: 'Asap';
+    src: url('../fonts/Asap-Regular.ttf');
 }
 
 /*******************************************************************************
@@ -60,7 +60,7 @@ p {
 
 /* Set default font and color. */
 body, button {
-    font-family: 'Avenir Book';
+    font-family: 'Sen';
     color: white;
 }
 
@@ -120,7 +120,7 @@ body, button {
 body {
     background-color: var(--color-bg-dark);
     color: var(--color-text);
-    font-family: 'Avenir Book', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: 'Sen', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     -webkit-font-smoothing: antialiased;
     margin: 0;
     padding: 0;
@@ -274,7 +274,7 @@ progress::-webkit-progress-bar {
 }
 #frameTitleText {
     font-size: 14px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     letter-spacing: 0.5px;
 }
 
@@ -450,7 +450,7 @@ progress::-webkit-progress-bar {
 }
 
 #welcomeHeader {
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     text-align: center;
     color: white;
     margin-bottom: 25px;
@@ -663,7 +663,7 @@ progress::-webkit-progress-bar {
 
 /* Header on login view. */
 #loginSubheader {
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     margin-bottom: 25px;
     font-size: 12px;
     letter-spacing: 1px;
@@ -688,7 +688,7 @@ progress::-webkit-progress-bar {
 
 /* Span which displays errors related to login field content. */
 .loginErrorSpan {
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-weight: bold;
     font-size: 8px;
     color: #ff1b0c;
@@ -724,7 +724,7 @@ progress::-webkit-progress-bar {
 
 /* Login text input styles. */
 .loginField {
-    font-family: 'Avenir Book';
+    font-family: 'Sen';
     background-color: var(--color-bg-darkest);
     border: 1px solid var(--color-border);
     color: var(--color-text);
@@ -1401,7 +1401,7 @@ progress::-webkit-progress-bar {
 }
 .settingsTabHeaderText {
     font-size: 20px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
 }
 .settingsTabHeaderDesc {
     font-size: 12px;
@@ -1440,7 +1440,7 @@ progress::-webkit-progress-bar {
     background: none;
     font-size: 12px;
     border-radius: 3px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     transition: 0.25s ease;
     cursor: pointer;
     outline: none;
@@ -1503,7 +1503,7 @@ progress::-webkit-progress-bar {
 }
 .settingsFieldTitle {
     font-size: 14px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     color: rgba(255, 255, 255, 0.95);
 }
 .settingsFieldDesc {
@@ -1665,7 +1665,7 @@ input:checked + .toggleSwitchSlider:before {
     width: 89%;
 }
 .settingsFileSelDesc strong {
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
 }
 
 /* * *
@@ -1773,7 +1773,7 @@ input:checked + .toggleSwitchSlider:before {
     font-size: 12px;
     color: grey;
     font-weight: bold;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
 }
 .settingsAuthAccountDetailValue {
     font-size: 14px;
@@ -1795,7 +1795,7 @@ input:checked + .toggleSwitchSlider:before {
     border: none;
     white-space: nowrap;
     background: none;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     outline: none;
     transition: 0.25s ease;
 }
@@ -1820,7 +1820,7 @@ input:checked + .toggleSwitchSlider:before {
     background: none;
     font-size: 12px;
     border-radius: 3px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     transition: 0.25s ease;
     cursor: pointer;
     outline: none;
@@ -2379,7 +2379,7 @@ input:checked + .toggleSwitchSlider:before {
 /* Release type text. */
 #settingsAboutCurrentVersionTitle {
     font-size: 12px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     color: #23aa23;
     font-weight: bold;
 }
@@ -2468,7 +2468,7 @@ input:checked + .toggleSwitchSlider:before {
     background-color: rgba(255, 255, 255, 0.25);
     color: white;
     border-radius: 3px;
-    font-family: 'Avenir Book';
+    font-family: 'Sen';
 }
 .settingsChangelogText li+li {
     margin-top: .25em;
@@ -2573,7 +2573,7 @@ input:checked + .toggleSwitchSlider:before {
 
 #settingsUpdateVersionTitle {
     font-size: 12px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     color: #23aa23;
     font-weight: bold;
 }
@@ -2769,7 +2769,7 @@ input:checked + .toggleSwitchSlider:before {
 #newsArticleTitle {
     font-size: 18px;
     font-weight: bold;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     color: white;
     text-decoration: none;
     transition: 0.25s ease;
@@ -3086,7 +3086,7 @@ input:checked + .toggleSwitchSlider:before {
     z-index: 1;
     top: 115%;
     left: -17.5px;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-size: 12px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
 }
@@ -3418,7 +3418,7 @@ input:checked + .toggleSwitchSlider:before {
     border-radius: 4px;
     padding: 5px 10px;
     z-index: 1;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-size: 12px;
     transition: visibility 0s linear 0.25s, opacity 0.25s ease;
     bottom: calc(100% + 15px);
@@ -3752,7 +3752,7 @@ input:checked + .toggleSwitchSlider:before {
 }
 
 #overlayTitle {
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-size: 20px;
     font-weight: bold;
     letter-spacing: 1px;
@@ -3775,7 +3775,7 @@ input:checked + .toggleSwitchSlider:before {
     background: none;
     border: 1px solid #ffffff;
     color: white;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-weight: bold;
     border-radius: 2px;
     padding: 0px 8.1px;
@@ -3830,7 +3830,7 @@ input:checked + .toggleSwitchSlider:before {
 /* Server selection header. */
 #serverSelectHeader,
 #accountSelectHeader {
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-size: 20px;
     font-weight: bold;
     color: #fff;
@@ -4104,7 +4104,7 @@ input:checked + .toggleSwitchSlider:before {
     background: none;
     border: 1px solid #ffffff;
     color: white;
-    font-family: 'Avenir Medium';
+    font-family: 'Sen Medium';
     font-weight: bold;
     border-radius: 2px;
     padding: 0px 8.1px;
@@ -4807,3 +4807,5 @@ progress::-webkit-progress-value {
     color: var (--color-text);
     text-decoration: underline;
 }
+
+

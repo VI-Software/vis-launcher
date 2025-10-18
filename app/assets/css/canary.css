@@ -15,6 +15,21 @@
     Website: https://visoftware.dev
 */
 
+@font-face {
+    font-family: 'Sen';
+    src: url('../fonts/Sen-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Sen Medium';
+    src: url('../fonts/Sen-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Asap';
+    src: url('../fonts/Asap-Regular.ttf');
+}
+
 :root {
   --bg: #0f0f0f;
   --panel: #1d1d1d;
@@ -30,7 +45,7 @@ body {
   margin: 0;
   background: var(--bg);
   color: #e9ecef;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
+  font-family: 'Sen', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial,
     sans-serif;
   -webkit-user-select: none;
   user-select: none;
@@ -138,3 +153,5 @@ a {
 }
 
 /* purple link color */
+
+

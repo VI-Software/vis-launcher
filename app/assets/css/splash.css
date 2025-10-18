@@ -15,9 +15,25 @@
     Website: https://visoftware.dev
 */
 
+@font-face {
+    font-family: 'Sen';
+    src: url('../fonts/Sen-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Sen Medium';
+    src: url('../fonts/Sen-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Asap';
+    src: url('../fonts/Asap-Regular.ttf');
+}
+
 html, body {
   overflow: hidden;
   background: #000;
+  font-family: 'Sen', sans-serif;
   margin: 0;
   padding: 0;
   user-select: none;
@@ -156,7 +172,7 @@ html, body {
 }
 
 #splashTitle {
-  font-family: 'Avenir Medium', 'Avenir Book', sans-serif;
+  font-family: 'Sen Medium', 'Sen', sans-serif;
   color: var(--color-text);
   font-size: 30px;
   margin: 0;
@@ -213,3 +229,5 @@ html, body {
 @media (max-width: 640px) {
   #splashBgTiles { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); grid-auto-rows: 86px; padding: 20px; opacity: 0.14 }
 }
+
+
