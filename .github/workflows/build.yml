@@ -40,6 +40,19 @@ jobs:
         run: npm ci
         shell: bash
 
+      - name: Set release type for prerelease
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" =~ .*(-nightly|-canary).* ]]; then
+            node -e "
+              const fs = require('fs');
+              let content = fs.readFileSync('electron-builder.yml', 'utf8');
+              content = content.replace(/releaseType: release/, 'releaseType: prerelease');
+              fs.writeFileSync('electron-builder.yml', content);
+            "
+          fi
+        shell: bash
+
       - name: Build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

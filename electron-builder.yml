@@ -9,7 +9,7 @@ asar: true
 compression: 'maximum'
 
 files:
-  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs'
+  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs}'
 
 extraResources:
   - 'libraries'
@@ -61,3 +61,9 @@ linux:
 directories:
   buildResources: 'build'
   output: 'dist'
+
+publish:
+  provider: github
+  owner: VI-Software
+  repo: vis-launcher
+  releaseType: release
