@@ -1422,7 +1422,89 @@ progress::-webkit-progress-bar {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding: 5px 0px;
+    padding: 10px 15px;
+    flex: 1;
+}
+
+/* Settings server card - compact design */
+.settingsServerCard {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.settingsServerIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    flex-shrink: 0;
+}
+
+.settingsServerInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.settingsServerName {
+    font-size: 15px;
+    font-family: 'Sen Medium';
+    color: #ffffff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.settingsServerDesc {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.settingsServerVersions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 2px;
+}
+
+.settingsServerBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 10px;
+    font-family: 'Sen Medium';
+    white-space: nowrap;
+}
+
+.settingsServerBadgeMC {
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border: 1px solid rgba(76, 175, 80, 0.4);
+}
+
+.settingsServerBadgeMP {
+    background: rgba(33, 150, 243, 0.2);
+    color: #2196f3;
+    border: 1px solid rgba(33, 150, 243, 0.4);
+}
+
+.settingsServerBadgeFeatured {
+    background: rgba(255, 215, 0, 0.15);
+    color: #ffd700;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+}
+
+.settingsServerBadgeFeatured svg {
+    flex-shrink: 0;
 }
 
 /* Wrapper container for the switch server button. */
