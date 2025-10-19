@@ -149,8 +149,18 @@ exports.setupLanguage = function(systemLocale){
         } else {
             // Try to match just the language part (e.g. "en-GB" -> "en")
             const baseLang = systemLocale.split(/[-_]/)[0]
+            
+            const baseLangFallbacks = {
+                'en': 'en_US',
+                'es': 'es_ES', 
+                'pt': 'pt_PT',
+                'ca': 'ca_ES'
+            }
+            
             if (SUPPORTED_LANGUAGES[baseLang]) {
                 langToUse = SUPPORTED_LANGUAGES[baseLang].id
+            } else if (baseLangFallbacks[baseLang]) {
+                langToUse = baseLangFallbacks[baseLang]
             }
         }
     }
@@ -158,12 +168,12 @@ exports.setupLanguage = function(systemLocale){
     try {
         const langPath = path.join(__dirname, '..', 'lang', `${langToUse}.toml`)
         if (!fs.existsSync(langPath)) {
-            console.warn(`Language file ${langToUse}.toml not found, falling back to es_ES`)
-            langToUse = 'es_ES'
+            console.warn(`Language file ${langToUse}.toml not found, falling back to en_US`)
+            langToUse = 'en_US'
         }
     } catch (error) {
         console.error('Error checking language file:', error)
-        langToUse = 'es_ES'
+        langToUse = 'en_US'
     }
     
     exports.loadLanguage(langToUse)

@@ -587,29 +587,21 @@ if (!gotTheLock) {
         }
     })
     
-    // Initialize language and then create the window when app is ready
     app.whenReady().then(async () => {
         let locale = ''
         try {
-            if (process.platform === 'win32') {
-                locale = app.getLocale()
-            } else {
-                // macOS/Linux
-                locale = process.env.LANG || 
-                         process.env.LC_ALL || 
-                         process.env.LC_MESSAGES || 
-                         process.env.LANGUAGE
-                
-                if (locale) {
-                    // Format: en_US.UTF-8 -> en-US
-                    locale = locale.split('.')[0].replace('_', '-')
-                } else {
-                    locale = app.getLocale()
-                }
+            // Get the user's preferred system languages (returns array of BCP 47 language tags)
+            const systemLanguages = app.getPreferredSystemLanguages()
+            
+            // Use the first preferred language, or fall back to getLocale() if empty
+            locale = systemLanguages && systemLanguages.length > 0 ? systemLanguages[0] : app.getLocale()
+
+            if (locale) {
+                locale = locale.replace(/_/g, '-')
             }
         } catch (error) {
             console.error('Error detecting system locale:', error)
-            locale = 'en_US'
+            locale = 'en-US'
         }
         
         LangLoader.setupLanguage(locale)
