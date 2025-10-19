@@ -158,7 +158,7 @@ welcomeDescription = 'Este launcher fue desarrollado por el <a href="https://git
 welcomeDescCTA = "¡La diversión está a la vuelta de la esquina!"
 
 [ejs.app]
-canary_warning_title = "Advertencia: versión Canary"
+canary_warning_title = "Advertencia: versión Canary - v{version}"
 canary_warning_text = "Está ejecutando una versión canary (pre-lanzamiento) del launcher <strong style='color:#b33838'>que puede ser inestable y puede dañar o dejar inservible su instalación de VI Software Launcher.</strong> Si no está familiarizado con realizar una reinstalación limpia, no continúe: cierre la aplicación y descargue una versión estable desde {websiteURL}."
 canary_warning_dontask = "No mostrar esta advertencia de nuevo"
 

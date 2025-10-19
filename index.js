@@ -664,6 +664,7 @@ if (!gotTheLock) {
                     }
                 })
                 remoteMain.enable(legalWin.webContents)
+                ejse.data('version', pjson.version)
                 legalWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
                 legalWin.removeMenu()
                 // Show the legal dialog once ready; it will appear above the
@@ -723,6 +724,7 @@ if (!gotTheLock) {
                 remoteMain.enable(canaryWinEarly.webContents)
                 ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
                 ejse.data('websiteURL', 'https://visoftware.dev/launcher')
+                ejse.data('version', pjson.version)
                 canaryWinEarly.loadURL(pathToFileURL(path.join(__dirname, 'app', 'canary.ejs')).toString())
                 canaryWinEarly.removeMenu()
                 canaryWinEarly.once('ready-to-show', () => canaryWinEarly.show())
@@ -763,6 +765,7 @@ if (!gotTheLock) {
                     }
                 })
                 remoteMain.enable(legalWinEarly.webContents)
+                ejse.data('version', pjson.version)
                 legalWinEarly.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
                 legalWinEarly.removeMenu()
                 legalWinEarly.once('ready-to-show', () => legalWinEarly.show())
@@ -986,6 +989,7 @@ if (!gotTheLock) {
                 ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
                 const canaryWebsiteURL = 'https://visoftware.dev/launcher'
                 ejse.data('websiteURL', canaryWebsiteURL)
+                ejse.data('version', pjson.version)
 
                 canaryWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'canary.ejs')).toString())
                 canaryWin.removeMenu()
@@ -1031,6 +1035,7 @@ if (!gotTheLock) {
                     }
                 })
                 remoteMain.enable(legalWin.webContents)
+                ejse.data('version', pjson.version)
                 legalWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'legal.ejs')).toString())
                 legalWin.removeMenu()
                 legalWin.once('ready-to-show', () => legalWin.show())

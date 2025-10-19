@@ -158,7 +158,7 @@ welcomeDescription = 'This launcher was developed by the <a href="https://github
 welcomeDescCTA = "Fun is just around the corner!"
 
 [ejs.app]
-canary_warning_title = "Canary Build Warning"
+canary_warning_title = "Canary Build Warning - v{version}"
 canary_warning_text = "You're running a canary (pre-release) version of the launcher <strong style='color:#b33838'>which may be unstable and may break or brick your VI Software Launcher installation.</strong> If you are not familiar with performing a clean reinstall, do not proceed: close the application and download a stable release from {websiteURL}."
 canary_warning_dontask = "Don't show this warning again"
 

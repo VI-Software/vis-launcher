@@ -158,7 +158,7 @@ welcomeDescription = 'Este launcher foi desenvolvido pela <a href="https://githu
 welcomeDescCTA = "A diversão está logo ali!"
 
 [ejs.app]
-canary_warning_title = "Aviso: versão Canary"
+canary_warning_title = "Aviso: versão Canary - v{version}"
 canary_warning_text = "Está a executar uma versão canary (pré-lançamento) do launcher <strong style='color:#b33838'>que pode ser instável e pode danificar ou inutilizar a sua instalação do VI Software Launcher.</strong> Se não estiver familiarizado com a realização de uma reinstalação limpa, não prossiga: feche a aplicação e descarregue uma versão estável a partir de {websiteURL}."
 canary_warning_dontask = "Não mostrar este aviso novamente"
 
