@@ -51,6 +51,12 @@ function initAutoUpdater(event, data) {
     if(process.platform === 'darwin'){
         autoUpdater.autoDownload = false
     }
+
+    autoUpdater.requestHeaders = {
+        'User-Agent': 'VI-Software-Launcher/' + pjson.version
+    }
+    autoUpdater.timeout = 180000 // 3 min timeout
+
     autoUpdater.on('update-available', (info) => {
         event.sender.send('autoUpdateNotification', 'update-available', info)
     })
@@ -65,7 +71,10 @@ function initAutoUpdater(event, data) {
     })
     autoUpdater.on('error', (err) => {
         event.sender.send('autoUpdateNotification', 'realerror', err)
-    }) 
+    })
+    autoUpdater.on('download-progress', (progress) => {
+        event.sender.send('autoUpdateNotification', 'download-progress', progress)
+    })
 }
 
 // Configure auto-updater specifically for the splash flow. This forwards
@@ -77,6 +86,11 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
             autoUpdater.autoInstallOnAppQuit = false
             autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
         }
+
+        autoUpdater.requestHeaders = {
+            'User-Agent': 'VI-Software-Launcher/' + pjson.version
+        }
+        autoUpdater.timeout = 180000 // 3 min timeout
 
         autoUpdater.on('checking-for-update', () => {
             try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'checking-for-update') } catch { void 0 }
@@ -98,7 +112,7 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
         autoUpdater.on('download-progress', (progress) => {
             try {
                 const percent = progress && progress.percent ? Math.floor(progress.percent) : 0
-                if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-progress', { percent, message: 'Downloading update...' })
+                if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-progress', { percent, message: `Downloading update... ${percent}%` })
                 if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'download-progress', progress)
             } catch { void 0 }
         })
@@ -768,19 +782,23 @@ if (!gotTheLock) {
                     if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'Checking for updates...')
 
                     const waitForUpdateResolution = () => new Promise((resolve) => {
-                        // Resolve values: { status: 'no-update' } | { status: 'downloaded' } | { status: 'error', error }
+                        // Resolve values: { status: 'no-update' } | { status: 'downloaded', info } | { status: 'error', error, hadUpdate?: boolean }
                         let resolved = false
+                        let hadUpdate = false
                         function cleanup() {
                             try { autoUpdater.removeListener('update-not-available', onNotAvailable) } catch { void 0 }
                             try { autoUpdater.removeListener('update-downloaded', onDownloaded) } catch { void 0 }
+                            try { autoUpdater.removeListener('update-available', onUpdateAvailable) } catch { void 0 }
                             try { autoUpdater.removeListener('error', onError) } catch { void 0 }
                         }
                         const onNotAvailable = () => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'no-update' }) }
                         const onDownloaded = (info) => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'downloaded', info }) }
-                        const onError = (err) => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'error', error: err }) }
+                        const onUpdateAvailable = (info) => { hadUpdate = true }
+                        const onError = (err) => { if (resolved) return; resolved = true; cleanup(); resolve({ status: 'error', error: err, hadUpdate }) }
 
                         autoUpdater.once('update-not-available', onNotAvailable)
                         autoUpdater.once('update-downloaded', onDownloaded)
+                        autoUpdater.once('update-available', onUpdateAvailable)
                         autoUpdater.once('error', onError)
 
                         // Trigger check (best-effort). If checkForUpdates rejects,
@@ -804,7 +822,7 @@ if (!gotTheLock) {
                     if (updateResult.status === 'downloaded') {
                         try {
                             if (splashWin && splashWin.webContents) {
-                                splashWin.webContents.send('splash-progress', { percent: 100, message: 'Update downloaded — applying now...' })
+                                splashWin.webContents.send('splash-progress', { percent: 100, message: 'Update downloaded' })
                                 splashWin.webContents.send('splash-message', 'Applying update...')
                             }
                         } catch { void 0 }
@@ -819,7 +837,8 @@ if (!gotTheLock) {
                         }
                     } else if (updateResult.status === 'error') {
                         console.error('Auto-update failed during check/download:', updateResult.error)
-                        try { if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'Update check failed (continuing)') } catch { void 0 }
+                        const message = updateResult.hadUpdate ? 'Update download failed (continuing)' : 'Update check failed (continuing)'
+                        try { if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', message) } catch { void 0 }
                     } else {
                         try { if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'No updates found') } catch { void 0 }
                     }
