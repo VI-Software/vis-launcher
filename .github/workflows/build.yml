@@ -20,7 +20,7 @@ jobs:
       - name: Install and setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Create certificate folder
         run: mkdir -p cert
