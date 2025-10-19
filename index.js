@@ -715,6 +715,13 @@ if (!gotTheLock) {
                 ])
 
                 try { canaryWinEarly.close() } catch { void 0 }
+                
+                if (canaryRes && canaryRes.channel === 'canary-close') {
+                    try { canaryWinEarly.close() } catch { void 0 }
+                    app.quit()
+                    return
+                }
+
                 // If ack resolved and the first argument is truthy (don't ask), persist
                 if (canaryRes && canaryRes.channel === 'canary-ack' && canaryRes.args && canaryRes.args.length > 0 && canaryRes.args[0]) {
                     try { ConfigManager.setCanaryAcknowledged(pjson.version) } catch (e) { console.error('Failed to persist canary acknowledgment', e) }
