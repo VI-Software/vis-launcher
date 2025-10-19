@@ -57,6 +57,14 @@ function initAutoUpdater(event, data) {
     }
     autoUpdater.timeout = 180000 // 3 min timeout
 
+    // Set installer options to skip user/system level prompt on Windows
+    if (process.platform === 'win32') {
+        autoUpdater.installerOptions = {
+            perMachine: false,  // Force per-user installation, no prompt
+            args: ['/S']  // Silent install - no UI shown during update
+        }
+    }
+
     autoUpdater.on('update-available', (info) => {
         event.sender.send('autoUpdateNotification', 'update-available', info)
     })
@@ -92,6 +100,14 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
         }
         autoUpdater.timeout = 180000 // 3 min timeout
 
+        // Hide installer prompts on Windows
+        if (process.platform === 'win32') {
+            autoUpdater.installerOptions = {
+                perMachine: false,  // Force per-user installation, no prompt
+                args: ['/S']  // Silent install - no UI shown during update
+            }
+        }
+
         autoUpdater.on('checking-for-update', () => {
             try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'checking-for-update') } catch { void 0 }
         })
@@ -118,13 +134,16 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
         })
 
         autoUpdater.on('update-downloaded', (info) => {
-            try { if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'update-downloaded', info) } catch { void 0 }
+            try { 
+                if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'update-downloaded', info)
+                if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'Installing update...')
+            } catch { void 0 }
             // Mandatory install when running a production build. In dev we don't auto-install.
             if (!isDev) {
-                // give a brief moment to let the UI update
+                // Install immediately and restart automatically
                 setTimeout(() => {
-                    try { autoUpdater.quitAndInstall() } catch (err) { console.error('Failed to install update', err) }
-                }, 500)
+                    try { autoUpdater.quitAndInstall() } catch (err) { console.error('Failed to quit and install update', err) }
+                }, 1000)
             }
         })
 
