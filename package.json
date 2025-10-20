@@ -17,7 +17,8 @@
     "dist:linux:arm64": "npm run dist -- -l --arm64",
     "dist:win:arm64": "npm run dist -- -w --arm64",
     "dist:arm64": "npm run dist -- --arm64",
-    "lint": "eslint --config ./eslint.config.mjs ."
+    "lint": "eslint --config ./eslint.config.mjs .",
+    "generate-licenses": "npx license-checker --json | node scripts/generate-licenses.js"
   },
   "engines": {
     "node": "22.x.x"
@@ -45,7 +46,8 @@
     "electron": "^38.1.2",
     "electron-builder": "^26.0.20",
     "eslint": "^9.0.0",
-    "globals": "^16.4.0"
+    "globals": "^16.4.0",
+    "license-checker": "^25.0.1"
   },
   "repository": {
     "type": "git",
