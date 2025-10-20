@@ -24,7 +24,7 @@
 const path = require('path')
 const app = require('electron')
 const https = require('https')
-const { Type } = require('vis-launcher-distribution-manager')
+const { Type } = require('@visoftware/distribution-types')
 
 const AuthManager = require('./assets/js/authmanager')
 const ConfigManager = require('./assets/js/configmanager')
