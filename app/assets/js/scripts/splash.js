@@ -29,22 +29,21 @@ document.addEventListener('readystatechange', () => {
         if (fill) fill.style.width = pct + '%'
         if (text) {
             if (message) text.textContent = message
-            else if (pct >= 100) text.textContent = 'Finalizing...'
+            else if (pct >= 100) text.textContent = 'Slowly but surely'
         }
     }
 
     ipcRenderer.on('splash-progress', (_ev, payload) => {
         if (!payload) return
         const pct = typeof payload.percent === 'number' ? payload.percent : 0
-        setProgress(pct, payload.message || 'Starting...')
+        setProgress(pct, payload.message || 'Please wait')
     })
 
     ipcRenderer.on('splash-message', (_ev, message) => {
         if (!message) return
         if (text) text.textContent = message
     })
-
-    ipcRenderer.on('splash-done', () => setProgress(100, 'Ready'))
+    ipcRenderer.on('splash-done', () => setProgress(100, 'Almost there') )
 })
 
 function createBgTiles() {

@@ -30,7 +30,7 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const LangLoader                        = require('./app/assets/js/langloader')
 const ConfigManager                     = require('./app/assets/js/configmanager')
-const pjson = require('./package.json')
+const pjson                             = require('./package.json')
 let isExitingThroughTray = false
 
 // Setup auto updater.
@@ -127,7 +127,9 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
         autoUpdater.on('download-progress', (progress) => {
             try {
                 const percent = progress && progress.percent ? Math.floor(progress.percent) : 0
-                if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-progress', { percent, message: `Downloading update... ${percent}%` })
+                const transferredMB = progress && progress.transferred ? (progress.transferred / (1024 * 1024)).toFixed(1) : '0'
+                const totalMB = progress && progress.total ? (progress.total / (1024 * 1024)).toFixed(1) : '0'
+                if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-progress', { percent, message: `Downloading ${transferredMB}mb / ${totalMB}mb` })
                 if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'download-progress', progress)
             } catch { void 0 }
         })
@@ -147,7 +149,7 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
         })
 
         try {
-            autoUpdater.checkForUpdates().catch(() => { /* best-effort */ })
+            // Auto update is handled by distributionIndexDone
         } catch { /* ignore */ }
     } catch (err) {
         console.error('Failed to configure auto-updater for splash', err)
@@ -513,11 +515,6 @@ if (!gotTheLock) {
         LangLoader.setupLanguage(locale)
         
         function startAfterPrechecks(){
-            try {
-                ConfigManager.load()
-            } catch (err) {
-                console.error('Error loading config before post-canary checks', err)
-            }
 
             if (!ConfigManager.getLegalAccepted()) {
                 // Parent the legal window to the main window if it exists,
@@ -747,7 +744,6 @@ if (!gotTheLock) {
                 } catch (err) {
                     console.error('Error while waiting for update resolution', err)
                 }
-
                 // First, perform the normal startup checks
                 try {
                     startAfterPrechecks()

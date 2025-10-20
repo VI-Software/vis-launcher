@@ -30,12 +30,10 @@ const { HeliosDistribution } = require('@visoftware/vis-launcher-core/common')
 const logger = LoggerUtil.getLogger('Preloader')
 
 logger.info('VI Software Launcher')
-logger.info('© 2025 VI Software. Todos los derechos reservados.')
+logger.info('© 2025 VI Software. All rights reserved.')
+logger.info('License: AGPL-3.0 https://www.gnu.org/licenses/agpl-3.0.en.html')
 logger.info('GitHub: https://github.com/VI-Software')
-logger.info('Documentación: https://docs.visoftware.dev/vi-software/vis-launcher')
-logger.info('Web: https://visoftware.dev')
-logger.info('https://github.com/VI-Software/vis-launcher/blob/main/LICENSE')
-logger.info('Cargando...')
+logger.info('Website: https://visoftware.dev')
 
 const { sendSplashProgress, sendSplashMessage, sendSplashDone } = require('./splash-utils')
 
@@ -84,12 +82,12 @@ function onDistroLoad(data){
             }
             sendSplashProgress(95, 'Finalizing...')
             setTimeout(() => {
-                sendSplashProgress(100, 'Ready')
+                sendSplashProgress(100, 'Checking for updates')
             }, 200)
         } else {
             logger.warn('Distribution index unavailable')
             sendSplashMessage('Failed to load distribution index')
-            sendSplashProgress(100, 'Ready (offline)')
+            sendSplashProgress(100, 'Checking for updates (offline)')
         }
     } finally {
         // Always notify main process and splash that we're done (success=false when data==null)
@@ -124,36 +122,4 @@ fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => 
     } else {
         logger.info('Directorio de nativos limpiado.')
     }
-})
-
-document.addEventListener('readystatechange', () => {
-    if (document.readyState !== 'interactive' && document.readyState !== 'complete') return
-
-    // Only send splash progress if this is the splash window
-    if (!document.location.href.includes('splash.ejs')) return
-
-    const fill = document.getElementById('splashProgressFill')
-    const text = document.getElementById('splashProgressText')
-
-    function setProgress(pct, message) {
-        pct = Math.max(0, Math.min(100, pct))
-        if (fill) fill.style.width = pct + '%'
-        if (text) {
-            if (message) text.textContent = message
-            else if (pct >= 100) text.textContent = 'Finalizing...'
-        }
-    }
-
-    ipcRenderer.on('splash-progress', (_ev, payload) => {
-        if (!payload) return
-        const pct = typeof payload.percent === 'number' ? payload.percent : 0
-        setProgress(pct, payload.message || 'Starting...')
-    })
-
-    ipcRenderer.on('splash-message', (_ev, message) => {
-        if (!message) return
-        if (text) text.textContent = message
-    })
-
-    ipcRenderer.on('splash-done', () => setProgress(100, 'Ready'))
 })
