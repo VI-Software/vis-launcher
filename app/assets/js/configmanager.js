@@ -16,7 +16,7 @@
 */
 
 const fs   = require('fs-extra')
-const { LoggerUtil } = require('vis-launcher-core')
+const { LoggerUtil } = require('@visoftware/vis-launcher-core')
 const os   = require('os')
 const path = require('path')
 

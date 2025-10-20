@@ -24,18 +24,18 @@ const { URL }                 = require('url')
 const {
     MojangRestAPI,
     getServerStatus
-}                             = require('vis-launcher-core/mojang')
+}                             = require('@visoftware/vis-launcher-core/mojang')
 const {
     RestResponseStatus,
     isDisplayableError,
     validateLocalFile
-}                             = require('vis-launcher-core/common')
+}                             = require('@visoftware/vis-launcher-core/common')
 const {
     FullRepair,
     DistributionIndexProcessor,
     MojangIndexProcessor,
     downloadFile
-}                             = require('vis-launcher-core/dl')
+}                             = require('@visoftware/vis-launcher-core/dl')
 const {
     validateSelectedJvm,
     ensureJavaDirIsRoot,
@@ -43,7 +43,7 @@ const {
     discoverBestJvmInstallation,
     latestOpenJDK,
     extractJdk
-}                             = require('vis-launcher-core/java')
+}                             = require('@visoftware/vis-launcher-core/java')
 
 // Internal Requirements
 const DiscordWrapper          = require('./assets/js/discordwrapper')

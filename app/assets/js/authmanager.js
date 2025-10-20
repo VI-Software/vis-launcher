@@ -28,9 +28,9 @@
  */
 // Requirements
 const ConfigManager          = require('./configmanager')
-const { LoggerUtil }         = require('vis-launcher-core')
-const { RestResponseStatus } = require('vis-launcher-core/common')
-const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('vis-launcher-core/mojang')
+const { LoggerUtil }         = require('@visoftware/vis-launcher-core')
+const { RestResponseStatus } = require('@visoftware/vis-launcher-core/common')
+const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('@visoftware/vis-launcher-core/mojang')
 const http                   = require('http')
 const { shell }              = require('electron')
 const { API_BASE_URL, WEBLOGIN_URL } = require('./apiconstants')

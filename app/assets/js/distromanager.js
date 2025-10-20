@@ -16,7 +16,7 @@
 */
 
 
-const { DistributionAPI } = require('vis-launcher-core/common')
+const { DistributionAPI } = require('@visoftware/vis-launcher-core/common')
 
 const ConfigManager = require('./configmanager')
 const { CDN_URL } = require('./apiconstants')

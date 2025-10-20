@@ -23,9 +23,9 @@ const path           = require('path')
 const ConfigManager  = require('./configmanager')
 const { DistroAPI }  = require('./distromanager')
 const LangLoader     = require('./langloader')
-const { LoggerUtil } = require('vis-launcher-core')
+const { LoggerUtil } = require('@visoftware/vis-launcher-core')
 /* eslint-disable no-unused-vars */
-const { HeliosDistribution } = require('vis-launcher-core/common')
+const { HeliosDistribution } = require('@visoftware/vis-launcher-core/common')
 
 const logger = LoggerUtil.getLogger('Preloader')
 

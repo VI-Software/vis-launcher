@@ -15,7 +15,7 @@
     Website: https://visoftware.dev
 */
 
-const { LoggerUtil } = require('vis-launcher-core')
+const { LoggerUtil } = require('@visoftware/vis-launcher-core')
 
 const logger = LoggerUtil.getLogger('DiscordWrapper')
 
