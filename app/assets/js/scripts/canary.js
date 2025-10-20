@@ -67,4 +67,19 @@ window.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('contextmenu', (e) => {
         e.preventDefault()
     })
+
+    let bypassKeysPressed = new Set()
+    document.addEventListener('keydown', (e) => {
+        bypassKeysPressed.add(e.key.toLowerCase())
+        if (bypassKeysPressed.has('shift') && bypassKeysPressed.has('control')) {
+            clearInterval(countdown)
+            remaining = 0
+            acceptBtn.disabled = false
+            updateLabel(0)
+        }
+    })
+
+    document.addEventListener('keyup', (e) => {
+        bypassKeysPressed.delete(e.key.toLowerCase())
+    })
 })
