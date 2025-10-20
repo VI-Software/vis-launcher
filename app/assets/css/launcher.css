@@ -1211,6 +1211,69 @@ progress::-webkit-progress-bar {
     pointer-events: none;
 }
 
+#loginOptionBackContainer {
+    position: absolute;
+    top: 5%;
+    right: 5%;
+}
+
+#loginOptionBackButton {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    transition: 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#loginOptionBackButton:hover #loginOptionBackIcon,
+#loginOptionBackButton:hover #loginOptionBackText,
+#loginOptionBackButton:focus #loginOptionBackIcon,
+#loginOptionBackButton:focus #loginOptionBackText {
+    text-shadow: 0px 0px 20px white;
+}
+#loginOptionBackButton:hover #loginOptionBackIcon,
+#loginOptionBackButton:focus #loginOptionBackIcon {
+    box-shadow: 0px 0px 20px white;
+}
+#loginOptionBackButton:active #loginOptionBackIcon,
+#loginOptionBackButton:active #loginOptionBackText {
+    text-shadow: 0px 0px 20px rgba(255, 255, 255, 0.75);
+    color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255, 0.75);
+}
+#loginOptionBackButton:active #loginOptionBackIcon {
+    box-shadow: 0px 0px 20px rgba(255, 255, 255, 0.75);
+}
+#loginOptionBackButton:disabled {
+    pointer-events: none;
+}
+#loginOptionBackButton:disabled #loginOptionBackIcon,
+#loginOptionBackButton:disabled #loginOptionBackText {
+    color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255, 0.75);
+}
+
+/* The back arrow icon for the back button. */
+#loginOptionBackIcon {
+    border-radius: 50%;
+    border: 1px solid white;
+    box-sizing: border-box;
+    height: 30px;
+    width: 30px;
+    font-size: 19px;
+    line-height: 30px;
+    margin: 0 auto;
+    margin-bottom: 5px;
+    transition: 0.25s ease;
+}
+/* Text for the login option back button. */
+#loginOptionBackText {
+    font-size: 15px;
+    transition: 0.25s ease;
+}
+
 
 /*******************************************************************************
  *                                                                             *

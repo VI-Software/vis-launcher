@@ -20,8 +20,11 @@ const loginOptionsCancelContainer = document.getElementById('loginOptionCancelCo
 const loginOptionVISoftware = document.getElementById('loginOptionVISoftware')
 const loginOptionsCancelButton = document.getElementById('loginOptionCancelButton')
 const loginOptionVISWeb = document.getElementById('loginOptionVISWeb')
+const loginOptionBackContainer = document.getElementById('loginOptionBackContainer')
+const loginOptionBackButton = document.getElementById('loginOptionBackButton')
 
 let loginOptionsCancellable = false
+let loginOptionsFromSettings = false
 
 let loginOptionsViewOnLoginSuccess
 let loginOptionsViewOnLoginCancel
@@ -31,9 +34,22 @@ let loginOptionsViewCancelHandler
 function loginOptionsCancelEnabled(val){
     if(val){
         $(loginOptionsCancelContainer).show()
+        $(loginOptionBackContainer).hide()
     } else {
         $(loginOptionsCancelContainer).hide()
     }
+}
+
+function showLoginOptions(fromSettings = false) {
+    loginOptionsFromSettings = fromSettings
+    if(fromSettings) {
+        $(loginOptionBackContainer).show()
+        $(loginOptionsCancelContainer).hide()
+    } else {
+        $(loginOptionsCancelContainer).show()
+        $(loginOptionBackContainer).hide()
+    }
+    switchView(getCurrentView(), VIEWS.loginOptions, 500, 500)
 }
 loginOptionVISoftware.onclick = (e) => {
     switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
@@ -77,5 +93,11 @@ loginOptionsCancelButton.onclick = (e) => {
             loginOptionsViewCancelHandler()
             loginOptionsViewCancelHandler = null
         }
+    })
+}
+
+loginOptionBackButton.onclick = (e) => {
+    switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+        loginOptionsFromSettings = false
     })
 }

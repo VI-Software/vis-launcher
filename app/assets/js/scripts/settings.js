@@ -372,11 +372,10 @@ settingsNavDone.onclick = () => {
 
 // Bind the add mojang account button.
 document.getElementById('settingsAddMojangAccount').onclick = (e) => {
-    switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
-        loginViewOnCancel = VIEWS.settings
-        loginViewOnSuccess = VIEWS.settings
-        loginCancelEnabled(true)
-    })
+    loginOptionsViewOnLoginSuccess = VIEWS.settings
+    loginOptionsViewOnLoginCancel = VIEWS.settings
+    loginOptionsViewOnCancel = VIEWS.settings
+    showLoginOptions(true)
 }
 
 /**
