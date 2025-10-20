@@ -52,9 +52,8 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software i col·laboradors. Tots els d
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opcions d'inici de sessió"
-loginWithMicrosoft = "Iniciar sessió amb Microsoft"
-loginWithVISWeb = "Iniciar sessió amb VI Software Web oAuth 2.0"
-loginWithVIS = "Iniciar sessió amb VI Software Legacy"
+loginWithVISWeb = "Inicia sessió amb VI Software Web oAuth 2.0"
+loginWithVIS = "Inicia sessió amb VI Software Legacy"
 cancelButton = "Cancel·lar"
 
 [ejs.overlay]
@@ -77,8 +76,6 @@ navUpdates = "Actualitzacions"
 navDone = "Fet"
 tabAccountHeaderText = "Configuració del compte"
 tabAccountHeaderDesc = "Afegir nous comptes o gestionar els existents."
-microsoftAccount = "Microsoft"
-addMicrosoftAccount = "+ Afegir compte de Microsoft"
 VISAccount = "VI Software"
 addVISAccount = "+ Afegir compte de VI Software"
 minecraftTabHeaderText = "Configuració del joc"
@@ -167,8 +164,6 @@ waiting = "Esperant al client.."
 state = "Servidor: {shortId}"
 
 [js.index]
-microsoftLoginTitle = "Inici de sessió de Microsoft"
-microsoftLogoutTitle = "Tancament de sessió de Microsoft"
 
 [js.login]
 login = "INICIAR SESSIÓ"
@@ -283,16 +278,6 @@ visnosupport = "<br><br><small>Aquest és un error amb el modpack de l'experièn
 [js.settings.fileSelectors]
 executables = "Executables"
 allFiles = "Tots els fitxers"
-
-[js.settings.mstfLogin]
-errorTitle = "Alguna cosa ha anat malament"
-errorMessage = "L'autenticació de Microsoft ha fallat. Si us plau, torna-ho a provar."
-okButton = "D'acord"
-
-[js.settings.mstfLogout]
-errorTitle = "Alguna cosa ha anat malament"
-errorMessage = "El tancament de sessió de Microsoft ha fallat. Si us plau, torna-ho a provar."
-okButton = "D'acord"
 
 [js.settings.authAccountSelect]
 selectButton = "Seleccionar compte"

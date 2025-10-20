@@ -19,7 +19,6 @@
 const fs        = require('fs-extra')
 const path      = require('path')
 const { ipcRenderer, shell } = require('electron')
-const { SHELL_OPCODE } = require('./ipcconstants')
 
 // Group #1: File Name (without .disabled, if any)
 // Group #2: File Extension (jar, zip, or litemod)

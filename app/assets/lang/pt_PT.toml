@@ -52,7 +52,6 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software e colaboradores. Todos os dir
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opções de início de sessão"
-loginWithMicrosoft = "Iniciar sessão com Microsoft"
 loginWithVISWeb = "Iniciar sessão com VI Software Web oAuth 2.0"
 loginWithVIS = "Iniciar sessão com VI Software Legacy"
 cancelButton = "Cancelar"
@@ -77,8 +76,6 @@ navUpdates = "Atualizações"
 navDone = "Concluído"
 tabAccountHeaderText = "Definições da Conta"
 tabAccountHeaderDesc = "Adicionar novas contas ou gerir as existentes."
-microsoftAccount = "Microsoft"
-addMicrosoftAccount = "+ Adicionar Conta Microsoft"
 VISAccount = "VI Software"
 addVISAccount = "+ Adicionar Conta VI Software"
 minecraftTabHeaderText = "Definições do Jogo"
@@ -167,8 +164,6 @@ waiting = "A aguardar cliente.."
 state = "Servidor: {shortId}"
 
 [js.index]
-microsoftLoginTitle = "Início de Sessão Microsoft"
-microsoftLogoutTitle = "Terminar Sessão Microsoft"
 
 [js.login]
 login = "INICIAR SESSÃO"
@@ -283,16 +278,6 @@ visnosupport = '<br><br><small>Este é um erro com o modpack da experiência, n�
 [js.settings.fileSelectors]
 executables = "Executáveis"
 allFiles = "Todos os ficheiros"
-
-[js.settings.mstfLogin]
-errorTitle = "Algo correu mal"
-errorMessage = "A autenticação Microsoft falhou. Por favor, tente novamente."
-okButton = "OK"
-
-[js.settings.mstfLogout]
-errorTitle = "Algo correu mal"
-errorMessage = "O logout da Microsoft falhou. Por favor, tente novamente."
-okButton = "OK"
 
 [js.settings.authAccountSelect]
 selectButton = "Selecionar Conta"

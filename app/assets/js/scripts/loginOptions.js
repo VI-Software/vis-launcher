@@ -70,8 +70,7 @@ loginOptionVISWeb.onclick = (e) => {
 
 loginOptionsCancelButton.onclick = (e) => {
     switchView(getCurrentView(), loginOptionsViewOnCancel, 500, 500, () => {
-        // Clear login values (Mojang login)
-        // No cleanup needed for Microsoft.
+        // Clear login values
         loginUsername.value = ''
         loginPassword.value = ''
         if(loginOptionsViewCancelHandler != null){

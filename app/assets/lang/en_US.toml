@@ -52,7 +52,6 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software and contributors. All rights 
 
 [ejs.loginOptions]
 loginOptionsTitle = "Login options"
-loginWithMicrosoft = "Log in with Microsoft"
 loginWithVISWeb = "Log in with VI Software Web oAuth 2.0"
 loginWithVIS = "Log in with VI Software Legacy"
 cancelButton = "Cancel"
@@ -77,8 +76,6 @@ navUpdates = "Updates"
 navDone = "Done"
 tabAccountHeaderText = "Account Settings"
 tabAccountHeaderDesc = "Add new accounts or manage existing ones."
-microsoftAccount = "Microsoft"
-addMicrosoftAccount = "+ Add Microsoft Account"
 VISAccount = "VI Software"
 addVISAccount = "+ Add VI Software Account"
 minecraftTabHeaderText = "Game Settings"
@@ -168,8 +165,6 @@ waiting = "Waiting for client.."
 state = "Server: {shortId}"
 
 [js.index]
-microsoftLoginTitle = "Microsoft Login"
-microsoftLogoutTitle = "Microsoft Logout"
 
 [js.login]
 login = "LOG IN"
@@ -283,16 +278,6 @@ visnosupport = '<br><br><small>This is an error with the experience modpack, not
 [js.settings.fileSelectors]
 executables = "Executables"
 allFiles = "All files"
-
-[js.settings.mstfLogin]
-errorTitle = "Something went wrong"
-errorMessage = "Microsoft authentication failed. Please try again."
-okButton = "OK"
-
-[js.settings.mstfLogout]
-errorTitle = "Something went wrong"
-errorMessage = "Microsoft logout failed. Please try again."
-okButton = "OK"
 
 [js.settings.authAccountSelect]
 selectButton = "Select Account"
