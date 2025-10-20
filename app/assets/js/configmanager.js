@@ -492,11 +492,27 @@ async function refreshDistroAndSettings(authAcc) {
         ensureJavaSettings(data)
 
         const currentSelectedServer = ConfigManager.getSelectedServer()
-        
+
+        try {
+            for (const srv of data.servers) {
+                if (srv && srv.rawServer) {
+                    srv.rawServer.promoted = !!srv.rawServer.mainServer
+                }
+            }
+        } catch (e) {
+            logger.warn('Unable to set promoted flags on servers', e)
+        }
+
         // Only update selected server if it's invalid or doesn't exist in the distribution
         if (!currentSelectedServer || !data.getServerById(currentSelectedServer)) {
-            const mainServer = data.getMainServer()
-            const newSelectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
+            const mains = data.servers.filter(s => s && s.rawServer && s.rawServer.mainServer)
+            let newSelectedServer
+            if (mains.length > 0) {
+                const idx = Math.floor(Math.random() * mains.length)
+                newSelectedServer = mains[idx].rawServer.id
+            } else {
+                newSelectedServer = data.servers[0].rawServer.id
+            }
             ConfigManager.setSelectedServer(newSelectedServer)
             logger.info('Selected server was invalid or missing, updated to:', newSelectedServer)
         } else {
@@ -505,11 +521,12 @@ async function refreshDistroAndSettings(authAcc) {
         }
 
         // Process server updates and mod configurations
-        data.servers.forEach(server => {
-            // updateSelectedServer(server)
+        try {
             syncModConfigurations(data)
-        })
-        // ConfigManager.setSelectedServer(currentSelectedServer)
+        } catch (e) {
+            logger.warn('Error while syncing mod configurations', e)
+        }
+
         logger.info('Distribution refresh completed successfully')
     } catch (err) {
         logger.error('Failed to refresh distribution:', err)
