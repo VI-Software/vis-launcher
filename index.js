@@ -59,8 +59,7 @@ function initAutoUpdater(event, data) {
     // Set installer options to skip user/system level prompt on Windows
     if (process.platform === 'win32') {
         autoUpdater.installerOptions = {
-            perMachine: false,  // Force per-user installation, no prompt
-            args: ['/S']  // Silent install - no UI shown during update
+            perMachine: false,  // Force per-user installation, to skip that prompt
         }
     }
 
