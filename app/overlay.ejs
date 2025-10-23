@@ -18,7 +18,7 @@
 <div id="overlayContainer" style="display: none;">
     <div id="serverSelectContent" style="display: none;">
         <span id="serverSelectHeader"><%- lang('overlay.serverSelectHeader') %></span>
-        <input type="text" id="serverSearchInput" placeholder="Search servers..." class="serverSearchBox">
+        <input type="text" id="serverSearchInput" placeholder="<%- lang('overlay.serverSearchPlaceholder') %>" class="serverSearchBox">
         <div id="serverSelectList">
             <div id="serverSelectListScrollable">
                 <!-- Server listings populated here. -->
@@ -27,8 +27,8 @@
                 <svg viewBox="0 0 24 24" width="64" height="64" style="opacity: 0.3; margin-bottom: 16px;">
                     <path fill="currentColor" d="M12,2A10,10 0 0,1 22,12A10,10 0 0,1 12,22A10,10 0 0,1 2,12A10,10 0 0,1 12,2M12,4A8,8 0 0,0 4,12A8,8 0 0,0 12,20A8,8 0 0,0 20,12A8,8 0 0,0 12,4M11,7H13V13H11V7M11,15H13V17H11V15Z"/>
                 </svg>
-                <span id="noServersMessageText">No servers found</span>
-                <span id="noServersMessageHint">Try adjusting your search</span>
+                <span id="noServersMessageText"><%- lang('overlay.noServersFound') %></span>
+                <span id="noServersMessageHint"><%- lang('overlay.noServersHint') %></span>
             </div>
         </div>
         <div id="serverDetailsDialog" style="display: none;">
@@ -43,26 +43,26 @@
                 <div class="serverDetailsBody">
                     <div class="serverDetailsMeta">
                         <div class="serverDetailsItem">
-                            <span class="label">Modpack Version</span>
+                            <span class="label"><%- lang('overlay.modpackVersionLabel') %></span>
                             <span id="serverDetailsVersion"></span>
                         </div>
                         <div class="serverDetailsItem">
-                            <span class="label">Minecraft Engine Version</span>
+                            <span class="label"><%- lang('overlay.minecraftVersionLabel') %></span>
                             <span id="serverDetailsMinecraft"></span>
                         </div>
                         <div class="serverDetailsItem">
-                            <span class="label">Server IP</span>
+                            <span class="label"><%- lang('overlay.serverIpLabel') %></span>
                             <span id="serverDetailsAddress"></span>
                         </div>
                     </div>
                     <div class="serverDetailsActions">
-                        <button id="serverDetailsConfirm" class="button-primary">Select Server</button>
-                        <button id="serverDetailsCancel" class="button-secondary">Cancel</button>
+                        <button id="serverDetailsConfirm" class="button-primary"><%- lang('overlay.selectServerButton') %></button>
+                        <button id="serverDetailsCancel" class="button-secondary"><%- lang('overlay.cancelButton') %></button>
                     </div>
                     <div class="button-group-utilities">
-                        <button id="serverDetailsWebsite" class="button-utility">View on serverlist</button>
-                        <button id="serverDetailsReport" class="button-utility">Report Server</button>
-                        <button id="serverDetailsResources" class="button-utility">Resources</button>
+                        <button id="serverDetailsWebsite" class="button-utility"><%- lang('overlay.viewOnServerlistButton') %></button>
+                        <button id="serverDetailsReport" class="button-utility"><%- lang('overlay.reportServerButton') %></button>
+                        <button id="serverDetailsResources" class="button-utility"><%- lang('overlay.resourcesButton') %></button>
                     </div>
                 </div>
             </div>
@@ -71,15 +71,15 @@
             <div id="serverResourcesModal" style="display: none;">
                 <div class="modalContent">
                     <div class="modalHeader">
-                        <h3>Server Resources</h3>
+                        <h3><%- lang('overlay.serverResourcesTitle') %></h3>
                         <button class="modalClose">&times;</button>
                     </div>
                     <div class="modalBody">
-                        <input type="text" id="resourceSearch" placeholder="Search resources..." class="resourceSearchBox">
+                        <input type="text" id="resourceSearch" placeholder="<%- lang('overlay.resourceSearchPlaceholder') %>" class="resourceSearchBox">
                         <div class="resourceCategories">
-                            <button class="resourceTab active" data-tab="required">Required</button>
-                            <button class="resourceTab" data-tab="optional">Optional</button>
-                            <button class="resourceTab" data-tab="libraries">Libraries</button>
+                            <button class="resourceTab active" data-tab="required"><%- lang('overlay.requiredTab') %></button>
+                            <button class="resourceTab" data-tab="optional"><%- lang('overlay.optionalTab') %></button>
+                            <button class="resourceTab" data-tab="libraries"><%- lang('overlay.librariesTab') %></button>
                         </div>
                         <div class="resourceList">
                             <!-- Resources populated by JavaScript -->
