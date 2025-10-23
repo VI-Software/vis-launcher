@@ -286,6 +286,10 @@ function setServerListingHandlers(){
                 require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
             }
 
+            document.getElementById('serverDetailsReport').onclick = () => {
+                require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}?report=true`)
+            }
+
             // Show dialog
             document.getElementById('serverDetailsDialog').style.display = 'flex'
         }
