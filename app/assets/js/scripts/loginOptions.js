@@ -61,7 +61,7 @@ loginOptionVISoftware.onclick = (e) => {
 
 loginOptionVISWeb.onclick = (e) => {
     switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
-        AuthManager.addVISWebAccount()
+        AuthManager.addVISWebAccountV3()
             .then((account) => {
                 loginViewOnSuccess = loginOptionsViewOnLoginSuccess
                 loginViewOnCancel = loginOptionsViewOnLoginCancel

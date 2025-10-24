@@ -17,9 +17,7 @@
 
 ### 🔒 Complete Account Management
 - Add multiple accounts and switch between them easily
-- Compatible with VI Software Web oAuth 2.0
-- Compatible Legacy Login of VIS' Yggdrasil Auth
-- Full VIS' Yggdrasil Auth authentication support
+- Compatible with VI Software Dashboard Authentication [VIS Auth 3.0] and Yggdrasi
 - Credentials are never stored - transmitted directly to VI Software servers
 
 ### 📂 Efficient Asset Management  

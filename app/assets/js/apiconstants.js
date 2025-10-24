@@ -20,3 +20,10 @@ exports.WEBLOGIN_URL = 'https://visoftware.dev/launcher-login'
 exports.CDN_URL = 'https://cdn.visoftware.dev/distribution.json'
 exports.AUTH_BASE_URL = 'https://authserver.visoftware.dev'
 
+exports.OAUTH_AUTHORIZATION_ENDPOINT = 'http://localhost:3000/oauth2/authorize'
+exports.OAUTH_TOKEN_ENDPOINT = 'http://localhost:3000/oauth2/token'
+exports.OAUTH_USERINFO_ENDPOINT = 'http://localhost:3000/oauth2/userinfo'
+exports.OAUTH_CLIENT_ID = 'vis-launcher'
+exports.OAUTH_REDIRECT_URI = 'http://127.0.0.1:43124/callback'
+exports.OAUTH_SCOPE = 'identify minecraft.login'
+

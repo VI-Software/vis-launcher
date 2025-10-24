@@ -52,8 +52,8 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software i col·laboradors. Tots els d
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opcions d'inici de sessió"
-loginWithVISWeb = "Inicia sessió amb VI Software Web oAuth 2.0"
-loginWithVIS = "Inicia sessió amb VI Software Legacy"
+loginWithVISWeb = "Inicia sessió amb VI Software Dashboard"
+loginWithVIS = "Inicia sessió amb VI Software Yggdrasi (Legacy)"
 cancelButton = "Cancel·lar"
 
 [ejs.overlay]
