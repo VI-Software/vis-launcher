@@ -384,7 +384,7 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
  */
 function bindAuthAccountSelect(){
     Array.from(document.getElementsByClassName('settingsAuthAccountSelect')).map((val) => {
-        val.onclick = (e) => {
+        val.onclick = async (e) => {
             if(val.hasAttribute('selected')){
                 return
             }
@@ -397,7 +397,7 @@ function bindAuthAccountSelect(){
             }
             val.setAttribute('selected', '')
             val.innerHTML = Lang.queryJS('settings.authAccountSelect.selectedButton')
-            setSelectedAccount(val.closest('.settingsAuthAccount').getAttribute('uuid'))
+            await setSelectedAccount(val.closest('.settingsAuthAccount').getAttribute('uuid'))
         }
     })
 }

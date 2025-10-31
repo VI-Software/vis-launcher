@@ -411,18 +411,13 @@ exports.removeAuthAccount = function(uuid){
  * @returns {Object} The selected authenticated account.
  */
 exports.getSelectedAccount = function(){
-    const authAcc = config.authenticationDatabase[config.selectedAccount]
-    
-    if(authAcc != null) {
-        // Trigger async refresh in background.
-        refreshDistroAndSettings(authAcc)
-    }
     return config.authenticationDatabase[config.selectedAccount]
 }
 
 /**
  * Refresh distribution and settings with the given auth account.
  * This is used to update the distribution authentification and the UI with the new distribution.
+ * Should only be called when logging in or manually switching accounts.
  * @param {Object} authAcc The authenticated account to use
  */
 async function refreshDistroAndSettings(authAcc) {
@@ -432,7 +427,7 @@ async function refreshDistroAndSettings(authAcc) {
         'authorization': authAcc.accessToken
     }
     DistroAPI['authHeaders'] = authHeaders
-    localStorage.setItem('authHeaders', authHeaders)
+    localStorage.setItem('authHeaders', JSON.stringify(authHeaders))
 
     try {
         logger.info('Fetching distribution data...')
@@ -481,21 +476,23 @@ async function refreshDistroAndSettings(authAcc) {
     }
 }
 
+exports.refreshDistroAndSettings = refreshDistroAndSettings
+
 /**
  * Set the selected authenticated account.
+ * NOTE: This does NOT automatically refresh the distribution.
+ * Call refreshDistroAndSettings() separately when switching accounts manually.
  * 
  * @param {string} uuid The UUID of the account which is to be set
  * as the selected account.
  * 
  * @returns {Object} The selected authenticated account.
  */
-exports.setSelectedAccount = async function(uuid){
+exports.setSelectedAccount = function(uuid){
     console.log('Setting selected account to: ' + uuid)
     const authAcc = config.authenticationDatabase[uuid]
     if(authAcc != null) {
         config.selectedAccount = uuid
-        // Call the shared refresh function instead of duplicating code
-        await refreshDistroAndSettings(authAcc)
     }
     return authAcc
 }

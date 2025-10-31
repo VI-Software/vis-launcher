@@ -25,13 +25,21 @@ const defaultAuthHeaders = {
     'authorization': 'public-servers',
 }
 
+let storedAuthHeaders
+try {
+    const stored = localStorage.getItem('authHeaders')
+    storedAuthHeaders = stored ? JSON.parse(stored) : null
+} catch {
+    storedAuthHeaders = null
+}
+
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
     null, // Injected forcefully by the preloader.
     null, // Injected forcefully by the preloader.
     CDN_URL,
     false,
-    localStorage.getItem('authHeaders') || defaultAuthHeaders,
+    storedAuthHeaders || defaultAuthHeaders,
     false
 )
 

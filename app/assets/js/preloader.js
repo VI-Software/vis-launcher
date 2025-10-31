@@ -54,6 +54,19 @@ try{
 DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
 DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
 
+// Set auth headers based on selected account if logged in
+const selectedAccount = ConfigManager.getSelectedAccount()
+if (selectedAccount != null) {
+    const authHeaders = {
+        'authorization': selectedAccount.accessToken
+    }
+    DistroAPI['authHeaders'] = authHeaders
+    localStorage.setItem('authHeaders', JSON.stringify(authHeaders))
+    logger.info('Using authenticated user for distribution fetch')
+} else {
+    logger.info('No account selected, using public token for distribution fetch')
+}
+
 // Load language packs
 sendSplashProgress(18, 'Loading language packs...')
 try{

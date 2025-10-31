@@ -250,7 +250,8 @@ exports.addVISWebAccount = async function() {
         updateSelectedAccount(ret)
         await prepareSettings(true)
         
-        await ConfigManager.getSelectedAccount() // It also refreshes CDN authentification to the new account
+        // Refresh distribution with the new account's authentication
+        await ConfigManager.refreshDistroAndSettings(ret)
 
         // Final cleanup of sensitive data
         cleanup()
@@ -453,7 +454,8 @@ exports.addVISWebAccountV3 = async function() {
         updateSelectedAccount(ret)
         await prepareSettings(true)
         
-        await ConfigManager.getSelectedAccount() // It also refreshes CDN authentification to the new account
+        // Refresh distribution with the new account's authentication
+        await ConfigManager.refreshDistroAndSettings(ret)
 
         // Final cleanup of sensitive data
         cleanup()

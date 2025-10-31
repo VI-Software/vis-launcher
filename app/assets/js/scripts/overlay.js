@@ -231,6 +231,8 @@ document.getElementById('accountSelectConfirm').addEventListener('click', async 
         if(listings[i].hasAttribute('selected')){
             const authAcc = ConfigManager.setSelectedAccount(listings[i].getAttribute('uuid'))
             ConfigManager.save()
+            // Manually refresh distribution when switching accounts
+            await ConfigManager.refreshDistroAndSettings(authAcc)
             updateSelectedAccount(authAcc)
             if(getCurrentView() === VIEWS.settings) {
                 await prepareSettings()
@@ -244,6 +246,8 @@ document.getElementById('accountSelectConfirm').addEventListener('click', async 
     if(listings.length > 0){
         const authAcc = ConfigManager.setSelectedAccount(listings[0].getAttribute('uuid'))
         ConfigManager.save()
+        // Manually refresh distribution when switching accounts
+        await ConfigManager.refreshDistroAndSettings(authAcc)
         updateSelectedAccount(authAcc)
         if(getCurrentView() === VIEWS.settings) {
             await prepareSettings()

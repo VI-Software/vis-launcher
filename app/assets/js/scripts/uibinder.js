@@ -656,7 +656,7 @@ async function validateSelectedAccount() {
                 toggleOverlay(false)
                 switchView(getCurrentView(), VIEWS.loginOptions)
             })
-            setDismissHandler(() => {
+            setDismissHandler(async () => {
                 if (accLen > 1) {
                     prepareAccountSelectionList()
                     $('#overlayContent').fadeOut(250, () => {
@@ -667,7 +667,7 @@ async function validateSelectedAccount() {
                     const accountsObj = ConfigManager.getAuthAccounts()
                     const accounts = Array.from(Object.keys(accountsObj), v => accountsObj[v])
                     // This function validates the account switch.
-                    setSelectedAccount(accounts[0].uuid)
+                    await setSelectedAccount(accounts[0].uuid)
                     toggleOverlay(false)
                 }
             })
@@ -686,9 +686,11 @@ async function validateSelectedAccount() {
  * 
  * @param {string} uuid The UUID of the account.
  */
-function setSelectedAccount(uuid) {
+async function setSelectedAccount(uuid) {
     const authAcc = ConfigManager.setSelectedAccount(uuid)
     ConfigManager.save()
+    // Manually refresh distribution when switching accounts
+    await ConfigManager.refreshDistroAndSettings(authAcc)
     updateSelectedAccount(authAcc)
     validateSelectedAccount()
 }

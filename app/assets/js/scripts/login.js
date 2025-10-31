@@ -205,8 +205,10 @@ loginButton.addEventListener('click', () => {
     // Show loading stuff.
     loginLoading(true)
 
-    AuthManager.addMojangAccount(loginUsername.value, loginPassword.value).then((value) => {
+    AuthManager.addMojangAccount(loginUsername.value, loginPassword.value).then(async (value) => {
         updateSelectedAccount(value)
+        // Refresh distribution with the new account's authentication
+        await ConfigManager.refreshDistroAndSettings(value)
         loginButton.innerHTML = loginButton.innerHTML.replace(Lang.queryJS('login.loggingIn'), Lang.queryJS('login.success'))
         $('.circle-loader').toggleClass('load-complete')
         $('.checkmark').toggle()
