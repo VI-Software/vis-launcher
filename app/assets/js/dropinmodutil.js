@@ -199,8 +199,6 @@ exports.scanForShaderpacks = function(instanceDir){
  * @returns {string} The file name of the enabled shaderpack.
  */
 exports.getEnabledShaderpack = function(instanceDir){
-    exports.validateDir(instanceDir)
-
     const optionsShaders = path.join(instanceDir, SHADER_CONFIG)
     if(fs.existsSync(optionsShaders)){
         const buf = fs.readFileSync(optionsShaders, {encoding: 'utf-8'})
