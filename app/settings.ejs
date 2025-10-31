@@ -386,6 +386,35 @@
                 </div>
                 <div class="settingsFileSelDesc"><%- lang('settings.dataDirectoryDesc') %></div>
             </div>
+            <div id="settingsStorageManagementContainer">
+                <div class="settingsFieldTitle"><%- lang('settings.storageManagementTitle') %></div>
+                <div class="settingsFieldDesc" style="margin-bottom: 15px;"><%- lang('settings.storageManagementDesc') %></div>
+                <div id="settingsStorageInfo">
+                    <div class="settingsStorageItem">
+                        <div class="settingsStorageItemLeft">
+                            <span class="settingsStorageLabel"><%- lang('settings.modstoreStorageLabel') %></span>
+                            <span id="settingsModstoreSize" class="settingsStorageValue"><%- lang('settings.calculatingSize') %></span>
+                        </div>
+                    </div>
+                    <div class="settingsStorageItem">
+                        <div class="settingsStorageItemLeft">
+                            <span class="settingsStorageLabel"><%- lang('settings.instancesStorageLabel') %></span>
+                            <span id="settingsInstancesSize" class="settingsStorageValue"><%- lang('settings.calculatingSize') %></span>
+                        </div>
+                    </div>
+                    <div class="settingsStorageDivider"></div>
+                    <div class="settingsStorageItem">
+                        <div class="settingsStorageItemLeft">
+                            <span class="settingsStorageLabel" style="font-weight: 600;"><%- lang('settings.totalStorageLabel') %></span>
+                            <span id="settingsTotalSize" class="settingsStorageValue" style="font-weight: 600;"><%- lang('settings.calculatingSize') %></span>
+                        </div>
+                        <div class="settingsStorageItemRight" style="display: flex; gap: 8px;">
+                            <button id="settingsClearModstoreButton" class="settingsActionButton"><%- lang('settings.clearModstoreButton') %></button>
+                            <button id="settingsClearInstancesButton" class="settingsActionButton danger"><%- lang('settings.clearInstancesButton') %></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <div id="settingsTabAbout" class="settingsTab" style="display: none;">
             <div class="settingsTabHeader">

@@ -141,6 +141,16 @@ dataDirectoryTitle = "Directorio de Datos"
 selectDataDirectory = "Seleccionar Directorio de Datos"
 chooseFolder = "Elegir Carpeta"
 dataDirectoryDesc = "Todos los archivos del juego y las instalaciones locales de Java se almacenarán en el directorio de datos.<br>Las capturas de pantalla y los guardados de mundos se almacenan en la carpeta de instancia para la configuración de servidor correspondiente."
+storageManagementTitle = "Gestión de Almacenamiento"
+storageManagementDesc = "Administra el uso de almacenamiento del launcher y limpia datos en caché."
+modstoreStorageLabel = "Caché de Modstore"
+instancesStorageLabel = "Instancias"
+totalStorageLabel = "Almacenamiento Total Usado"
+clearModstoreButton = "Limpiar Caché de Modstore"
+clearInstancesButton = "Limpiar Todas las Instancias"
+clearModstoreConfirmTitle = "Limpiar Caché de Modstore"
+clearModstoreConfirmMessage = "¿Estás seguro de que quieres limpiar la caché de modstore? Esto eliminará todos los mods descargados y tendrán que volver a descargarse cuando inicies un modpack."
+calculatingSize = "Calculando..."
 aboutTabHeaderText = "Acerca de"
 aboutTabHeaderDesc = "Ver información y notas de lanzamiento de la versión actual."
 aboutTitle = "{appName}"
@@ -284,6 +294,9 @@ joined = "En un servidor multijugador"
 
 [js.overlay]
 dismiss = "Descartar"
+clearModstoreErrorTitle = "Error al Limpiar Caché"
+clearModstoreErrorMessage = "No se pudo limpiar la caché de modstore: {error}"
+okay = "OK"
 
 [js.processbuilder.exit]
 exitErrorHeader = "El juego se cerró con un código de error"
@@ -391,6 +404,15 @@ restartRequiredTitle = "Reinicio Requerido"
 restartRequiredMessage = "Necesitas reiniciar el lanzador para que el cambio de idioma surta efecto."
 restartNowButton = "Reiniciar Ahora"
 restartLaterButton = "Más Tarde"
+
+[js.settings.storageManagement]
+clearModstoreConfirmTitle = "Limpiar Caché de Modstore"
+clearModstoreConfirmMessage = "¿Estás seguro de que quieres limpiar la caché del modstore? Esto eliminará todos los mods descargados y deberán descargarse nuevamente cuando inicies un modpack."
+clearModstoreButton = "Limpiar Caché"
+clearInstancesConfirmTitle = "Limpiar Todas las Instancias"
+clearInstancesConfirmMessage = "¿Estás seguro de que quieres limpiar TODAS las instancias? Esto eliminará permanentemente todas tus instancias de juego instaladas, mundos, partidas guardadas y configuraciones. ¡Esta acción no se puede deshacer!"
+clearInstancesButton = "Limpiar Todas las Instancias"
+cancelButton = "Cancelar"
 
 [settings]
 languageTitle = "Idioma"

@@ -141,6 +141,16 @@ dataDirectoryTitle = "Directori de dades"
 selectDataDirectory = "Seleccionar directori de dades"
 chooseFolder = "Triar carpeta"
 dataDirectoryDesc = "Tots els fitxers del joc i les instal·lacions locals de Java s'emmagatzemaran al directori de dades.<br>Les captures de pantalla i els guardats del món s'emmagatzemen a la carpeta d'instància per a la configuració del servidor corresponent."
+storageManagementTitle = "Gestió d'emmagatzematge"
+storageManagementDesc = "Administra l'ús d'emmagatzematge del llançador i neteja dades en memòria cau."
+modstoreStorageLabel = "Memòria cau de Modstore"
+instancesStorageLabel = "Instàncies"
+totalStorageLabel = "Emmagatzematge total utilitzat"
+clearModstoreButton = "Netejar memòria cau de Modstore"
+clearInstancesButton = "Netejar totes les instàncies"
+clearModstoreConfirmTitle = "Netejar memòria cau de Modstore"
+clearModstoreConfirmMessage = "Estàs segur que vols netejar la memòria cau de modstore? Això eliminarà tots els mods descarregats i s'hauran de tornar a descarregar quan iniciïs un modpack."
+calculatingSize = "Calculant..."
 aboutTabHeaderText = "Sobre"
 aboutTabHeaderDesc = "Veure informació i notes de la versió actual."
 aboutTitle = "{appName}"
@@ -283,6 +293,9 @@ joined = "En un servidor multijugador"
 
 [js.overlay]
 dismiss = "Descartar"
+clearModstoreErrorTitle = "Error al netejar la memòria cau"
+clearModstoreErrorMessage = "No s'ha pogut netejar la memòria cau de modstore: {error}"
+okay = "OK"
 
 [js.processbuilder.exit]
 exitErrorHeader = "El joc s'ha tancat amb un codi d'error"
@@ -390,6 +403,15 @@ restartRequiredTitle = "Cal reiniciar"
 restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi d'idioma tingui efecte."
 restartNowButton = "Reiniciar ara"
 restartLaterButton = "Més tard"
+
+[js.settings.storageManagement]
+clearModstoreConfirmTitle = "Netejar Caché de Modstore"
+clearModstoreConfirmMessage = "Estàs segur que vols netejar la caché del modstore? Això eliminarà tots els mods descarregats i caldrà tornar-los a descarregar quan iniciïs un modpack."
+clearModstoreButton = "Netejar Caché"
+clearInstancesConfirmTitle = "Netejar Totes les Instàncies"
+clearInstancesConfirmMessage = "Estàs segur que vols netejar TOTES les instàncies? Això eliminarà permanentment totes les teves instàncies de joc instal·lades, móns, partides desades i configuracions. Aquesta acció no es pot desfer!"
+clearInstancesButton = "Netejar Totes les Instàncies"
+cancelButton = "Cancel·lar"
 
 [settings]
 languageTitle = "Idioma"

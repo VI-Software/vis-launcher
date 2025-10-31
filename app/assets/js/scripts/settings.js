@@ -19,6 +19,7 @@
 // Requirements
 const os     = require('os')
 const semver = require('semver')
+const fs     = require('fs-extra')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
 const LangLoader = require('./assets/js/langloader')
@@ -312,6 +313,11 @@ function settingsNavItemListener(ele, fade = true){
     ele.setAttribute('selected', '')
     let prevTab = selectedSettingsTab
     selectedSettingsTab = ele.getAttribute('rSc')
+
+    // Update storage info when Launcher tab is selected
+    if(selectedSettingsTab === 'settingsTabLauncher') {
+        updateStorageInfo()
+    }
 
     document.getElementById(prevTab).onscroll = null
     document.getElementById(selectedSettingsTab).onscroll = settingsTabScrollListener
@@ -1341,6 +1347,199 @@ function populateReleaseNotes(){
 }
 
 /**
+ * Storage Management Functions
+ */
+
+/**
+ * Calculate the size of a directory recursively.
+ * 
+ * @param {string} dirPath The path to the directory.
+ * @returns {Promise<number>} The size in bytes.
+ */
+async function getDirectorySize(dirPath) {
+    let size = 0
+    
+    try {
+        if (!fs.existsSync(dirPath)) {
+            return 0
+        }
+        
+        const files = await fs.readdir(dirPath)
+        
+        for (const file of files) {
+            const filePath = path.join(dirPath, file)
+            const stats = await fs.stat(filePath)
+            
+            if (stats.isDirectory()) {
+                size += await getDirectorySize(filePath)
+            } else {
+                size += stats.size
+            }
+        }
+    } catch (error) {
+        console.error(`Error calculating size for ${dirPath}:`, error)
+    }
+    
+    return size
+}
+
+/**
+ * Format bytes to human-readable format.
+ * 
+ * @param {number} bytes The size in bytes.
+ * @returns {string} The formatted size string.
+ */
+function formatBytes(bytes) {
+    if (bytes === 0) return '0 B'
+    
+    const k = 1024
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
+}
+
+/**
+ * Update storage information display.
+ */
+async function updateStorageInfo() {
+    const modstoreSizeEl = document.getElementById('settingsModstoreSize')
+    const instancesSizeEl = document.getElementById('settingsInstancesSize')
+    const totalSizeEl = document.getElementById('settingsTotalSize')
+    
+    try {
+        const commonDir = ConfigManager.getCommonDirectory()
+        const modstorePath = path.join(commonDir, 'modstore')
+        const instancesPath = ConfigManager.getInstanceDirectory()
+        
+        // Calculate sizes
+        const modstoreSize = await getDirectorySize(modstorePath)
+        const instancesSize = await getDirectorySize(instancesPath)
+        const totalSize = modstoreSize + instancesSize
+        
+        // Update UI
+        modstoreSizeEl.textContent = formatBytes(modstoreSize)
+        instancesSizeEl.textContent = formatBytes(instancesSize)
+        totalSizeEl.textContent = formatBytes(totalSize)
+    } catch (error) {
+        console.error('Error updating storage info:', error)
+        modstoreSizeEl.textContent = 'Error'
+        instancesSizeEl.textContent = 'Error'
+        totalSizeEl.textContent = 'Error'
+    }
+}
+
+/**
+ * Clear the modstore cache.
+ */
+async function clearModstoreCache() {
+    setOverlayContent(
+        Lang.queryJS('settings.storageManagement.clearModstoreConfirmTitle'),
+        Lang.queryJS('settings.storageManagement.clearModstoreConfirmMessage'),
+        Lang.queryJS('settings.storageManagement.clearModstoreButton'),
+        Lang.queryJS('settings.storageManagement.cancelButton')
+    )
+    
+    setOverlayHandler(async () => {
+        toggleOverlay(false)
+        
+        try {
+            const commonDir = ConfigManager.getCommonDirectory()
+            const modstorePath = path.join(commonDir, 'modstore')
+            
+            if (fs.existsSync(modstorePath)) {
+                await fs.remove(modstorePath)
+                console.log('Modstore cache cleared successfully')
+            }
+            
+            // Update storage info after clearing
+            await updateStorageInfo()
+        } catch (error) {
+            console.error('Error clearing modstore cache:', error)
+            setOverlayContent(
+                Lang.queryJS('overlay.clearModstoreErrorTitle'),
+                Lang.queryJS('overlay.clearModstoreErrorMessage', { 'error': error.message }),
+                Lang.queryJS('overlay.okay')
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        }
+    })
+    
+    setDismissHandler(() => {
+        toggleOverlay(false)
+    })
+    
+    toggleOverlay(true, true)
+}
+
+/**
+ * Clear all instances.
+ */
+async function clearAllInstances() {
+    setOverlayContent(
+        Lang.queryJS('settings.storageManagement.clearInstancesConfirmTitle'),
+        Lang.queryJS('settings.storageManagement.clearInstancesConfirmMessage'),
+        Lang.queryJS('settings.storageManagement.clearInstancesButton'),
+        Lang.queryJS('settings.storageManagement.cancelButton')
+    )
+    
+    setOverlayHandler(async () => {
+        toggleOverlay(false)
+        
+        try {
+            const instanceDir = ConfigManager.getInstanceDirectory()
+            
+            if (fs.existsSync(instanceDir)) {
+                await fs.remove(instanceDir)
+                console.log('All instances cleared successfully')
+            }
+            
+            // Update storage info after clearing
+            await updateStorageInfo()
+        } catch (error) {
+            console.error('Error clearing instances:', error)
+            setOverlayContent(
+                'Error',
+                `Failed to clear instances: ${error.message}`,
+                Lang.queryJS('overlay.okay')
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        }
+    })
+    
+    setDismissHandler(() => {
+        toggleOverlay(false)
+    })
+    
+    toggleOverlay(true, true)
+}
+
+/**
+ * Initialize storage management UI.
+ */
+function initStorageManagement() {
+    const clearModstoreButton = document.getElementById('settingsClearModstoreButton')
+    const clearInstancesButton = document.getElementById('settingsClearInstancesButton')
+    
+    if (clearModstoreButton) {
+        clearModstoreButton.addEventListener('click', clearModstoreCache)
+    }
+    
+    if (clearInstancesButton) {
+        clearInstancesButton.addEventListener('click', clearAllInstances)
+    }
+    
+    // Update storage info when settings are opened
+    updateStorageInfo()
+}
+
+/**
  * Prepare account tab for display.
  */
 function prepareAboutTab(){
@@ -1434,6 +1633,7 @@ async function prepareSettings(first = false) {
         initSettingsValidators()
         prepareUpdateTab()
         setupLanguageSelector()
+        initStorageManagement()
     } else {
         await prepareModsTab()
     }
