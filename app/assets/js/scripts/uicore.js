@@ -29,6 +29,7 @@ const remote                         = require('@electron/remote')
 const isDev                          = require('./assets/js/isdev')
 const { LoggerUtil }                 = require('@visoftware/vis-launcher-core')
 const Lang                           = require('./assets/js/langloader')
+const ChristmasSnowflakes            = require('./assets/js/christmassnowflakes')
 
 const loggerUICore             = LoggerUtil.getLogger('UICore')
 const loggerAutoUpdater        = LoggerUtil.getLogger('AutoUpdater')
@@ -131,6 +132,11 @@ function changeAllowPrerelease(val){
     ipcRenderer.send('autoUpdateAction', 'allowPrereleaseChange', val)
 }
 
+function changeChristmasSnowflakes(val){
+    ChristmasSnowflakes.toggle(val)
+    ConfigManager.save()
+}
+
 function showUpdateUI(info){
     //TODO Make this message a bit more informative `${info.version}`
     document.getElementById('image_seal_container').setAttribute('update', true)
@@ -215,6 +221,9 @@ document.addEventListener('readystatechange', function () {
         document.getElementById('launch_details_right').style.maxWidth = 170.8
         document.getElementById('launch_progress_label').style.width = 53.21
         
+        // Initialize Christmas Snowflakes
+        ChristmasSnowflakes.init()
+        
     }
 
 }, false)
@@ -267,6 +276,7 @@ setTimeout(function() {
         loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoaidingTakingTooLong')}`
     }
 }, 10000)
+
 
 
 

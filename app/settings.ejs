@@ -362,6 +362,21 @@
                     </label>
                 </div>
             </div>
+            <% const now = new Date(); const isDecember = now.getMonth() === 11; %>
+            <% if (isDecember) { %>
+            <div class="settingsFieldContainer">
+                <div class="settingsFieldLeft">
+                    <span class="settingsFieldTitle"><%- lang('settings.christmasSnowflakesTitle') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.christmasSnowflakesDesc') %></span>
+                </div>
+                <div class="settingsFieldRight">
+                    <label class="toggleSwitch">
+                        <input type="checkbox" cValue="ChristmasSnowflakes" checked>
+                        <span class="toggleSwitchSlider"></span>
+                    </label>
+                </div>
+            </div>
+            <% } %>
             <div class="settingsFileSelContainer">
                 <div class="settingsFileSelContent">
                     <div class="settingsFieldTitle" id="settingsDataDirTitle"><%- lang('settings.dataDirectoryTitle') %>

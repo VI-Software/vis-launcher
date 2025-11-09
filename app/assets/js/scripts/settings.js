@@ -98,6 +98,7 @@ bindFileSelectors()
 
 launchDetachedCheckbox = document.querySelector('input[cValue="LaunchDetached"]')
 MinimizeOnLaunchCheckbox = document.querySelector('input[cValue="MinimizeOnLaunch"]')
+const christmasSnowflakesCheckbox = document.querySelector('input[cValue="ChristmasSnowflakes"]')
 
 
 MinimizeOnLaunchCheckbox.addEventListener('change', function() {
@@ -108,6 +109,15 @@ MinimizeOnLaunchCheckbox.addEventListener('change', function() {
         MinimizeOnLaunchCheckbox.disabled = false
     }
 })
+
+// Live update for Christmas Snowflakes toggle
+if (christmasSnowflakesCheckbox) {
+    christmasSnowflakesCheckbox.addEventListener('change', function() {
+        ConfigManager.setChristmasSnowflakesEnabled(this.checked)
+        ConfigManager.save()
+        changeChristmasSnowflakes(this.checked)
+    })
+}
 
 
 /**
@@ -239,6 +249,8 @@ function saveSettingsValues(){
                     // Special Conditions
                     if(cVal === 'AllowPrerelease'){
                         changeAllowPrerelease(v.checked)
+                    } else if(cVal === 'ChristmasSnowflakes'){
+                        changeChristmasSnowflakes(v.checked)
                     }
                 }
             } else if(v.tagName === 'DIV'){

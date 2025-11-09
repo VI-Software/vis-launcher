@@ -743,6 +743,7 @@ async function debug_getHelp() {
     console.log('function debug_devModeToggle() - toggles distro dev mode')
     console.log('function debug_toggledisableHttpd() - toggles the flag disableHttpd for the authlib injector')
     console.log('function debug_toggleAuthLibDebug(mode) - toggles debug mode for the authlib injector. Available options: verbose, authlib, dumpClass, printUntransformed')
+    console.log('function debug_toggleSnowflakes(force) - toggles Christmas snowflakes on/off regardless of season. Optional force parameter: true/false')
 }
 
 /* Toggle distro dev mode */
@@ -786,4 +787,25 @@ async function debug_toggleAuthLibDebug(mode){
         localStorage.removeItem('authlibDebug')
         console.log('Authlib debug mode disabled')
     }
+}
+
+
+/* Toggle Christmas snowflakes on/off regardless of season for debugging purposes */
+
+async function debug_toggleSnowflakes(force) {
+    const currentState = ChristmasSnowflakes.isActive
+    const newState = force !== undefined ? force : !currentState
+    
+    console.log(`[Debug] Toggling snowflakes: ${currentState} -> ${newState}`)
+    
+    const originalIsDecember = ChristmasSnowflakes.isDecember
+    ChristmasSnowflakes.isDecember = () => true
+    
+    ChristmasSnowflakes.toggle(newState)
+    
+    setTimeout(() => {
+        ChristmasSnowflakes.isDecember = originalIsDecember
+    }, 100)
+    
+    console.log(`[Debug] Snowflakes ${newState ? 'enabled' : 'disabled'} (debug mode)`)
 }

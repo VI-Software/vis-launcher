@@ -112,3 +112,45 @@ if (document.readyState === 'loading') {
 } else {
     createBgTiles()
 }
+
+// Christmas Snowflakes for Splash Screen (December only, not toggleable)
+function initChristmasSnowflakes() {
+    const now = new Date()
+    if (now.getMonth() !== 11) return 
+    
+    const container = document.createElement('div')
+    container.id = 'christmasSnowflakesContainer'
+    document.body.appendChild(container)
+    
+    function createSnowflake(randomY = false) {
+        const snowflake = document.createElement('div')
+        snowflake.classList.add('snowflake', 'small')
+        snowflake.innerHTML = '❄'
+        snowflake.style.left = Math.random() * window.innerWidth + 'px'
+        
+        if (randomY) {
+            snowflake.style.top = Math.random() * window.innerHeight + 'px'
+        }
+        
+        snowflake.style.animationDuration = (Math.random() * 5 + 8) + 's'
+        snowflake.style.animationDelay = '0s'
+        container.appendChild(snowflake)
+        setTimeout(() => snowflake.remove(), 15000)
+    }
+    
+    // Creates 25 snowflakes IMMEDIATELY at random positions across the screen
+    for (let i = 0; i < 25; i++) {
+        createSnowflake(true)
+    }
+    
+    // creates more (snowflakes) from the top
+    const interval = setInterval(() => createSnowflake(false), 600)
+    
+    window.addEventListener('beforeunload', () => clearInterval(interval))
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initChristmasSnowflakes)
+} else {
+    initChristmasSnowflakes()
+}

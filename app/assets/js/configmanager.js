@@ -117,6 +117,7 @@ const DEFAULT_CONFIG = {
             dataDirectory: dataPath,
             legalAcceptedVersion: null,
             canaryAcknowledgedVersion: null,
+            christmasSnowflakes: true
         }
     },
     newsCache: {
@@ -925,4 +926,23 @@ exports.getMinimizeOnLaunch = function(def = false){
  */
 exports.setMinimizeOnLaunch = function(MinimizeOnLaunch){
     config.settings.game.MinimizeOnLaunch = MinimizeOnLaunch
+}
+
+/**
+ * Check if Christmas snowflakes should be displayed during December.
+ * 
+ * @param {boolean} def Optional. If true, the default value will be returned.
+ * @returns {boolean} Whether or not Christmas snowflakes should be displayed.
+ */
+exports.getChristmasSnowflakesEnabled = function(def = false){
+    return !def ? config.settings.launcher.christmasSnowflakes : DEFAULT_CONFIG.settings.launcher.christmasSnowflakes
+}
+
+/**
+ * Change the status of Christmas snowflakes display.
+ * 
+ * @param {boolean} enabled Whether or not Christmas snowflakes should be displayed.
+ */
+exports.setChristmasSnowflakesEnabled = function(enabled){
+    config.settings.launcher.christmasSnowflakes = enabled
 }
