@@ -592,7 +592,8 @@ if (!gotTheLock) {
                 })
                 remoteMain.enable(canaryWinEarly.webContents)
                 ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
-                ejse.data('websiteURL', 'https://visoftware.dev/launcher')
+                const canaryWebsiteURL = LangLoader.queryEJS('landing.canaryWebsiteURL')
+                ejse.data('websiteURL', canaryWebsiteURL)
                 ejse.data('version', pjson.version)
                 canaryWinEarly.loadURL(pathToFileURL(path.join(__dirname, 'app', 'canary.ejs')).toString())
                 canaryWinEarly.removeMenu()
@@ -855,7 +856,7 @@ if (!gotTheLock) {
                 remoteMain.enable(canaryWin.webContents)
 
                 ejse.data('lang', (str, placeHolders) => LangLoader.queryEJS(str, placeHolders))
-                const canaryWebsiteURL = 'https://visoftware.dev/launcher'
+                const canaryWebsiteURL = LangLoader.queryEJS('landing.canaryWebsiteURL')
                 ejse.data('websiteURL', canaryWebsiteURL)
                 ejse.data('version', pjson.version)
 
@@ -871,7 +872,7 @@ if (!gotTheLock) {
                     if (dontAsk) {
                         try { ConfigManager.setCanaryAcknowledged(pjson.version) } catch (e) { console.error('Failed to persist canary acknowledgement', e) }
                     }
-                    ejse.data('websiteURL', 'https://visoftware.dev')
+                    ejse.data('websiteURL', LangLoader.queryEJS('landing.websiteURL'))
                     try { canaryWin.close() } catch (err) { console.error('Error closing canary window', err) }
                     // After canary dialog, we must re-check legal acceptance and
                     // only create the main window if legal was accepted for this

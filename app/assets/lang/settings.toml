@@ -21,6 +21,7 @@ title_canary = "VI Software Launcher Canary"
 websiteURL = "https://visoftware.dev"
 mediaGitHubURL = "https://github.com/VI-Software"
 mediaDiscordURL = "https://visoftware.dev/discord"
+canaryWebsiteURL = "https://visoftware.dev/launcher"
 
 [ejs.settings]
 sourceGithubLink = "https://github.com/VI-Software/vis-launcher"
