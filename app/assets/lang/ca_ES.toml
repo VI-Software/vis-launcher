@@ -337,8 +337,6 @@ okButton = "D'acord"
 
 [js.settings.serverListing]
 mainServer = "Servidor Destacat"
-info = 'Pots gestionar els teus servidors a <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
-noServers = "No tenim servidors per mostrar-te. <br>Pots gestionar els servidors que apareixen aquí al <a style=\"color: pink;\" href=\"https://puf.visoftware.dev/servers\">panell d'usuari final de VI Software</a>.</div>"
 noServersFound = "No s'han trobat servidors"
 noServersAvailable = "No hi ha servidors disponibles"
 adjustSearch = "Prova d'ajustar la teva cerca"

@@ -338,8 +338,6 @@ okButton = "Aceptar"
 
 [js.settings.serverListing]
 mainServer = "Servidor Destacado"
-info = 'Puedes gestionar tus servidores en <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
-noServers = 'No tenemos servidores para mostrarte. <br>Puedes gestionar los servidores que aparecen aquí en el <a style="color: pink;" href="https://puf.visoftware.dev/servers">panel de usuario final de VI Software</a>.</div>'
 noServersFound = "No se encontraron servidores"
 noServersAvailable = "No hay servidores disponibles"
 adjustSearch = "Intenta ajustar tu búsqueda"

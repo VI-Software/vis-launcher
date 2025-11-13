@@ -337,8 +337,6 @@ okButton = "OK"
 
 [js.settings.serverListing]
 mainServer = "Featured Server"
-info = 'You can manage your servers at <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
-noServers = 'We have no servers to show you. <br>You can manage the servers that appear here in the <a style="color: pink;" href="https://puf.visoftware.dev/servers">VI Software end-user panel</a>.</div>'
 noServersFound = "No servers found"
 noServersAvailable = "No servers available"
 adjustSearch = "Try adjusting your search"
