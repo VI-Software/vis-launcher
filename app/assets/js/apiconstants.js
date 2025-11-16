@@ -16,6 +16,7 @@
 */
 
 exports.API_BASE_URL = 'https://api.visoftware.dev'
+exports.MAINWEBSITE_URL = 'https://visoftware.dev'
 exports.WEBLOGIN_URL = 'https://visoftware.dev/launcher-login'
 exports.CDN_URL = 'https://cdn.visoftware.dev/distribution.json'
 exports.AUTH_BASE_URL = 'https://authserver.visoftware.dev'

@@ -4068,10 +4068,12 @@ input:checked + .toggleSwitchSlider:before {
 #serverSelectHeader,
 #accountSelectHeader {
     font-family: 'Sen Medium';
-    font-size: 20px;
+    font-size: 28px;
     font-weight: bold;
     color: #fff;
     margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
 
 /* Wrapper div for the list of available servers. */
@@ -4719,7 +4721,8 @@ progress::-webkit-progress-value {
 }
 
 .serverSearchBox {
-    width: 375px;
+    width: 100%;
+    max-width: 1000px;
     padding: 8px;
     margin-bottom: 15px;
     background: rgba(0, 0, 0, 0.2);
@@ -4731,6 +4734,33 @@ progress::-webkit-progress-value {
 .serverSearchBox:focus {
     outline: none;
     border-color: var(--color-primary);
+}
+
+/* Global serverlist button in the server list */
+.serverSearchGlobalButton {
+    width: 100%;
+    padding: 10px;
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 12px;
+    text-decoration: none;
+    color: rgba(138, 43, 226, 0.85);
+    transition: 0.25s ease;
+    background: rgba(138, 43, 226, 0.1);
+    border: 1px solid rgba(138, 43, 226, 0.3);
+    border-radius: 4px;
+    outline: none;
+    cursor: pointer;
+}
+.serverSearchGlobalButton:hover,
+.serverSearchGlobalButton:focus {
+    color: rgba(138, 43, 226, 1);
+    background: rgba(138, 43, 226, 0.2);
+    border-color: rgba(138, 43, 226, 0.5);
+}
+.serverSearchGlobalButton:active {
+    color: rgba(100, 30, 180, 0.85);
+    background: rgba(138, 43, 226, 0.15);
 }
 
 /* Server Details Dialog */

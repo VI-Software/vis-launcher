@@ -262,6 +262,13 @@ document.getElementById('serverSelectCancel').addEventListener('click', () => {
     toggleOverlay(false)
 })
 
+// Bind server select global list button.
+document.getElementById('serverSelectGlobalList').addEventListener('click', () => {
+    const { shell } = require('electron')
+    const { MAINWEBSITE_URL } = require('./assets/js/apiconstants')
+    shell.openExternal(`${MAINWEBSITE_URL}/servers`)
+})
+
 document.getElementById('accountSelectCancel').addEventListener('click', () => {
     $('#accountSelectContent').fadeOut(250, () => {
         $('#overlayContent').fadeIn(250)
@@ -272,6 +279,9 @@ let selectedServer = null
 
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
+    const { shell } = require('electron')
+    const { API_BASE_URL } = require('./assets/js/apiconstants')
+    
     listings.map((val) => {
         val.onclick = async (e) => {
             const serverId = val.getAttribute('servid')
@@ -287,11 +297,11 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
             document.getElementById('serverDetailsWebsite').onclick = () => {
-                require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
+                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}`)
             }
 
             document.getElementById('serverDetailsReport').onclick = () => {
-                require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}?report=true`)
+                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}?report=true`)
             }
 
             // Show dialog
