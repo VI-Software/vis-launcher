@@ -173,6 +173,10 @@ whatsNew = "O que há de novo?"
 updateReleaseNotes = "Notas de lançamento da atualização"
 languageTitle = "Idioma"
 languageDesc = "Selecione o idioma que deseja usar no launcher."
+exportSettingsTitle = "Exportar / Importar Definições"
+exportSettingsDesc = "Exporte a sua configuração do launcher para partilhar ou fazer backup, <br> ou importe configurações a partir de um ficheiro."
+exportSettingsButton = "Exportar Definições"
+importSettingsButton = "Importar Definições"
 
 [ejs.waiting]
 waitingText = "A aguardar VI Software..."
@@ -331,10 +335,21 @@ logout = "Terminar Sessão"
 
 [js.settings.dropinMods]
 removeButton = "Remover"
-deleteFailedTitle = "Falha ao eliminar<br>mod drop-in {fullName}"
+deleteFailedTitle = "Falha ao eliminar<br>o mod adicional {fullName}"
 deleteFailedMessage = "Certifique-se de que o ficheiro não está em uso e tente novamente."
-failedToggleTitle = "Falha ao alternar<br>Um ou mais mods drop-in"
+failedToggleTitle = "Falha ao alternar<br>Um ou mais mods adicionais"
 okButton = "OK"
+
+[js.settings.configManagement]
+exportSuccess = "Definições exportadas com sucesso!"
+exportSaved = "Definições guardadas em: {path}"
+importSuccess = "Definições importadas com sucesso!"
+importWarningTitle = "Aviso de Importação"
+importWarningMessage = "<strong>AVISO:</strong> Importar configurações de fontes desconhecidas pode ser arriscado!<br><br><ul style='text-align: left; margin: 10px 0;'><li>Apenas importe ficheiros de <strong>fontes confiáveis</strong></li><li>Configurações maliciosas podem afetar o comportamento do launcher</li><li>As suas definições atuais serão <strong>substituídas</strong></li><li>As credenciais de conta <strong>NÃO</strong> estão incluídas nas exportações</li></ul><br>Deseja continuar?"
+importContinue = "Importar Definições"
+importError = "Falha ao importar definições"
+importInvalidFile = "Ficheiro de configuração inválido. Por favor selecione um ficheiro válido."
+importSelectFile = "Selecionar Ficheiro de Definições"
 
 [js.settings.serverListing]
 mainServer = "Servidor em Destaque"

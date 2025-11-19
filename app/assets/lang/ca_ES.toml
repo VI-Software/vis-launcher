@@ -173,6 +173,10 @@ whatsNew = "Què hi ha de nou?"
 updateReleaseNotes = "Notes de la versió de l'actualització"
 languageTitle = "Idioma"
 languageDesc = "Selecciona l'idioma que vols utilitzar al launcher."
+exportSettingsTitle = "Exportar / Importar Configuració"
+exportSettingsDesc = "Exporta la teva configuració del launcher per compartir o fer còpia de seguretat, <br> o importa configuració des d'un arxiu."
+exportSettingsButton = "Exportar Configuració"
+importSettingsButton = "Importar Configuració"
 
 [ejs.waiting]
 waitingText = "Esperant a VI Software..."
@@ -335,6 +339,17 @@ deleteFailedTitle = "No s'ha pogut eliminar<br>el mod addicional {fullName}"
 deleteFailedMessage = "Assegura't que el fitxer no està en ús i torna-ho a provar."
 failedToggleTitle = "No s'ha pogut canviar<br>Un o més mods addicionals"
 okButton = "D'acord"
+
+[js.settings.configManagement]
+exportSuccess = "Configuració exportada amb èxit!"
+exportSaved = "Configuració desada a: {path}"
+importSuccess = "Configuració importada amb èxit!"
+importWarningTitle = "Advertència d'Importació"
+importWarningMessage = "<strong>ADVERTÈNCIA:</strong> Importar configuracions de fonts desconegudes pot ser perillós!<br><br><ul style='text-align: left; margin: 10px 0;'><li>Només importa arxius de <strong>fonts de confiança</strong></li><li>Configuracions malicioses podrien afectar el comportament del launcher</li><li>La teva configuració actual serà <strong>sobreescrita</strong></li><li>Les credencials de compte <strong>NO</strong> estan incloses a les exportacions</li></ul><br>Vols continuar?"
+importContinue = "Importar Configuració"
+importError = "Error en importar configuració"
+importInvalidFile = "Arxiu de configuració invàlid. Si us plau selecciona un arxiu vàlid."
+importSelectFile = "Seleccionar Arxiu de Configuració"
 
 [js.settings.serverListing]
 mainServer = "Servidor Destacat"

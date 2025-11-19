@@ -173,6 +173,10 @@ whatsNew = "¿Qué hay de nuevo?"
 updateReleaseNotes = "Notas de lanzamiento de la actualización"
 languageTitle = "Idioma"
 languageDesc = "Selecciona el idioma que quieres usar en el launcher."
+exportSettingsTitle = "Exportar / Importar Configuración"
+exportSettingsDesc = "Exporta tu configuración del launcher para compartir o hacer copia de seguridad, <br> o importa configuración desde un archivo."
+exportSettingsButton = "Exportar Configuración"
+importSettingsButton = "Importar Configuración"
 
 [ejs.waiting]
 waitingText = "Esperando a VI Software..."
@@ -336,6 +340,17 @@ deleteFailedTitle = "Error al eliminar<br>mod drop-in {fullName}"
 deleteFailedMessage = "Asegúrate de que el archivo no esté en uso y vuelve a intentarlo."
 failedToggleTitle = "Error al aaternar<br>Uno o más mods drop-in"
 okButton = "Aceptar"
+
+[js.settings.configManagement]
+exportSuccess = "¡Configuración exportada con éxito!"
+exportSaved = "Configuración guardada en: {path}"
+importSuccess = "¡Configuración importada con éxito!"
+importWarningTitle = "Advertencia de Importación"
+importWarningMessage = "<strong>ADVERTENCIA:</strong> ¡Importar configuraciones de fuentes desconocidas puede ser riesgoso!<br><br><ul style='text-align: left; margin: 10px 0;'><li>Solo importa archivos de <strong>fuentes confiables</strong></li><li>Configuraciones maliciosas podrían afectar el comportamiento del launcher</li><li>Tu configuración actual será <strong>sobrescrita</strong></li><li>Las credenciales de cuenta <strong>NO</strong> están incluidas en las exportaciones</li></ul><br>¿Deseas continuar?"
+importContinue = "Importar Configuración"
+importError = "Error al importar configuración"
+importInvalidFile = "Archivo de configuración inválido. Por favor selecciona un archivo válido."
+importSelectFile = "Seleccionar Archivo de Configuración"
 
 [js.settings.serverListing]
 mainServer = "Servidor Destacado"

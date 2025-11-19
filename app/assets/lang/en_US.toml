@@ -173,6 +173,10 @@ whatsNew = "What's new?"
 updateReleaseNotes = "Update release notes"
 languageTitle = "Language"
 languageDesc = "Select the language you want to use in the launcher."
+exportSettingsTitle = "Export / Import Settings"
+exportSettingsDesc = "Export your launcher configuration to share or backup your settings, <br> or import settings from a configuration file."
+exportSettingsButton = "Export Settings"
+importSettingsButton = "Import Settings"
 
 [ejs.waiting]
 waitingText = "Waiting for VI Software..."
@@ -335,6 +339,17 @@ deleteFailedTitle = "Failed to delete<br>drop-in mod {fullName}"
 deleteFailedMessage = "Make sure the file is not in use and try again."
 failedToggleTitle = "Failed to toggle<br>One or more drop-in mods"
 okButton = "OK"
+
+[js.settings.configManagement]
+exportSuccess = "Settings exported successfully!"
+exportSaved = "Settings saved to: {path}"
+importSuccess = "Settings imported successfully!"
+importWarningTitle = "Import Settings Warning"
+importWarningMessage = "<strong>WARNING:</strong> Importing settings from unknown sources can be risky!<br><br><ul style='text-align: left; margin: 10px 0;'><li>Only import configuration files from <strong>trusted sources</strong></li><li>Malicious settings could affect launcher behavior</li><li>Your current settings will be <strong>overwritten</strong></li><li>Account credentials are <strong>NOT</strong> included in exports</li></ul><br>Do you want to continue?"
+importContinue = "Import Settings"
+importError = "Failed to import settings"
+importInvalidFile = "Invalid configuration file. Please select a valid launcher settings file."
+importSelectFile = "Select Settings File"
 
 [js.settings.serverListing]
 mainServer = "Featured Server"
