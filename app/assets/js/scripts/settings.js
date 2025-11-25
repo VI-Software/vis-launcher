@@ -6,22 +6,23 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
-
-    License: AGPL-3.0
-    https://www.gnu.org/licenses/agpl-3.0.en.html
-
+                         
+    © 2025 VI Software. Todos los derechos reservados.
+    
     GitHub: https://github.com/VI-Software
-    Website: https://visoftware.dev
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+    Web: https://visoftware.dev
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
 */
 
 
 // Requirements
 const os     = require('os')
 const semver = require('semver')
-const fs     = require('fs-extra')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
+const { MSFT_OPCODE, MSFT_REPLY_TYPE, MSFT_ERROR } = require('./assets/js/ipcconstants')
 const LangLoader = require('./assets/js/langloader')
 
 const settingsState = {
@@ -98,7 +99,6 @@ bindFileSelectors()
 
 launchDetachedCheckbox = document.querySelector('input[cValue="LaunchDetached"]')
 MinimizeOnLaunchCheckbox = document.querySelector('input[cValue="MinimizeOnLaunch"]')
-const christmasSnowflakesCheckbox = document.querySelector('input[cValue="ChristmasSnowflakes"]')
 
 
 MinimizeOnLaunchCheckbox.addEventListener('change', function() {
@@ -109,15 +109,6 @@ MinimizeOnLaunchCheckbox.addEventListener('change', function() {
         MinimizeOnLaunchCheckbox.disabled = false
     }
 })
-
-// Live update for Christmas Snowflakes toggle
-if (christmasSnowflakesCheckbox) {
-    christmasSnowflakesCheckbox.addEventListener('change', function() {
-        ConfigManager.setChristmasSnowflakesEnabled(this.checked)
-        ConfigManager.save()
-        changeChristmasSnowflakes(this.checked)
-    })
-}
 
 
 /**
@@ -249,8 +240,6 @@ function saveSettingsValues(){
                     // Special Conditions
                     if(cVal === 'AllowPrerelease'){
                         changeAllowPrerelease(v.checked)
-                    } else if(cVal === 'ChristmasSnowflakes'){
-                        changeChristmasSnowflakes(v.checked)
                     }
                 }
             } else if(v.tagName === 'DIV'){
@@ -326,11 +315,6 @@ function settingsNavItemListener(ele, fade = true){
     let prevTab = selectedSettingsTab
     selectedSettingsTab = ele.getAttribute('rSc')
 
-    // Update storage info when Launcher tab is selected
-    if(selectedSettingsTab === 'settingsTabLauncher') {
-        updateStorageInfo()
-    }
-
     document.getElementById(prevTab).onscroll = null
     document.getElementById(selectedSettingsTab).onscroll = settingsTabScrollListener
 
@@ -388,13 +372,111 @@ settingsNavDone.onclick = () => {
  * Account Management Tab
  */
 
+const msftLoginLogger = LoggerUtil.getLogger('Microsoft Login')
+const msftLogoutLogger = LoggerUtil.getLogger('Microsoft Logout')
+
 // Bind the add mojang account button.
 document.getElementById('settingsAddMojangAccount').onclick = (e) => {
-    loginOptionsViewOnLoginSuccess = VIEWS.settings
-    loginOptionsViewOnLoginCancel = VIEWS.settings
-    loginOptionsViewOnCancel = VIEWS.settings
-    showLoginOptions(true)
+    switchView(getCurrentView(), VIEWS.login, 500, 500, () => {
+        loginViewOnCancel = VIEWS.settings
+        loginViewOnSuccess = VIEWS.settings
+        loginCancelEnabled(true)
+    })
 }
+
+// Bind the add microsoft account button.
+
+document.getElementById('settingsAddMicrosoftAccount').onclick = (e) => {
+    switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
+        ipcRenderer.send(MSFT_OPCODE.OPEN_LOGIN, VIEWS.settings, VIEWS.settings)
+    })
+}
+// Bind reply for Microsoft Login.
+
+ipcRenderer.on(MSFT_OPCODE.REPLY_LOGIN, (_, ...arguments_) => {
+    if (arguments_[0] === MSFT_REPLY_TYPE.ERROR) {
+
+        const viewOnClose = arguments_[2]
+        console.log(arguments_)
+        switchView(getCurrentView(), viewOnClose, 500, 500, () => {
+
+            if(arguments_[1] === MSFT_ERROR.NOT_FINISHED) {
+                // User cancelled.
+                msftLoginLogger.info('Login cancelled by user.')
+                return
+            }
+
+            // Unexpected error.
+            setOverlayContent(
+                Lang.queryJS('settings.msftLogin.errorTitle'),
+                Lang.queryJS('settings.msftLogin.errorMessage'),
+                Lang.queryJS('settings.msftLogin.okButton')
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        })
+    } else if(arguments_[0] === MSFT_REPLY_TYPE.SUCCESS) {
+        const queryMap = arguments_[1]
+        const viewOnClose = arguments_[2]
+
+        // Error from request to Microsoft.
+        if (Object.prototype.hasOwnProperty.call(queryMap, 'error')) {
+            switchView(getCurrentView(), viewOnClose, 500, 500, () => {
+                // TODO Dont know what these errors are. Just show them I guess.
+                // This is probably if you messed up the app registration with Azure.      
+                let error = queryMap.error // Error might be 'access_denied' ?
+                let errorDesc = queryMap.error_description
+                console.log('Error getting authCode, is Azure application registered correctly?')
+                console.log(error)
+                console.log(errorDesc)
+                console.log('Full query map: ', queryMap)
+                setOverlayContent(
+                    error,
+                    errorDesc,
+                    Lang.queryJS('settings.msftLogin.okButton')
+                )
+                setOverlayHandler(() => {
+                    toggleOverlay(false)
+                })
+                toggleOverlay(true)
+
+            })
+        } else {
+
+            msftLoginLogger.info('Acquired authCode, proceeding with authentication.')
+
+            const authCode = queryMap.code
+            AuthManager.addMicrosoftAccount(authCode).then(value => {
+                updateSelectedAccount(value)
+                switchView(getCurrentView(), viewOnClose, 500, 500, async () => {
+                    await prepareSettings()
+                })
+            })
+                .catch((displayableError) => {
+
+                    let actualDisplayableError
+                    if(isDisplayableError(displayableError)) {
+                        msftLoginLogger.error('Error while logging in.', displayableError)
+                        actualDisplayableError = displayableError
+                    } else {
+                        // Uh oh.
+                        msftLoginLogger.error('Unhandled error during login.', displayableError)
+                        actualDisplayableError = Lang.queryJS('login.error.unknown')
+                    }
+
+                    switchView(getCurrentView(), viewOnClose, 500, 500, () => {
+                        setOverlayContent(actualDisplayableError.title, actualDisplayableError.desc, Lang.queryJS('login.tryAgain'))
+                        setOverlayHandler(() => {
+                            toggleOverlay(false)
+                        })
+                        toggleOverlay(true)
+                    })
+                })
+        }
+    }
+})
 
 /**
  * Bind functionality for the account selection buttons. If another account
@@ -402,7 +484,7 @@ document.getElementById('settingsAddMojangAccount').onclick = (e) => {
  */
 function bindAuthAccountSelect(){
     Array.from(document.getElementsByClassName('settingsAuthAccountSelect')).map((val) => {
-        val.onclick = async (e) => {
+        val.onclick = (e) => {
             if(val.hasAttribute('selected')){
                 return
             }
@@ -415,7 +497,7 @@ function bindAuthAccountSelect(){
             }
             val.setAttribute('selected', '')
             val.innerHTML = Lang.queryJS('settings.authAccountSelect.selectedButton')
-            await setSelectedAccount(val.closest('.settingsAuthAccount').getAttribute('uuid'))
+            setSelectedAccount(val.closest('.settingsAuthAccount').getAttribute('uuid'))
         }
     })
 }
@@ -453,6 +535,7 @@ function bindAuthAccountLogOut(){
     })
 }
 
+let msAccDomElementCache
 /**
  * Process a log out.
  * 
@@ -464,24 +547,90 @@ function processLogOut(val, isLastAccount){
     const uuid = parent.getAttribute('uuid')
     const prevSelAcc = ConfigManager.getSelectedAccount()
     const targetAcc = ConfigManager.getAuthAccount(uuid)
-    AuthManager.removeMojangAccount(uuid).then(() => {
-        if(!isLastAccount && uuid === prevSelAcc.uuid){
-            const selAcc = ConfigManager.getSelectedAccount()
-            refreshAuthAccountSelected(selAcc.uuid)
-            updateSelectedAccount(selAcc)
-            validateSelectedAccount()
-        }
-        if(isLastAccount) {
-            loginOptionsCancelEnabled(false)
-            loginOptionsViewOnLoginSuccess = VIEWS.settings
-            loginOptionsViewOnLoginCancel = VIEWS.loginOptions
-            switchView(getCurrentView(), VIEWS.loginOptions)
-        }
-    })
-    $(parent).fadeOut(250, () => {
-        parent.remove()
-    })
+    if(targetAcc.type === 'microsoft') {
+        msAccDomElementCache = parent
+        switchView(getCurrentView(), VIEWS.waiting, 500, 500, () => {
+            ipcRenderer.send(MSFT_OPCODE.OPEN_LOGOUT, uuid, isLastAccount)
+        })
+    } else {
+        AuthManager.removeMojangAccount(uuid).then(() => {
+            if(!isLastAccount && uuid === prevSelAcc.uuid){
+                const selAcc = ConfigManager.getSelectedAccount()
+                refreshAuthAccountSelected(selAcc.uuid)
+                updateSelectedAccount(selAcc)
+                validateSelectedAccount()
+            }
+            if(isLastAccount) {
+                loginOptionsCancelEnabled(false)
+                loginOptionsViewOnLoginSuccess = VIEWS.settings
+                loginOptionsViewOnLoginCancel = VIEWS.loginOptions
+                switchView(getCurrentView(), VIEWS.loginOptions)
+            }
+        })
+        $(parent).fadeOut(250, () => {
+            parent.remove()
+        })
+    }
 }
+
+// Bind reply for Microsoft Logout.
+
+ipcRenderer.on(MSFT_OPCODE.REPLY_LOGOUT, (_, ...arguments_) => {
+    if (arguments_[0] === MSFT_REPLY_TYPE.ERROR) {
+        switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
+
+            if(arguments_.length > 1 && arguments_[1] === MSFT_ERROR.NOT_FINISHED) {
+                // User cancelled.
+                msftLogoutLogger.info('Logout cancelled by user.')
+                return
+            }
+
+            // Unexpected error.
+            setOverlayContent(
+                Lang.queryJS('settings.msftLogout.errorTitle'),
+                Lang.queryJS('settings.msftLogout.errorMessage'),
+                Lang.queryJS('settings.msftLogout.okButton')
+            )
+            setOverlayHandler(() => {
+                toggleOverlay(false)
+            })
+            toggleOverlay(true)
+        })
+    } else if(arguments_[0] === MSFT_REPLY_TYPE.SUCCESS) {
+        
+        const uuid = arguments_[1]
+        const isLastAccount = arguments_[2]
+        const prevSelAcc = ConfigManager.getSelectedAccount()
+
+        msftLogoutLogger.info('Logout Successful. uuid:', uuid)
+        
+        AuthManager.removeMicrosoftAccount(uuid)
+            .then(() => {
+                if(!isLastAccount && uuid === prevSelAcc.uuid){
+                    const selAcc = ConfigManager.getSelectedAccount()
+                    refreshAuthAccountSelected(selAcc.uuid)
+                    updateSelectedAccount(selAcc)
+                    validateSelectedAccount()
+                }
+                if(isLastAccount) {
+                    loginOptionsCancelEnabled(false)
+                    loginOptionsViewOnLoginSuccess = VIEWS.settings
+                    loginOptionsViewOnLoginCancel = VIEWS.loginOptions
+                    switchView(getCurrentView(), VIEWS.loginOptions)
+                }
+                if(msAccDomElementCache) {
+                    msAccDomElementCache.remove()
+                    msAccDomElementCache = null
+                }
+            })
+            .finally(() => {
+                if(!isLastAccount) {
+                    switchView(getCurrentView(), VIEWS.settings, 500, 500)
+                }
+            })
+
+    }
+})
 
 /**
  * Refreshes the status of the selected account on the auth account
@@ -505,6 +654,7 @@ function refreshAuthAccountSelected(uuid){
     })
 }
 
+const settingsCurrentMicrosoftAccounts = document.getElementById('settingsCurrentMicrosoftAccounts')
 const settingsCurrentMojangAccounts = document.getElementById('settingsCurrentMojangAccounts')
 
 /**
@@ -518,6 +668,7 @@ function populateAuthAccounts(){
     }
     const selectedUUID = ConfigManager.getSelectedAccount().uuid
 
+    let microsoftAuthAccountStr = ''
     let mojangAuthAccountStr = ''
 
     authKeys.forEach((val) => {
@@ -547,9 +698,15 @@ function populateAuthAccounts(){
             </div>
         </div>`
 
-        mojangAuthAccountStr += accHtml
+        if(acc.type === 'microsoft') {
+            microsoftAuthAccountStr += accHtml
+        } else {
+            mojangAuthAccountStr += accHtml
+        }
+
     })
 
+    settingsCurrentMicrosoftAccounts.innerHTML = microsoftAuthAccountStr
     settingsCurrentMojangAccounts.innerHTML = mojangAuthAccountStr
 }
 
@@ -954,25 +1111,23 @@ async function loadSelectedServerOnModsTab(){
 
     for(const el of document.getElementsByClassName('settingsSelServContent')) {
         el.innerHTML = `
-            <div class="settingsServerCard">
-                <img class="settingsServerIcon" src="${serv.rawServer.icon}"/>
-                <div class="settingsServerInfo">
-                    <div class="settingsServerName">${serv.rawServer.name}</div>
-                    <div class="settingsServerDesc">${serv.rawServer.description}</div>
-                    <div class="settingsServerVersions">
-                        <span class="settingsServerBadge settingsServerBadgeMC">${serv.rawServer.minecraftVersion}</span>
-                        <span class="settingsServerBadge settingsServerBadgeMP">v${serv.rawServer.version}</span>
-                        ${serv.rawServer.mainServer ? `<span class="settingsServerBadge settingsServerBadgeFeatured">
-                            <svg viewBox="0 0 107.45 104.74" width="12px" height="12px">
-                                <defs>
-                                    <style>.cls-1{fill:#ffd700;}.cls-2{fill:none;stroke:#ffd700;stroke-miterlimit:10;}</style>
-                                </defs>
-                                <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
-                                <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
-                            </svg>
-                            ${Lang.queryJS('settings.serverListing.mainServer')}
-                        </span>` : ''}
-                    </div>
+            <img class="serverListingImg" src="${serv.rawServer.icon}"/>
+            <div class="serverListingDetails">
+                <span class="serverListingName">${serv.rawServer.name}</span>
+                <span class="serverListingDescription">${serv.rawServer.description}</span>
+                <div class="serverListingInfo">
+                    <div class="serverListingVersion">${serv.rawServer.minecraftVersion}</div>
+                    <div class="serverListingRevision">${serv.rawServer.version}</div>
+                    ${serv.rawServer.mainServer ? `<div class="serverListingStarWrapper">
+                        <svg id="Layer_1" viewBox="0 0 107.45 104.74" width="20px" height="20px">
+                            <defs>
+                                <style>.cls-1{fill:#fff;}.cls-2{fill:none;stroke:#fff;stroke-miterlimit:10;}</style>
+                            </defs>
+                            <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
+                            <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
+                        </svg>
+                        <span class="serverListingStarTooltip">${Lang.queryJS('settings.serverListing.mainServer')}</span>
+                    </div>` : ''}
                 </div>
             </div>
         `
@@ -1359,329 +1514,6 @@ function populateReleaseNotes(){
 }
 
 /**
- * Storage Management Functions
- */
-
-/**
- * Calculate the size of a directory recursively.
- * 
- * @param {string} dirPath The path to the directory.
- * @returns {Promise<number>} The size in bytes.
- */
-async function getDirectorySize(dirPath) {
-    let size = 0
-    
-    try {
-        if (!fs.existsSync(dirPath)) {
-            return 0
-        }
-        
-        const files = await fs.readdir(dirPath)
-        
-        for (const file of files) {
-            const filePath = path.join(dirPath, file)
-            const stats = await fs.stat(filePath)
-            
-            if (stats.isDirectory()) {
-                size += await getDirectorySize(filePath)
-            } else {
-                size += stats.size
-            }
-        }
-    } catch (error) {
-        console.error(`Error calculating size for ${dirPath}:`, error)
-    }
-    
-    return size
-}
-
-/**
- * Format bytes to human-readable format.
- * 
- * @param {number} bytes The size in bytes.
- * @returns {string} The formatted size string.
- */
-function formatBytes(bytes) {
-    if (bytes === 0) return '0 B'
-    
-    const k = 1024
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-    const i = Math.floor(Math.log(bytes) / Math.log(k))
-    
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
-
-/**
- * Update storage information display.
- */
-async function updateStorageInfo() {
-    const modstoreSizeEl = document.getElementById('settingsModstoreSize')
-    const instancesSizeEl = document.getElementById('settingsInstancesSize')
-    const totalSizeEl = document.getElementById('settingsTotalSize')
-    
-    try {
-        const commonDir = ConfigManager.getCommonDirectory()
-        const modstorePath = path.join(commonDir, 'modstore')
-        const instancesPath = ConfigManager.getInstanceDirectory()
-        
-        // Calculate sizes
-        const modstoreSize = await getDirectorySize(modstorePath)
-        const instancesSize = await getDirectorySize(instancesPath)
-        const totalSize = modstoreSize + instancesSize
-        
-        // Update UI
-        modstoreSizeEl.textContent = formatBytes(modstoreSize)
-        instancesSizeEl.textContent = formatBytes(instancesSize)
-        totalSizeEl.textContent = formatBytes(totalSize)
-    } catch (error) {
-        console.error('Error updating storage info:', error)
-        modstoreSizeEl.textContent = 'Error'
-        instancesSizeEl.textContent = 'Error'
-        totalSizeEl.textContent = 'Error'
-    }
-}
-
-/**
- * Clear the modstore cache.
- */
-async function clearModstoreCache() {
-    setOverlayContent(
-        Lang.queryJS('settings.storageManagement.clearModstoreConfirmTitle'),
-        Lang.queryJS('settings.storageManagement.clearModstoreConfirmMessage'),
-        Lang.queryJS('settings.storageManagement.clearModstoreButton'),
-        Lang.queryJS('settings.storageManagement.cancelButton')
-    )
-    
-    setOverlayHandler(async () => {
-        toggleOverlay(false)
-        
-        try {
-            const commonDir = ConfigManager.getCommonDirectory()
-            const modstorePath = path.join(commonDir, 'modstore')
-            
-            if (fs.existsSync(modstorePath)) {
-                await fs.remove(modstorePath)
-                console.log('Modstore cache cleared successfully')
-            }
-            
-            // Update storage info after clearing
-            await updateStorageInfo()
-        } catch (error) {
-            console.error('Error clearing modstore cache:', error)
-            setOverlayContent(
-                Lang.queryJS('overlay.clearModstoreErrorTitle'),
-                Lang.queryJS('overlay.clearModstoreErrorMessage', { 'error': error.message }),
-                Lang.queryJS('overlay.okay')
-            )
-            setOverlayHandler(() => {
-                toggleOverlay(false)
-            })
-            toggleOverlay(true)
-        }
-    })
-    
-    setDismissHandler(() => {
-        toggleOverlay(false)
-    })
-    
-    toggleOverlay(true, true)
-}
-
-/**
- * Clear all instances.
- */
-async function clearAllInstances() {
-    setOverlayContent(
-        Lang.queryJS('settings.storageManagement.clearInstancesConfirmTitle'),
-        Lang.queryJS('settings.storageManagement.clearInstancesConfirmMessage'),
-        Lang.queryJS('settings.storageManagement.clearInstancesButton'),
-        Lang.queryJS('settings.storageManagement.cancelButton')
-    )
-    
-    setOverlayHandler(async () => {
-        toggleOverlay(false)
-        
-        try {
-            const instanceDir = ConfigManager.getInstanceDirectory()
-            
-            if (fs.existsSync(instanceDir)) {
-                await fs.remove(instanceDir)
-                console.log('All instances cleared successfully')
-            }
-            
-            // Update storage info after clearing
-            await updateStorageInfo()
-        } catch (error) {
-            console.error('Error clearing instances:', error)
-            setOverlayContent(
-                'Error',
-                `Failed to clear instances: ${error.message}`,
-                Lang.queryJS('overlay.okay')
-            )
-            setOverlayHandler(() => {
-                toggleOverlay(false)
-            })
-            toggleOverlay(true)
-        }
-    })
-    
-    setDismissHandler(() => {
-        toggleOverlay(false)
-    })
-    
-    toggleOverlay(true, true)
-}
-
-/**
- * Initialize storage management UI.
- */
-function initStorageManagement() {
-    const clearModstoreButton = document.getElementById('settingsClearModstoreButton')
-    const clearInstancesButton = document.getElementById('settingsClearInstancesButton')
-    
-    if (clearModstoreButton) {
-        clearModstoreButton.addEventListener('click', clearModstoreCache)
-    }
-    
-    if (clearInstancesButton) {
-        clearInstancesButton.addEventListener('click', clearAllInstances)
-    }
-    
-    // Update storage info when settings are opened
-    updateStorageInfo()
-}
-
-/**
- * Export launcher configuration to a json file.
- */
-async function exportLauncherSettings() {
-    try {
-        const { dialog } = remote
-        const result = await dialog.showSaveDialog(remote.getCurrentWindow(), {
-            title: Lang.queryJS('settings.exportSettingsButton'),
-            defaultPath: `vis-launcher-settings-${new Date().toISOString().split('T')[0]}.json`,
-            filters: [
-                { name: 'JSON Files', extensions: ['json'] },
-                { name: 'All Files', extensions: ['*'] }
-            ]
-        })
-        
-        if (!result.canceled && result.filePath) {
-            const configData = ConfigManager.exportConfiguration()
-            await fs.writeFile(result.filePath, configData, 'utf-8')
-            
-            setOverlayContent(
-                Lang.queryJS('settings.configManagement.exportSuccess'),
-                Lang.queryJS('settings.configManagement.exportSaved', { path: result.filePath }),
-                Lang.queryJS('settings.dropinMods.okButton')
-            )
-            
-            setOverlayHandler(() => {
-                toggleOverlay(false)
-            })
-            
-            toggleOverlay(true)
-        }
-    } catch (error) {
-        console.error('Error exporting settings:', error)
-        setOverlayContent(
-            Lang.queryJS('settings.configManagement.importError'),
-            error.message,
-            Lang.queryJS('settings.dropinMods.okButton')
-        )
-        setOverlayHandler(() => {
-            toggleOverlay(false)
-        })
-        toggleOverlay(true)
-    }
-}
-
-/**
- * Import launcher configuration from a file with warning dialog.
- */
-async function importLauncherSettings() {
-    // eslint-disable-next-line quotes
-    const warningIcon = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 640' width='20' height='20' style='vertical-align: middle; margin-right: 8px;'><path fill='currentColor' d='M320 64C334.7 64 348.2 72.1 355.2 85L571.2 485C577.9 497.4 577.6 512.4 570.4 524.5C563.2 536.6 550.1 544 536 544L104 544C89.9 544 76.8 536.6 69.6 524.5C62.4 512.4 62.1 497.4 68.8 485L284.8 85C291.8 72.1 305.3 64 320 64zM320 416C302.3 416 288 430.3 288 448C288 465.7 302.3 480 320 480C337.7 480 352 465.7 352 448C352 430.3 337.7 416 320 416zM320 224C301.8 224 287.3 239.5 288.6 257.7L296 361.7C296.9 374.2 307.4 384 319.9 384C332.5 384 342.9 374.3 343.8 361.7L351.2 257.7C352.5 239.5 338.1 224 319.8 224z'/></svg>`
-    
-    setOverlayContent(
-        warningIcon + Lang.queryJS('settings.configManagement.importWarningTitle'),
-        Lang.queryJS('settings.configManagement.importWarningMessage'),
-        Lang.queryJS('settings.configManagement.importContinue'),
-        Lang.queryEJS('overlay.cancelButton')
-    )
-    
-    setOverlayHandler(async () => {
-        toggleOverlay(false)
-        
-        try {
-            const { dialog } = remote
-            const result = await dialog.showOpenDialog(remote.getCurrentWindow(), {
-                title: Lang.queryJS('settings.configManagement.importSelectFile'),
-                filters: [
-                    { name: 'JSON Files', extensions: ['json'] },
-                    { name: 'All Files', extensions: ['*'] }
-                ],
-                properties: ['openFile']
-            })
-            
-            if (!result.canceled && result.filePaths.length > 0) {
-                const filePath = result.filePaths[0]
-                const fileData = await fs.readFile(filePath, 'utf-8')
-                
-                ConfigManager.importConfiguration(fileData)
-                
-                await initSettingsValues()
-                
-                setOverlayContent(
-                    Lang.queryJS('settings.configManagement.importSuccess'),
-                    Lang.queryJS('settings.configManagement.importSuccess'),
-                    Lang.queryJS('settings.dropinMods.okButton')
-                )
-                
-                setOverlayHandler(() => {
-                    toggleOverlay(false)
-                })
-                
-                toggleOverlay(true)
-            }
-        } catch (error) {
-            console.error('Error importing settings:', error)
-            setOverlayContent(
-                Lang.queryJS('settings.configManagement.importError'),
-                Lang.queryJS('settings.configManagement.importInvalidFile'),
-                Lang.queryJS('settings.dropinMods.okButton')
-            )
-            setOverlayHandler(() => {
-                toggleOverlay(false)
-            })
-            toggleOverlay(true)
-        }
-    })
-    
-    setDismissHandler(() => {
-        toggleOverlay(false)
-    })
-    
-    toggleOverlay(true, true)
-}
-
-/**
- * Initialize configuration management UI (export/import).
- */
-function initConfigurationManagement() {
-    const exportButton = document.getElementById('settingsExportConfigButton')
-    const importButton = document.getElementById('settingsImportConfigButton')
-    
-    if (exportButton) {
-        exportButton.addEventListener('click', exportLauncherSettings)
-    }
-    
-    if (importButton) {
-        importButton.addEventListener('click', importLauncherSettings)
-    }
-}
-
-/**
  * Prepare account tab for display.
  */
 function prepareAboutTab(){
@@ -1775,8 +1607,6 @@ async function prepareSettings(first = false) {
         initSettingsValidators()
         prepareUpdateTab()
         setupLanguageSelector()
-        initStorageManagement()
-        initConfigurationManagement()
     } else {
         await prepareModsTab()
     }
@@ -1784,57 +1614,6 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
-    
-    // Apply guest mode restrictions if active
-    applyGuestModeSettingsRestrictions()
-}
-
-/**
- * Apply restrictions to settings when in guest mode.
- * Settings are view-only in guest mode.
- */
-function applyGuestModeSettingsRestrictions() {
-    const settingsGuestBanner = document.getElementById('settingsGuestModeBanner')
-    
-    if (!ConfigManager.isGuestMode()) {
-        document.getElementById('settingsContainer').classList.remove('guest-mode-settings')
-        if (settingsGuestBanner) {
-            settingsGuestBanner.style.display = 'none'
-        }
-        return
-    }
-    
-    if (settingsGuestBanner) {
-        settingsGuestBanner.style.display = 'block'
-        
-        const loginBtn = document.getElementById('settingsGuestModeLoginButton')
-        const signUpBtn = document.getElementById('settingsGuestModeSignUpButton')
-        
-        if (loginBtn) {
-            loginBtn.onclick = () => {
-                ConfigManager.endGuestMode()
-                switchView(getCurrentView(), VIEWS.loginOptions)
-            }
-        }
-        
-        if (signUpBtn) {
-            signUpBtn.onclick = () => {
-                shell.openExternal('https://visoftware.dev/auth/')
-            }
-        }
-    }
-    
-    document.getElementById('settingsContainer').classList.add('guest-mode-settings')
-    
-    const settingsContainer = document.getElementById('settingsContainer')
-    const inputs = settingsContainer.querySelectorAll('input, button:not(#settingsNavDone):not(.guestModeLoginBtn):not(.guestModeSignUpBtn), select, .settingsFileSelButton, .rangeSlider')
-    
-    inputs.forEach(el => {
-        if (!el.classList.contains('settingsNavItem') && el.id !== 'settingsNavDone') {
-            el.disabled = true
-            el.classList.add('guest-mode-disabled')
-        }
-    })
 }
 
 /**
