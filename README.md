@@ -17,7 +17,7 @@
 
 ### 🔒 Complete Account Management
 - Add multiple accounts and switch between them easily
-- Compatible with VI Software Dashboard Authentication [VIS Auth 3.0] and Yggdrasi
+- Compatible with VI Software Dashboard Authentication [VIS Auth 3.0] and Yggdrasil
 - Credentials are never stored - transmitted directly to VI Software servers
 
 ### 📂 Efficient Asset Management  

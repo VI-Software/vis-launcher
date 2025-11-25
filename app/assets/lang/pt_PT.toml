@@ -56,7 +56,7 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software e colaboradores. Todos os dir
 [ejs.loginOptions]
 loginOptionsTitle = "Opções de início de sessão"
 loginWithVISWeb = "Iniciar sessão com VI Software Dashboard"
-loginWithVIS = "Iniciar sessão com VI Software Yggdrasi (Legacy)"
+loginWithVIS = "Iniciar sessão com VI Software Yggdrasil (Legacy)"
 cancelButton = "Cancelar"
 orContinueAs = "ou continuar como"
 continueAsGuest = "Continuar como Convidado"

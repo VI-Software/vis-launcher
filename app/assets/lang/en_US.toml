@@ -56,7 +56,7 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software and contributors. All rights 
 [ejs.loginOptions]
 loginOptionsTitle = "Login options"
 loginWithVISWeb = "Log in with VI Software Dashboard"
-loginWithVIS = "Log in with VI Software Yggdrasi (Legacy)"
+loginWithVIS = "Log in with VI Software Yggdrasil (Legacy)"
 cancelButton = "Cancel"
 orContinueAs = "or continue as"
 continueAsGuest = "Continue as Guest"
