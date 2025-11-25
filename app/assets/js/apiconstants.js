@@ -6,18 +6,25 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-                         
-    © 2025 VI Software. Todos los derechos reservados.
-    
-    GitHub: https://github.com/VI-Software
-    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
-    Web: https://visoftware.dev
-    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+    © 2025 VI Software. All rights reserved.
 
+    License: AGPL-3.0
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    GitHub: https://github.com/VI-Software
+    Website: https://visoftware.dev
 */
 
 exports.API_BASE_URL = 'https://api.visoftware.dev'
+exports.MAINWEBSITE_URL = 'https://visoftware.dev'
 exports.WEBLOGIN_URL = 'https://visoftware.dev/launcher-login'
 exports.CDN_URL = 'https://cdn.visoftware.dev/distribution.json'
 exports.AUTH_BASE_URL = 'https://authserver.visoftware.dev'
+
+exports.OAUTH_AUTHORIZATION_ENDPOINT = 'https://visoftware.dev/oauth2/authorize'
+exports.OAUTH_TOKEN_ENDPOINT = 'https://visoftware.dev/oauth2/token'
+exports.OAUTH_USERINFO_ENDPOINT = 'https://visoftware.dev/oauth2/userinfo'
+exports.OAUTH_CLIENT_ID = 'vis-launcher'
+exports.OAUTH_REDIRECT_URI = 'http://127.0.0.1:43124/callback'
+exports.OAUTH_SCOPE = 'identify minecraft.login'
 

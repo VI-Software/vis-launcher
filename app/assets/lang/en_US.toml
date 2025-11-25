@@ -1,20 +1,18 @@
-#
 #    ____   ____.___    _________       _____  __                                 
 # \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
 #  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
-#  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-#   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
-#                         \/                                 \/            \/ 
-#                         
-#                         
-#    © 2025 VI Software. All rights reserved.
-#    
-#    GitHub: https://github.com/VI-Software
-#    Documentation: https://docs.visoftware.dev/vi-software/vis-launcher
-#    Web: https://visoftware.dev
-#    Project License: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+#   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+#    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+#                          \/                                 \/            \/ 
+#                          
+#     © 2025 VI Software. All rights reserved.
 # 
-#    Translation by: VI Software
+#     License: AGPL-3.0
+#    https://www.gnu.org/licenses/agpl-3.0.en.html
+#
+#    GitHub: https://github.com/VI-Software
+#    Website: https://visoftware.dev
+#
 
 [ejs.landing]
 updateAvailableTooltip = "Update available"
@@ -35,6 +33,9 @@ newsErrorLoadSpan = "Checking news.."
 newsErrorFailedSpan = "Failed to load news"
 newsErrorRetryButton = "Try again"
 newsErrorNoneSpan = "No news"
+guestModeBannerText = "You're browsing as a Guest"
+guestModeLoginButton = "Log In"
+guestModeSignUpButton = "Sign Up"
 
 [ejs.login]
 loginCancelText = "Cancel"
@@ -54,15 +55,33 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software and contributors. All rights 
 
 [ejs.loginOptions]
 loginOptionsTitle = "Login options"
-loginWithMicrosoft = "Log in with Microsoft"
-loginWithVISWeb = "Log in with VI Software Web oAuth 2.0"
-loginWithVIS = "Log in with VI Software Legacy"
+loginWithVISWeb = "Log in with VI Software Dashboard"
+loginWithVIS = "Log in with VI Software Yggdrasi (Legacy)"
 cancelButton = "Cancel"
+orContinueAs = "or continue as"
+continueAsGuest = "Continue as Guest"
 
 [ejs.overlay]
 serverSelectHeader = "VI Software server list"
 serverSelectConfirm = "Select"
 serverSelectCancel = "Cancel"
+serverSearchPlaceholder = "Search servers..."
+noServersFound = "No servers found"
+noServersHint = "Try adjusting your search"
+modpackVersionLabel = "Modpack Version"
+minecraftVersionLabel = "Minecraft Engine Version"
+serverIpLabel = "Server IP"
+selectServerButton = "Select Server"
+cancelButton = "Cancel"
+viewOnServerlistButton = "View on serverlist"
+reportServerButton = "Report Server"
+resourcesButton = "Resources"
+serverResourcesTitle = "Server Resources"
+resourceSearchPlaceholder = "Search resources..."
+requiredTab = "Required"
+optionalTab = "Optional"
+librariesTab = "Libraries"
+viewGlobalServerlist = "View global serverlist"
 accountSelectHeader = "Select an account"
 accountSelectConfirm = "Select"
 accountSelectCancel = "Cancel"
@@ -79,8 +98,6 @@ navUpdates = "Updates"
 navDone = "Done"
 tabAccountHeaderText = "Account Settings"
 tabAccountHeaderDesc = "Add new accounts or manage existing ones."
-microsoftAccount = "Microsoft"
-addMicrosoftAccount = "+ Add Microsoft Account"
 VISAccount = "VI Software"
 addVISAccount = "+ Add VI Software Account"
 minecraftTabHeaderText = "Game Settings"
@@ -126,10 +143,22 @@ launcherTabHeaderText = "Launcher Settings"
 launcherTabHeaderDesc = "Options related to the launcher itself."
 allowPrereleaseTitle = "Nightly update channel."
 allowPrereleaseDesc = "Nightly versions include new features that may not have been fully tested or integrated.<br>This option will be considered active whenever you are on a nightly version."
+christmasSnowflakesTitle = "Christmas Snowflakes"
+christmasSnowflakesDesc = "Display festive snowflakes during December. Toggle to enable or disable this seasonal effect."
 dataDirectoryTitle = "Data Directory"
 selectDataDirectory = "Select Data Directory"
 chooseFolder = "Choose Folder"
 dataDirectoryDesc = "All game files and local Java installations will be stored in the data directory.<br>Screenshots and world saves are stored in the instance folder for the corresponding server configuration."
+storageManagementTitle = "Storage Management"
+storageManagementDesc = "Manage your launcher's storage usage and clear cached data."
+modstoreStorageLabel = "Modstore Cache"
+instancesStorageLabel = "Instances"
+totalStorageLabel = "Total Storage Used"
+clearModstoreButton = "Clear Modstore Cache"
+clearInstancesButton = "Clear All Instances"
+clearModstoreConfirmTitle = "Clear Modstore Cache"
+clearModstoreConfirmMessage = "Are you sure you want to clear the modstore cache? This will delete all downloaded mods and they will need to be re-downloaded when you launch a modpack."
+calculatingSize = "Calculating..."
 aboutTabHeaderText = "About"
 aboutTabHeaderDesc = "View information and release notes for the current version."
 aboutTitle = "{appName}"
@@ -149,6 +178,10 @@ whatsNew = "What's new?"
 updateReleaseNotes = "Update release notes"
 languageTitle = "Language"
 languageDesc = "Select the language you want to use in the launcher."
+exportSettingsTitle = "Export / Import Settings"
+exportSettingsDesc = "Export your launcher configuration to share or backup your settings, <br> or import settings from a configuration file."
+exportSettingsButton = "Export Settings"
+importSettingsButton = "Import Settings"
 
 [ejs.waiting]
 waitingText = "Waiting for VI Software..."
@@ -159,14 +192,17 @@ welcomeHeader = "Welcome to VI Software Launcher"
 welcomeDescription = 'This launcher was developed by the <a href="https://github.com/orgs/VI-Software/people" style="color: purple;">VI Software team</a> to facilitate modpack management in server experiences. By using this launcher, you accept the <a style="color: purple;" href="https://docs.visoftware.dev/vi-software/vis-launcher/privacy-policy">privacy policy</a> and <a href="https://docs.visoftware.dev/vi-software/vis-launcher/terms-of-service" style="color: purple;">terms of service</a> of <a href="https://visoftware.dev" style="color: purple;">VI Software</a>.'
 welcomeDescCTA = "Fun is just around the corner!"
 
+[ejs.app]
+canary_warning_title = "Canary Build Warning - v{version}"
+canary_warning_text = "You're running a canary (pre-release) version of the launcher <strong style='color:#b33838'>which may be unstable and may break or brick your VI Software Launcher installation.</strong> If you are not familiar with performing a clean reinstall, do not proceed: close the application and download a stable release from {websiteURL}."
+canary_warning_dontask = "Don't show this warning again"
+
 
 [js.discord]
 waiting = "Waiting for client.."
 state = "Server: {shortId}"
 
 [js.index]
-microsoftLoginTitle = "Microsoft Login"
-microsoftLogoutTitle = "Microsoft Logout"
 
 [js.login]
 login = "LOG IN"
@@ -181,6 +217,16 @@ requiredValue = "* Required"
 [js.login.error.unknown]
 title = "Unknown error during login"
 desc = "An unknown error occurred. Check the console for more details (CTRL + Shift + i)"
+
+[js.guestMode]
+guestUser = "Guest"
+signUpUrl = "https://visoftware.dev/auth/"
+loginRequiredTitle = "Login Required"
+loginRequiredMessage = "To launch games, you need to log in with a VI Software account. Guest mode allows you to explore the launcher, but game launches require authentication."
+loginButton = "Log In"
+cancelButton = "Cancel"
+disabledTitle = "Guest Mode Unavailable"
+disabledMessage = "Guest mode has been disabled by the launcher administrator."
 
 [js.landing.launch]
 pleaseWait = "Please wait..."
@@ -269,6 +315,9 @@ joined = "In a multiplayer server"
 
 [js.overlay]
 dismiss = "Dismiss"
+clearModstoreErrorTitle = "Error Clearing Cache"
+clearModstoreErrorMessage = "Failed to clear modstore cache: {error}"
+okay = "OK"
 
 [js.processbuilder.exit]
 exitErrorHeader = "The game closed with an error code"
@@ -280,16 +329,6 @@ visnosupport = '<br><br><small>This is an error with the experience modpack, not
 [js.settings.fileSelectors]
 executables = "Executables"
 allFiles = "All files"
-
-[js.settings.mstfLogin]
-errorTitle = "Something went wrong"
-errorMessage = "Microsoft authentication failed. Please try again."
-okButton = "OK"
-
-[js.settings.mstfLogout]
-errorTitle = "Something went wrong"
-errorMessage = "Microsoft logout failed. Please try again."
-okButton = "OK"
 
 [js.settings.authAccountSelect]
 selectButton = "Select Account"
@@ -316,10 +355,23 @@ deleteFailedMessage = "Make sure the file is not in use and try again."
 failedToggleTitle = "Failed to toggle<br>One or more drop-in mods"
 okButton = "OK"
 
+[js.settings.configManagement]
+exportSuccess = "Settings exported successfully!"
+exportSaved = "Settings saved to: {path}"
+importSuccess = "Settings imported successfully!"
+importWarningTitle = "Import Settings Warning"
+importWarningMessage = "<strong>WARNING:</strong> Importing settings from unknown sources can be risky!<br><br><ul style='text-align: left; margin: 10px 0;'><li>Only import configuration files from <strong>trusted sources</strong></li><li>Malicious settings could affect launcher behavior</li><li>Your current settings will be <strong>overwritten</strong></li><li>Account credentials are <strong>NOT</strong> included in exports</li></ul><br>Do you want to continue?"
+importContinue = "Import Settings"
+importError = "Failed to import settings"
+importInvalidFile = "Invalid configuration file. Please select a valid launcher settings file."
+importSelectFile = "Select Settings File"
+
 [js.settings.serverListing]
-mainServer = "Main Server"
-info = 'You can manage your servers at <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
-noServers = 'We have no servers to show you. <br>You can manage the servers that appear here in the <a style="color: pink;" href="https://puf.visoftware.dev/servers">VI Software end-user panel</a>.</div>'
+mainServer = "Featured Server"
+noServersFound = "No servers found"
+noServersAvailable = "No servers available"
+adjustSearch = "Try adjusting your search"
+checkBackLater = "Please check back later"
 
 [js.settings.java]
 selectedJava = "Selected: Java {version} ({vendor})"
@@ -374,9 +426,23 @@ checkForUpdatesButton = "Check for updates"
 LoadingText = "Loading"
 LoaidingTakingTooLong = "The loading process is taking longer than expected. Is your internet connectivity stable?"
 
+[js.auth.visweb]
+tooManyRequestsTitle = "Service busy"
+tooManyRequestsMessage = "The authentication service is receiving too many requests right now. Please wait a few minutes and try again. If the problem persists, check our status page or try again later."
+tooManyRequestsAction = "Try again"
+
 [js.settings.language]
 restartRequiredTitle = "Restart Required"
 restartRequiredMessage = "You need to restart the launcher for the language change to take effect."
 restartNowButton = "Restart Now"
 restartLaterButton = "Later"
+
+[js.settings.storageManagement]
+clearModstoreConfirmTitle = "Clear Modstore Cache"
+clearModstoreConfirmMessage = "Are you sure you want to clear the modstore cache? This will delete all downloaded mods and they will need to be re-downloaded when you launch a modpack."
+clearModstoreButton = "Clear Cache"
+clearInstancesConfirmTitle = "Clear All Instances"
+clearInstancesConfirmMessage = "Are you sure you want to clear ALL instances? This will permanently delete all your installed game instances, worlds, saves, and configurations. This action cannot be undone!"
+clearInstancesButton = "Clear All Instances"
+cancelButton = "Cancel"
 

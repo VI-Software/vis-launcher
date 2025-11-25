@@ -6,14 +6,13 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-                         
-    © 2025 VI Software. Todos los derechos reservados.
-    
-    GitHub: https://github.com/VI-Software
-    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
-    Web: https://visoftware.dev
-    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+    © 2025 VI Software. All rights reserved.
 
+    License: AGPL-3.0
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    GitHub: https://github.com/VI-Software
+    Website: https://visoftware.dev
 */
 
 
@@ -22,6 +21,7 @@ const path = require('path')
 const toml = require('toml')
 const merge = require('lodash.merge')
 const os = require('os')
+const { log } = require('console')
 
 let lang
 
@@ -47,13 +47,35 @@ exports.query = function(id, placeHolders){
     for(let q of query){
         res = res[q]
     }
-    let text = res === lang ? '' : res
+    // Ensure we always work with a string to avoid errors when a key is missing
+    let text = (typeof res === 'string') ? res : ''
     if (placeHolders) {
         Object.entries(placeHolders).forEach(([key, value]) => {
-            text = text.replace(`{${key}}`, value)
+            // replace all occurrences of the placeholder
+            text = text.split(`{${key}}`).join(String(value))
         })
     }
     return text
+}
+
+/**
+ * Query raw value from lang object without string conversion.
+ * Useful for boolean/number settings in settings.toml.
+ * 
+ * @param {string} id The path to the value (e.g., 'launcher.guestModeEnabled')
+ * @returns {*} The raw value (boolean, number, string, etc.) or undefined if not found
+ */
+exports.queryRaw = function(id) {
+    let query = id.split('.')
+    let res = lang
+    
+    for (let q of query) {
+        if (res === undefined || res === null) {
+            return undefined
+        }
+        res = res[q]
+    }
+    return res
 }
 
 exports.queryJS = function(id, placeHolders){
@@ -119,7 +141,8 @@ exports.getLauncherDirectory = function() {
             : require('@electron/remote') || require('electron').remote
             
         return app.getPath('userData')
-    } catch (err) {
+    } catch {
+        log.warn('Electron app path not accessible, using home directory for launcher data.')
         return path.join(os.homedir(), '.vis-launcher')
     }
 }
@@ -146,8 +169,18 @@ exports.setupLanguage = function(systemLocale){
         } else {
             // Try to match just the language part (e.g. "en-GB" -> "en")
             const baseLang = systemLocale.split(/[-_]/)[0]
+            
+            const baseLangFallbacks = {
+                'en': 'en_US',
+                'es': 'es_ES', 
+                'pt': 'pt_PT',
+                'ca': 'ca_ES'
+            }
+            
             if (SUPPORTED_LANGUAGES[baseLang]) {
                 langToUse = SUPPORTED_LANGUAGES[baseLang].id
+            } else if (baseLangFallbacks[baseLang]) {
+                langToUse = baseLangFallbacks[baseLang]
             }
         }
     }
@@ -155,12 +188,12 @@ exports.setupLanguage = function(systemLocale){
     try {
         const langPath = path.join(__dirname, '..', 'lang', `${langToUse}.toml`)
         if (!fs.existsSync(langPath)) {
-            console.warn(`Language file ${langToUse}.toml not found, falling back to es_ES`)
-            langToUse = 'es_ES'
+            console.warn(`Language file ${langToUse}.toml not found, falling back to en_US`)
+            langToUse = 'en_US'
         }
     } catch (error) {
         console.error('Error checking language file:', error)
-        langToUse = 'es_ES'
+        langToUse = 'en_US'
     }
     
     exports.loadLanguage(langToUse)

@@ -6,18 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-                         
-    © 2025 VI Software. Todos los derechos reservados.
-    
-    GitHub: https://github.com/VI-Software
-    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
-    Web: https://visoftware.dev
-    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+    © 2025 VI Software. All rights reserved.
 
+    License: AGPL-3.0
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    GitHub: https://github.com/VI-Software
+    Website: https://visoftware.dev
 */
 
 
-const { DistributionAPI } = require('vis-launcher-core/common')
+const { DistributionAPI } = require('@visoftware/vis-launcher-core/common')
 
 const ConfigManager = require('./configmanager')
 const { CDN_URL } = require('./apiconstants')
@@ -26,13 +25,21 @@ const defaultAuthHeaders = {
     'authorization': 'public-servers',
 }
 
+let storedAuthHeaders
+try {
+    const stored = localStorage.getItem('authHeaders')
+    storedAuthHeaders = stored ? JSON.parse(stored) : null
+} catch {
+    storedAuthHeaders = null
+}
+
 const api = new DistributionAPI(
     ConfigManager.getLauncherDirectory(),
     null, // Injected forcefully by the preloader.
     null, // Injected forcefully by the preloader.
     CDN_URL,
     false,
-    localStorage.getItem('authHeaders') || defaultAuthHeaders,
+    storedAuthHeaders || defaultAuthHeaders,
     false
 )
 

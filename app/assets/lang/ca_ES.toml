@@ -1,20 +1,18 @@
-#
 #    ____   ____.___    _________       _____  __                                 
 # \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
 #  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
-#  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-#   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
-#                         \/                                 \/            \/ 
-#                         
-#                         
-#    © 2025 VI Software. All rights reserved.
-#    
-#    GitHub: https://github.com/VI-Software
-#    Documentation: https://docs.visoftware.dev/vi-software/vis-launcher
-#    Web: https://visoftware.dev
-#    Project License: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+#   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+#    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+#                          \/                                 \/            \/ 
+#                          
+#     © 2025 VI Software. All rights reserved.
 # 
-#    Translation by: VI Software
+#     License: AGPL-3.0
+#    https://www.gnu.org/licenses/agpl-3.0.en.html
+#
+#    GitHub: https://github.com/VI-Software
+#    Website: https://visoftware.dev
+#
 
 [ejs.landing]
 updateAvailableTooltip = "Actualització disponible"
@@ -35,6 +33,9 @@ newsErrorLoadSpan = "Comprovant notícies.."
 newsErrorFailedSpan = "No s'han pogut carregar les notícies"
 newsErrorRetryButton = "Tornar a provar"
 newsErrorNoneSpan = "Sense notícies"
+guestModeBannerText = "Estàs navegant com a Convidat"
+guestModeLoginButton = "Iniciar Sessió"
+guestModeSignUpButton = "Registrar-se"
 
 [ejs.login]
 loginCancelText = "Cancel·lar"
@@ -54,15 +55,33 @@ loginPasswordDisclaimer2 = "&copy 2025 VI Software i col·laboradors. Tots els d
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opcions d'inici de sessió"
-loginWithMicrosoft = "Iniciar sessió amb Microsoft"
-loginWithVISWeb = "Iniciar sessió amb VI Software Web oAuth 2.0"
-loginWithVIS = "Iniciar sessió amb VI Software Legacy"
+loginWithVISWeb = "Inicia sessió amb VI Software Dashboard"
+loginWithVIS = "Inicia sessió amb VI Software Yggdrasi (Legacy)"
 cancelButton = "Cancel·lar"
+orContinueAs = "o continuar com"
+continueAsGuest = "Continuar com a Convidat"
 
 [ejs.overlay]
 serverSelectHeader = "Llista de servidors de VI Software"
 serverSelectConfirm = "Seleccionar"
 serverSelectCancel = "Cancel·lar"
+serverSearchPlaceholder = "Cercar servidors..."
+noServersFound = "No s'han trobat servidors"
+noServersHint = "Prova d'ajustar la cerca"
+modpackVersionLabel = "Versió del Modpack"
+minecraftVersionLabel = "Versió del Motor de Minecraft"
+serverIpLabel = "IP del Servidor"
+selectServerButton = "Seleccionar Servidor"
+cancelButton = "Cancel·lar"
+viewOnServerlistButton = "Veure a la llista de servidors"
+reportServerButton = "Reportar Servidor"
+resourcesButton = "Recursos"
+serverResourcesTitle = "Recursos del Servidor"
+resourceSearchPlaceholder = "Cercar recursos..."
+requiredTab = "Obligatoris"
+optionalTab = "Opcionals"
+librariesTab = "Biblioteques"
+viewGlobalServerlist = "Veure llista de servidors global"
 accountSelectHeader = "Selecciona un compte"
 accountSelectConfirm = "Seleccionar"
 accountSelectCancel = "Cancel·lar"
@@ -79,8 +98,6 @@ navUpdates = "Actualitzacions"
 navDone = "Fet"
 tabAccountHeaderText = "Configuració del compte"
 tabAccountHeaderDesc = "Afegir nous comptes o gestionar els existents."
-microsoftAccount = "Microsoft"
-addMicrosoftAccount = "+ Afegir compte de Microsoft"
 VISAccount = "VI Software"
 addVISAccount = "+ Afegir compte de VI Software"
 minecraftTabHeaderText = "Configuració del joc"
@@ -124,12 +141,24 @@ jvmOptsTitle = "Opcions addicionals de JVM"
 jvmOptsDesc = "Opcions que es proporcionaran a la JVM en temps d'execució. <em>-Xms</em> i <em>-Xmx</em> no s'han d'incloure."
 launcherTabHeaderText = "Configuració del llançador"
 launcherTabHeaderDesc = "Opcions relacionades amb el llançador."
-allowPrereleaseTitle = "Canal d'actualitzacions nocturnes."
+allowPrereleaseTitle = "Canal d'actualització nocturn."
 allowPrereleaseDesc = "Les versions nocturnes inclouen noves funcions que poden no haver estat completament provades o integrades.<br>Aquesta opció es considerarà activa sempre que estiguis en una versió nocturna."
-dataDirectoryTitle = "Directori de dades"
+christmasSnowflakesTitle = "Flocs de Neu Nadalencs"
+christmasSnowflakesDesc = "Mostra flocs de neu festius durant desembre. Activa o desactiva aquest efecte estacional."
+dataDirectoryTitle = "Directori de Dades"
 selectDataDirectory = "Seleccionar directori de dades"
 chooseFolder = "Triar carpeta"
 dataDirectoryDesc = "Tots els fitxers del joc i les instal·lacions locals de Java s'emmagatzemaran al directori de dades.<br>Les captures de pantalla i els guardats del món s'emmagatzemen a la carpeta d'instància per a la configuració del servidor corresponent."
+storageManagementTitle = "Gestió d'emmagatzematge"
+storageManagementDesc = "Administra l'ús d'emmagatzematge del llançador i neteja dades en memòria cau."
+modstoreStorageLabel = "Memòria cau de Modstore"
+instancesStorageLabel = "Instàncies"
+totalStorageLabel = "Emmagatzematge total utilitzat"
+clearModstoreButton = "Netejar memòria cau de Modstore"
+clearInstancesButton = "Netejar totes les instàncies"
+clearModstoreConfirmTitle = "Netejar memòria cau de Modstore"
+clearModstoreConfirmMessage = "Estàs segur que vols netejar la memòria cau de modstore? Això eliminarà tots els mods descarregats i s'hauran de tornar a descarregar quan iniciïs un modpack."
+calculatingSize = "Calculant..."
 aboutTabHeaderText = "Sobre"
 aboutTabHeaderDesc = "Veure informació i notes de la versió actual."
 aboutTitle = "{appName}"
@@ -149,6 +178,10 @@ whatsNew = "Què hi ha de nou?"
 updateReleaseNotes = "Notes de la versió de l'actualització"
 languageTitle = "Idioma"
 languageDesc = "Selecciona l'idioma que vols utilitzar al launcher."
+exportSettingsTitle = "Exportar / Importar Configuració"
+exportSettingsDesc = "Exporta la teva configuració del launcher per compartir o fer còpia de seguretat, <br> o importa configuració des d'un arxiu."
+exportSettingsButton = "Exportar Configuració"
+importSettingsButton = "Importar Configuració"
 
 [ejs.waiting]
 waitingText = "Esperant a VI Software..."
@@ -159,13 +192,16 @@ welcomeHeader = "Benvingut/da a VI Software Launcher"
 welcomeDescription = "Aquest launcher va ser desenvolupat per l'<a href=\"https://github.com/orgs/VI-Software/people\" style=\"color: purple;\">equip de VI Software</a> per facilitar la gestió de modpacks a les experiències del servidor. En utilitzar aquest launcher, acceptes la <a style=\"color: purple;\" href=\"https://docs.visoftware.dev/vi-software/vis-launcher/privacy-policy\">política de privacitat</a> i els <a href=\"https://docs.visoftware.dev/vi-software/vis-launcher/terms-of-service\" style=\"color: purple;\">termes de servei</a> de <a href=\"https://visoftware.dev\" style=\"color: purple;\">VI Software</a>."
 welcomeDescCTA = "La diversió és a la cantonada!"
 
+[ejs.app]
+canary_warning_title = "Advertència: versió Canary - v{version}"
+canary_warning_text = "Estàs executant una versió canary (pre-llançament) del launcher <strong style='color:#b33838'>que pot ser inestable i pot malmetre o inutilitzar la teva instal·lació de VI Software Launcher.</strong> Si no estàs familiaritzat amb fer una reinstal·lació neta, no continuïs: tanca l'aplicació i descarrega una versió estable des de {websiteURL}."
+canary_warning_dontask = "No mostris aquesta advertència de nou"
+
 [js.discord]
 waiting = "Esperant al client.."
 state = "Servidor: {shortId}"
 
 [js.index]
-microsoftLoginTitle = "Inici de sessió de Microsoft"
-microsoftLogoutTitle = "Tancament de sessió de Microsoft"
 
 [js.login]
 login = "INICIAR SESSIÓ"
@@ -180,6 +216,16 @@ requiredValue = "* Obligatori"
 [js.login.error.unknown]
 title = "Error desconegut durant l'inici de sessió"
 desc = "S'ha produït un error desconegut. Comprova la consola per a més detalls (CTRL + Shift + i)"
+
+[js.guestMode]
+guestUser = "Convidat"
+signUpUrl = "https://visoftware.dev/auth/"
+loginRequiredTitle = "Inici de Sessió Requerit"
+loginRequiredMessage = "Per iniciar jocs, necessites iniciar sessió amb un compte de VI Software. El mode convidat et permet explorar el launcher, però els llançaments de jocs requereixen autenticació."
+loginButton = "Iniciar Sessió"
+cancelButton = "Cancel·lar"
+disabledTitle = "Mode Convidat No Disponible"
+disabledMessage = "El mode convidat ha estat deshabilitat per l'administrador del launcher."
 
 [js.landing.launch]
 pleaseWait = "Si us plau, espereu..."
@@ -269,6 +315,9 @@ joined = "En un servidor multijugador"
 
 [js.overlay]
 dismiss = "Descartar"
+clearModstoreErrorTitle = "Error al netejar la memòria cau"
+clearModstoreErrorMessage = "No s'ha pogut netejar la memòria cau de modstore: {error}"
+okay = "OK"
 
 [js.processbuilder.exit]
 exitErrorHeader = "El joc s'ha tancat amb un codi d'error"
@@ -280,16 +329,6 @@ visnosupport = "<br><br><small>Aquest és un error amb el modpack de l'experièn
 [js.settings.fileSelectors]
 executables = "Executables"
 allFiles = "Tots els fitxers"
-
-[js.settings.mstfLogin]
-errorTitle = "Alguna cosa ha anat malament"
-errorMessage = "L'autenticació de Microsoft ha fallat. Si us plau, torna-ho a provar."
-okButton = "D'acord"
-
-[js.settings.mstfLogout]
-errorTitle = "Alguna cosa ha anat malament"
-errorMessage = "El tancament de sessió de Microsoft ha fallat. Si us plau, torna-ho a provar."
-okButton = "D'acord"
 
 [js.settings.authAccountSelect]
 selectButton = "Seleccionar compte"
@@ -316,10 +355,23 @@ deleteFailedMessage = "Assegura't que el fitxer no està en ús i torna-ho a pro
 failedToggleTitle = "No s'ha pogut canviar<br>Un o més mods addicionals"
 okButton = "D'acord"
 
+[js.settings.configManagement]
+exportSuccess = "Configuració exportada amb èxit!"
+exportSaved = "Configuració desada a: {path}"
+importSuccess = "Configuració importada amb èxit!"
+importWarningTitle = "Advertència d'Importació"
+importWarningMessage = "<strong>ADVERTÈNCIA:</strong> Importar configuracions de fonts desconegudes pot ser perillós!<br><br><ul style='text-align: left; margin: 10px 0;'><li>Només importa arxius de <strong>fonts de confiança</strong></li><li>Configuracions malicioses podrien afectar el comportament del launcher</li><li>La teva configuració actual serà <strong>sobreescrita</strong></li><li>Les credencials de compte <strong>NO</strong> estan incloses a les exportacions</li></ul><br>Vols continuar?"
+importContinue = "Importar Configuració"
+importError = "Error en importar configuració"
+importInvalidFile = "Arxiu de configuració invàlid. Si us plau selecciona un arxiu vàlid."
+importSelectFile = "Seleccionar Arxiu de Configuració"
+
 [js.settings.serverListing]
-mainServer = "Servidor principal"
-info = 'Pots gestionar els teus servidors a <a style="color: pink;" href="https://puf.visoftware.dev/servers">https://puf.visoftware.dev/servers</a>.</div>'
-noServers = "No tenim servidors per mostrar-te. <br>Pots gestionar els servidors que apareixen aquí al <a style=\"color: pink;\" href=\"https://puf.visoftware.dev/servers\">panell d'usuari final de VI Software</a>.</div>"
+mainServer = "Servidor Destacat"
+noServersFound = "No s'han trobat servidors"
+noServersAvailable = "No hi ha servidors disponibles"
+adjustSearch = "Prova d'ajustar la teva cerca"
+checkBackLater = "Si us plau, torna més tard"
 
 [js.settings.java]
 selectedJava = "Seleccionat: Java {version} ({vendor})"
@@ -372,11 +424,25 @@ checkForUpdatesButton = "Comprovar actualitzacions"
 LoadingText = "Carregant"
 LoaidingTakingTooLong = "El procés de càrrega està trigant més del esperat. La teva connexió a Internet és estable?"
 
+[js.auth.visweb]
+tooManyRequestsTitle = "Servei ocupat"
+tooManyRequestsMessage = "El servei d'autenticació està rebent massa sol·licituds en aquest moment. Si us plau, esperi uns minuts i torni-ho a intentar. Si el problema persisteix, consulti la nostra pàgina d'estat o torni-ho a provar més tard."
+tooManyRequestsAction = "Tornar-ho a intentar"
+
 [js.settings.language]
 restartRequiredTitle = "Cal reiniciar"
 restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi d'idioma tingui efecte."
 restartNowButton = "Reiniciar ara"
 restartLaterButton = "Més tard"
+
+[js.settings.storageManagement]
+clearModstoreConfirmTitle = "Netejar Caché de Modstore"
+clearModstoreConfirmMessage = "Estàs segur que vols netejar la caché del modstore? Això eliminarà tots els mods descarregats i caldrà tornar-los a descarregar quan iniciïs un modpack."
+clearModstoreButton = "Netejar Caché"
+clearInstancesConfirmTitle = "Netejar Totes les Instàncies"
+clearInstancesConfirmMessage = "Estàs segur que vols netejar TOTES les instàncies? Això eliminarà permanentment totes les teves instàncies de joc instal·lades, móns, partides desades i configuracions. Aquesta acció no es pot desfer!"
+clearInstancesButton = "Netejar Totes les Instàncies"
+cancelButton = "Cancel·lar"
 
 [settings]
 languageTitle = "Idioma"
