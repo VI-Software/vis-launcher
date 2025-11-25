@@ -8,10 +8,6 @@ jobs:
   triage:
     name: PR Triage
     runs-on: ubuntu-latest
-    permissions:
-      pull-requests: write
-      contents: read
-      issues: write
     steps:
       - name: Send CLA and Code of Conduct message on PR open
         if: github.event.action == 'opened'
@@ -94,40 +90,3 @@ jobs:
               repo: context.repo.repo,
               assignees: [author]
             });
-
-      - name: Add manual verification label on CI failure
-        if: github.event.action == 'synchronize' || github.event.action == 'opened' || github.event.action == 'reopened'
-        uses: actions/github-script@v6
-        with:
-          github-token: ${{ secrets.BOT_TOKEN }}
-          script: |
-            const pr = context.payload.pull_request;
-            if (pr.draft) {
-              return; // Skip if PR is draft
-            }
-            
-            const sha = pr.head.sha;
-            const { data: status } = await github.rest.repos.getCombinedStatusForRef({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              ref: sha
-            });
-            
-            if (status.state === 'failure') {
-              // Check if label already exists
-              const { data: labels } = await github.rest.issues.listLabelsOnIssue({
-                issue_number: context.issue.number,
-                owner: context.repo.owner,
-                repo: context.repo.repo
-              });
-              const hasLabel = labels.some(label => label.name === 'manual verification');
-              
-              if (!hasLabel) {
-                await github.rest.issues.addLabels({
-                  issue_number: context.issue.number,
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  labels: ['manual verification']
-                });
-              }
-            }

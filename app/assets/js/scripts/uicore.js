@@ -6,13 +6,14 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
-
-    License: AGPL-3.0
-    https://www.gnu.org/licenses/agpl-3.0.en.html
-
+                         
+    © 2025 VI Software. Todos los derechos reservados.
+    
     GitHub: https://github.com/VI-Software
-    Website: https://visoftware.dev
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+    Web: https://visoftware.dev
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
 */
 
 
@@ -27,9 +28,8 @@ const $                              = require('jquery')
 const {ipcRenderer, shell, webFrame, clipboard} = require('electron')
 const remote                         = require('@electron/remote')
 const isDev                          = require('./assets/js/isdev')
-const { LoggerUtil }                 = require('@visoftware/vis-launcher-core')
+const { LoggerUtil }                 = require('vis-launcher-core')
 const Lang                           = require('./assets/js/langloader')
-const ChristmasSnowflakes            = require('./assets/js/christmassnowflakes')
 
 const loggerUICore             = LoggerUtil.getLogger('UICore')
 const loggerAutoUpdater        = LoggerUtil.getLogger('AutoUpdater')
@@ -44,7 +44,7 @@ process.traceProcessWarnings = true
 process.traceDeprecation = true
 
 // Disable eval function.
- 
+// eslint-disable-next-line
 window.eval = global.eval = function () {
     throw new Error('Sorry, this app does not support window.eval().')
 }
@@ -132,11 +132,6 @@ function changeAllowPrerelease(val){
     ipcRenderer.send('autoUpdateAction', 'allowPrereleaseChange', val)
 }
 
-function changeChristmasSnowflakes(val){
-    ChristmasSnowflakes.toggle(val)
-    ConfigManager.save()
-}
-
 function showUpdateUI(info){
     //TODO Make this message a bit more informative `${info.version}`
     document.getElementById('image_seal_container').setAttribute('update', true)
@@ -221,9 +216,6 @@ document.addEventListener('readystatechange', function () {
         document.getElementById('launch_details_right').style.maxWidth = 170.8
         document.getElementById('launch_progress_label').style.width = 53.21
         
-        // Initialize Christmas Snowflakes
-        ChristmasSnowflakes.init()
-        
     }
 
 }, false)
@@ -276,7 +268,6 @@ setTimeout(function() {
         loadingText.innerHTML = `${Lang.queryJS('uicore.loading.LoaidingTakingTooLong')}`
     }
 }, 10000)
-
 
 
 

@@ -6,36 +6,28 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
-
-    License: AGPL-3.0
-    https://www.gnu.org/licenses/agpl-3.0.en.html
-
+                         
+    © 2025 VI Software. Todos los derechos reservados.
+    
     GitHub: https://github.com/VI-Software
-    Website: https://visoftware.dev
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+    Web: https://visoftware.dev
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
 */
 
 const fs   = require('fs-extra')
-const { LoggerUtil } = require('@visoftware/vis-launcher-core')
+const { LoggerUtil } = require('vis-launcher-core')
 const os   = require('os')
 const path = require('path')
 
 const logger = LoggerUtil.getLogger('ConfigManager')
-const pjson = require('../../../package.json')
 
 const sysRoot = process.env.APPDATA || (process.platform == 'darwin' ? process.env.HOME + '/Library/Application Support' : process.env.HOME)
 
 const dataPath = path.join(sysRoot, '.visdev-launcher')
 
-let launcherDir
-try {
-    // In renderer processes the '@electron/remote' package is used.
-    // In the main process require('@electron/remote') will throw, so fall back to electron.app
-    launcherDir = require('@electron/remote').app.getPath('userData')
-} catch {
-    const { app: electronApp } = require('electron')
-    launcherDir = electronApp.getPath('userData')
-}
+const launcherDir = require('@electron/remote').app.getPath('userData')
 
 
 /**
@@ -114,11 +106,7 @@ const DEFAULT_CONFIG = {
         },
         launcher: {
             allowPrerelease: false,
-            dataDirectory: dataPath,
-            legalAcceptedVersion: null,
-            canaryAcknowledgedVersion: null,
-            christmasSnowflakes: true,
-            guestModeEnabled: true
+            dataDirectory: dataPath
         }
     },
     newsCache: {
@@ -382,6 +370,58 @@ exports.addMojangAuthAccount = function(uuid, accessToken, username, displayName
 }
 
 /**
+ * Update the tokens of an authenticated microsoft account.
+ * 
+ * @param {string} uuid The uuid of the authenticated account.
+ * @param {string} accessToken The new Access Token.
+ * @param {string} msAccessToken The new Microsoft Access Token
+ * @param {string} msRefreshToken The new Microsoft Refresh Token
+ * @param {date} msExpires The date when the microsoft access token expires
+ * @param {date} mcExpires The date when the mojang access token expires
+ * 
+ * @returns {Object} The authenticated account object created by this action.
+ */
+exports.updateMicrosoftAuthAccount = function(uuid, accessToken, msAccessToken, msRefreshToken, msExpires, mcExpires) {
+    config.authenticationDatabase[uuid].accessToken = accessToken
+    config.authenticationDatabase[uuid].expiresAt = mcExpires
+    config.authenticationDatabase[uuid].microsoft.access_token = msAccessToken
+    config.authenticationDatabase[uuid].microsoft.refresh_token = msRefreshToken
+    config.authenticationDatabase[uuid].microsoft.expires_at = msExpires
+    return config.authenticationDatabase[uuid]
+}
+
+/**
+ * Adds an authenticated microsoft account to the database to be stored.
+ * 
+ * @param {string} uuid The uuid of the authenticated account.
+ * @param {string} accessToken The accessToken of the authenticated account.
+ * @param {string} name The in game name of the authenticated account.
+ * @param {date} mcExpires The date when the mojang access token expires
+ * @param {string} msAccessToken The microsoft access token
+ * @param {string} msRefreshToken The microsoft refresh token
+ * @param {date} msExpires The date when the microsoft access token expires
+ * 
+ * @returns {Object} The authenticated account object created by this action.
+ */
+exports.addMicrosoftAuthAccount = function(uuid, accessToken, name, mcExpires, msAccessToken, msRefreshToken, msExpires) {
+    config.selectedAccount = uuid
+    config.authenticationDatabase[uuid] = {
+        type: 'microsoft',
+        accessToken,
+        username: name.trim(),
+        uuid: uuid.trim(),
+        displayName: name.trim(),
+        expiresAt: mcExpires,
+        microsoft: {
+            access_token: msAccessToken,
+            refresh_token: msRefreshToken,
+            expires_at: msExpires
+        }
+    }
+    return config.authenticationDatabase[uuid]
+}
+
+/**
  * Remove an authenticated account from the database. If the account
  * was also the selected account, a new one will be selected. If there
  * are no accounts, the selected account will be null.
@@ -413,13 +453,18 @@ exports.removeAuthAccount = function(uuid){
  * @returns {Object} The selected authenticated account.
  */
 exports.getSelectedAccount = function(){
+    const authAcc = config.authenticationDatabase[config.selectedAccount]
+    
+    if(authAcc != null) {
+        // Trigger async refresh in background.
+        refreshDistroAndSettings(authAcc)
+    }
     return config.authenticationDatabase[config.selectedAccount]
 }
 
 /**
  * Refresh distribution and settings with the given auth account.
  * This is used to update the distribution authentification and the UI with the new distribution.
- * Should only be called when logging in or manually switching accounts.
  * @param {Object} authAcc The authenticated account to use
  */
 async function refreshDistroAndSettings(authAcc) {
@@ -429,7 +474,7 @@ async function refreshDistroAndSettings(authAcc) {
         'authorization': authAcc.accessToken
     }
     DistroAPI['authHeaders'] = authHeaders
-    localStorage.setItem('authHeaders', JSON.stringify(authHeaders))
+    localStorage.setItem('authHeaders', authHeaders)
 
     try {
         logger.info('Fetching distribution data...')
@@ -437,27 +482,11 @@ async function refreshDistroAndSettings(authAcc) {
         ensureJavaSettings(data)
 
         const currentSelectedServer = ConfigManager.getSelectedServer()
-
-        try {
-            for (const srv of data.servers) {
-                if (srv && srv.rawServer) {
-                    srv.rawServer.promoted = !!srv.rawServer.mainServer
-                }
-            }
-        } catch (e) {
-            logger.warn('Unable to set promoted flags on servers', e)
-        }
-
+        
         // Only update selected server if it's invalid or doesn't exist in the distribution
         if (!currentSelectedServer || !data.getServerById(currentSelectedServer)) {
-            const mains = data.servers.filter(s => s && s.rawServer && s.rawServer.mainServer)
-            let newSelectedServer
-            if (mains.length > 0) {
-                const idx = Math.floor(Math.random() * mains.length)
-                newSelectedServer = mains[idx].rawServer.id
-            } else {
-                newSelectedServer = data.servers[0].rawServer.id
-            }
+            const mainServer = data.getMainServer()
+            const newSelectedServer = mainServer ? mainServer.rawServer.id : data.servers[0].rawServer.id
             ConfigManager.setSelectedServer(newSelectedServer)
             logger.info('Selected server was invalid or missing, updated to:', newSelectedServer)
         } else {
@@ -466,35 +495,32 @@ async function refreshDistroAndSettings(authAcc) {
         }
 
         // Process server updates and mod configurations
-        try {
+        data.servers.forEach(server => {
+            // updateSelectedServer(server)
             syncModConfigurations(data)
-        } catch (e) {
-            logger.warn('Error while syncing mod configurations', e)
-        }
-
+        })
+        // ConfigManager.setSelectedServer(currentSelectedServer)
         logger.info('Distribution refresh completed successfully')
     } catch (err) {
         logger.error('Failed to refresh distribution:', err)
     }
 }
 
-exports.refreshDistroAndSettings = refreshDistroAndSettings
-
 /**
  * Set the selected authenticated account.
- * NOTE: This does NOT automatically refresh the distribution.
- * Call refreshDistroAndSettings() separately when switching accounts manually.
  * 
  * @param {string} uuid The UUID of the account which is to be set
  * as the selected account.
  * 
  * @returns {Object} The selected authenticated account.
  */
-exports.setSelectedAccount = function(uuid){
+exports.setSelectedAccount = async function(uuid){
     console.log('Setting selected account to: ' + uuid)
     const authAcc = config.authenticationDatabase[uuid]
     if(authAcc != null) {
         config.selectedAccount = uuid
+        // Call the shared refresh function instead of duplicating code
+        await refreshDistroAndSettings(authAcc)
     }
     return authAcc
 }
@@ -840,77 +866,6 @@ exports.setAllowPrerelease = function(allowPrerelease){
 }
 
 /**
- * Check whether the user previously accepted the legal notices.
- * @returns {boolean} True if accepted, false otherwise.
- */
-/**
- * Check whether the user previously accepted the legal notices for the
- * current application version. We store the version string when the user
- * accepts; only a match to the current application version returns true.
- *
- * @param {boolean} def Optional. If true, return the default config value.
- * @returns {boolean} True if accepted for current version, false otherwise.
- */
-exports.getLegalAccepted = function(def = false){
-    if(def) return DEFAULT_CONFIG.settings.launcher.legalAcceptedVersion != null || DEFAULT_CONFIG.settings.launcher.legalAccepted || false
-    const v = config.settings.launcher.legalAcceptedVersion
-    if(!v) return !!config.settings.launcher.legalAccepted
-    return v === pjson.version
-}
-
-/**
- * Set the legal acceptance flag and save immediately.
- * @param {boolean} accepted
- */
-/**
- * Record that the user accepted the legal notices for a specific version.
- * Pass the app version string (for example, require('../../../package.json').version).
- *
- * @param {string} version The version string for which acceptance applies.
- */
-exports.setLegalAccepted = function(version){
-    config.settings.launcher.legalAcceptedVersion = version
-    // keep legacy flag for UI/state but prefer versioned value
-    config.settings.launcher.legalAccepted = true
-    exports.save()
-}
-
-/**
- * Check if the user has acknowledged canary warnings.
- * @returns {boolean}
- */
-/**
- * Check if the user has acknowledged canary warnings for the current
- * application version.
- *
- * @param {boolean} def Optional. If true, return the default config value.
- * @returns {boolean}
- */
-exports.getCanaryAcknowledged = function(def = false){
-    if(def) return DEFAULT_CONFIG.settings.launcher.canaryAcknowledgedVersion != null || DEFAULT_CONFIG.settings.launcher.canaryAcknowledged || false
-    const v = config.settings.launcher.canaryAcknowledgedVersion
-    if(!v) return !!config.settings.launcher.canaryAcknowledged
-    return v === pjson.version
-}
-
-/**
- * Set the canary acknowledged flag and persist immediately.
- * @param {boolean} acknowledged
- */
-/**
- * Record that the user acknowledged canary warnings for a specific version.
- * Pass the app version string (for example, require('../../../package.json').version).
- *
- * @param {string} version The version string for which acknowledgement applies.
- */
-exports.setCanaryAcknowledged = function(version){
-    config.settings.launcher.canaryAcknowledgedVersion = version
-    // keep legacy flag for UI/state but prefer versioned value
-    config.settings.launcher.canaryAcknowledged = true
-    exports.save()
-}
-
-/**
  * Check if the launcher should be minimized to the system tray when the game is launch.
  * 
  * @param {boolean} def Optional. If true, the default value will be returned.
@@ -927,268 +882,4 @@ exports.getMinimizeOnLaunch = function(def = false){
  */
 exports.setMinimizeOnLaunch = function(MinimizeOnLaunch){
     config.settings.game.MinimizeOnLaunch = MinimizeOnLaunch
-}
-
-/**
- * Check if Christmas snowflakes should be displayed during December.
- * 
- * @param {boolean} def Optional. If true, the default value will be returned.
- * @returns {boolean} Whether or not Christmas snowflakes should be displayed.
- */
-exports.getChristmasSnowflakesEnabled = function(def = false){
-    return !def ? config.settings.launcher.christmasSnowflakes : DEFAULT_CONFIG.settings.launcher.christmasSnowflakes
-}
-
-/**
- * Change the status of Christmas snowflakes display.
- * 
- * @param {boolean} enabled Whether or not Christmas snowflakes should be displayed.
- */
-exports.setChristmasSnowflakesEnabled = function(enabled){
-    config.settings.launcher.christmasSnowflakes = enabled
-}
-/**
- * Export launcher configuration to a JSON file.
- * This function filters out sensitive data like accounts and authentication tokens.
- * 
- * @returns {string} JSON string of the exportable configuration
- */
-exports.exportConfiguration = function(){
-    const os = require('os')
-    
-    const exportData = {
-        _metadata: {
-            warning: 'DO NOT MANUALLY EDIT THIS FILE - Generated by VI Software Launcher',
-            generator: 'VI Software Launcher',
-            version: pjson.version,
-            exportDate: new Date().toISOString(),
-            platform: process.platform,
-            hostname: os.hostname(),
-            username: os.userInfo().username
-        },
-        settings: {
-            game: { ...config.settings.game },
-            launcher: {
-                allowPrerelease: config.settings.launcher.allowPrerelease,
-                // dataDirectory is platform-specific and will be normalized on import
-                dataDirectory: config.settings.launcher.dataDirectory,
-                christmasSnowflakes: config.settings.launcher.christmasSnowflakes
-            }
-        },
-        modConfigurations: config.modConfigurations ? [...config.modConfigurations] : [],
-        javaConfig: config.javaConfig ? { ...config.javaConfig } : {}
-    }
-    
-    // Do NOT export sensitive data
-    // - authenticationDatabase (contains account credentials)
-    // - clientToken (authentication token)
-    // - selectedAccount (account reference)
-    // - legalAcceptedVersion (user agreement tracking)
-    // - canaryAcknowledgedVersion (warning acknowledgements)
-    
-    return JSON.stringify(exportData, null, 2)
-}
-
-/**
- * Import launcher configuration from exported JSON data.
- * This function validates and safely merges imported settings without overwriting sensitive data.
- * Handles cross-platform compatibility by normalizing paths.
- * 
- * @param {string} jsonData The JSON string containing exported configuration
- * @returns {boolean} True if import was successful, false otherwise
- * @throws {Error} If the JSON is invalid or the data structure is incorrect
- */
-exports.importConfiguration = function(jsonData){
-    try {
-        const importData = JSON.parse(jsonData)
-        
-        // Validate the import data structure
-        if (!importData.settings || typeof importData.settings !== 'object') {
-            throw new Error('Invalid configuration file: missing settings object')
-        }
-        
-        if (importData._metadata) {
-            logger.info('Importing configuration from:')
-            logger.info(`  Version: ${importData._metadata.version || 'unknown'}`)
-            logger.info(`  Platform: ${importData._metadata.platform || 'unknown'}`)
-            logger.info(`  Export Date: ${importData._metadata.exportDate || 'unknown'}`)
-            
-            if (importData._metadata.platform && importData._metadata.platform !== process.platform) {
-                logger.warn(`Cross-platform import detected: ${importData._metadata.platform} --> ${process.platform}`)
-            }
-        }
-        
-        if (importData.settings.game && typeof importData.settings.game === 'object') {
-            // Only import known game settings to prevent injection of invalid keys
-            const validGameSettings = ['resWidth', 'resHeight', 'fullscreen', 'MinimizeOnLaunch', 'autoConnect', 'launchDetached']
-            for (const key of validGameSettings) {
-                if (importData.settings.game[key] !== undefined) {
-                    config.settings.game[key] = importData.settings.game[key]
-                }
-            }
-        }
-        
-        if (importData.settings.launcher && typeof importData.settings.launcher === 'object') {
-            // Only import known launcher settings
-            const validLauncherSettings = ['allowPrerelease', 'christmasSnowflakes']
-            for (const key of validLauncherSettings) {
-                if (importData.settings.launcher[key] !== undefined) {
-                    config.settings.launcher[key] = importData.settings.launcher[key]
-                }
-            }
-            
-            // Handle cross-platform path normalization for dataDirectory
-            if (importData.settings.launcher.dataDirectory) {
-                const importedPath = importData.settings.launcher.dataDirectory
-                
-                let normalizedPath = importedPath.replace(/\\/g, path.sep).replace(/\//g, path.sep)
-                
-                const homePattern = /^(~|%USERPROFILE%|%HOME%|\$HOME)/
-                if (homePattern.test(normalizedPath)) {
-                    normalizedPath = normalizedPath.replace(homePattern, os.homedir())
-                }
-                
-                if (normalizedPath !== importedPath) {
-                    logger.info(`Data directory path normalized: ${importedPath} --> ${normalizedPath}`)
-                }
-                
-                try {
-                    fs.ensureDirSync(normalizedPath)
-                    config.settings.launcher.dataDirectory = normalizedPath
-                } catch {
-                    logger.warn(`Could not access/create data directory: ${normalizedPath}. Using current directory.`)
-                    // Keep existing dataDirectory
-                }
-            }
-        }
-        
-        if (Array.isArray(importData.modConfigurations)) {
-            config.modConfigurations = importData.modConfigurations
-        }
-        
-        if (importData.javaConfig && typeof importData.javaConfig === 'object') {
-            const normalizedJavaConfig = {}
-            
-            for (const [key, value] of Object.entries(importData.javaConfig)) {
-                if (value && typeof value === 'object') {
-                    normalizedJavaConfig[key] = {}
-                    
-                    // Normalize Java executable paths
-                    if (value.javaPath && typeof value.javaPath === 'string') {
-                        normalizedJavaConfig[key].javaPath = value.javaPath.replace(/\\/g, path.sep).replace(/\//g, path.sep)
-                    }
-                    
-                    // Copy other Java config values
-                    for (const [propKey, propValue] of Object.entries(value)) {
-                        if (propKey !== 'javaPath') {
-                            normalizedJavaConfig[key][propKey] = propValue
-                        }
-                    }
-                } else {
-                    normalizedJavaConfig[key] = value
-                }
-            }
-            
-            config.javaConfig = normalizedJavaConfig
-        }
-        
-        exports.save()
-        
-        logger.info('Configuration imported successfully')
-        return true
-        
-    } catch (err) {
-        logger.error('Failed to import configuration:', err)
-        throw err
-    }
-}
-
-let guestModeActive = false
-let guestModeStartTime = null
-
-/**
- * Check if guest mode feature is enabled in launcher settings.
- * Reads from settings.toml first, falls back to default config.
- * Third-party launchers can disable this feature via settings.toml.
- * 
- * @returns {boolean} True if guest mode feature is enabled.
- */
-exports.isGuestModeFeatureEnabled = function() {
-    // Check settings.toml first (via LangLoader.queryRaw for boolean support)
-    try {
-        const settingsValue = Lang.queryRaw('launcher.guestModeEnabled')
-        if (typeof settingsValue === 'boolean') {
-            return settingsValue
-        }
-    } catch {
-        logger.debug('Guest mode setting not found in settings.toml, using config fallback')
-
-    }
-    return config.settings.launcher.guestModeEnabled !== false
-}
-
-/**
- * Enable or disable the guest mode feature for third-party launchers.
- * 
- * @param {boolean} enabled Whether guest mode feature should be enabled.
- */
-exports.setGuestModeFeatureEnabled = function(enabled) {
-    config.settings.launcher.guestModeEnabled = enabled
-}
-
-/**
- * Start a guest mode session.
- * Guest sessions are not persisted and will end when the app closes.
- */
-exports.startGuestMode = function() {
-    if (!exports.isGuestModeFeatureEnabled()) {
-        logger.warn('Guest mode feature is disabled')
-        return false
-    }
-    guestModeActive = true
-    guestModeStartTime = Date.now()
-    logger.info('Guest mode session started')
-    return true
-}
-
-/**
- * End the current guest mode session.
- */
-exports.endGuestMode = function() {
-    if (guestModeActive) {
-        const sessionDuration = Date.now() - guestModeStartTime
-        logger.info(`Guest mode session ended. Duration: ${Math.round(sessionDuration / 1000)}s`)
-    }
-    guestModeActive = false
-    guestModeStartTime = null
-}
-
-/**
- * Check if guest mode is currently active.
- * 
- * @returns {boolean} True if guest mode is active.
- */
-exports.isGuestMode = function() {
-    return guestModeActive
-}
-
-/**
- * Get guest mode session duration in milliseconds.
- * 
- * @returns {number|null} Session duration in ms, or null if not in guest mode.
- */
-exports.getGuestModeSessionDuration = function() {
-    if (!guestModeActive || !guestModeStartTime) {
-        return null
-    }
-    return Date.now() - guestModeStartTime
-}
-
-/**
- * Get guest mode session start time.
- * 
- * @returns {number|null} Session start timestamp, or null if not in guest mode.
- */
-exports.getGuestModeStartTime = function() {
-    return guestModeStartTime
 }

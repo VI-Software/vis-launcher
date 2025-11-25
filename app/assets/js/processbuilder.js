@@ -6,13 +6,14 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
-
-    License: AGPL-3.0
-    https://www.gnu.org/licenses/agpl-3.0.en.html
-
+                         
+    © 2025 VI Software. Todos los derechos reservados.
+    
     GitHub: https://github.com/VI-Software
-    Website: https://visoftware.dev
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+    Web: https://visoftware.dev
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
 */
 
 const { app }              = require('@electron/remote')
@@ -20,9 +21,9 @@ const AdmZip                = require('adm-zip')
 const child_process         = require('child_process')
 const crypto                = require('crypto')
 const fs                    = require('fs-extra')
-const { LoggerUtil }        = require('@visoftware/vis-launcher-core')
-const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('@visoftware/vis-launcher-core/common')
-const { Type }              = require('@visoftware/distribution-types')
+const { LoggerUtil }        = require('vis-launcher-core')
+const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('vis-launcher-core/common')
+const { Type }              = require('vis-launcher-distribution-manager')
 const os                    = require('os')
 const path                  = require('path')
 const win                   = remote.getCurrentWindow()
@@ -295,7 +296,6 @@ class ProcessBuilder {
                     return true
                 }
             }
-        // eslint-disable-next-line no-unused-vars
         } catch (err) {
             // We know old forge versions follow this format.
             // Error must be caused by newer version.
@@ -572,7 +572,7 @@ class ProcessBuilder {
                             val = this.authUser.accessToken
                             break
                         case 'user_type':
-                            val = 'mojang'
+                            val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
                             break
                         case 'version_type':
                             val = this.vanillaManifest.type
@@ -656,7 +656,7 @@ class ProcessBuilder {
                         val = this.authUser.accessToken
                         break
                     case 'user_type':
-                        val = 'mojang'
+                        val = this.authUser.type === 'microsoft' ? 'msa' : 'mojang'
                         break
                     case 'user_properties': // 1.8.9 and below.
                         val = '{}'

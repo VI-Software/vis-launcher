@@ -1,6 +1,5 @@
 appId: 'vi-software-launcher'
 productName: 'VI Software Launcher'
-# Include architecture in artifact filenames is not here by default, we add them on each platform config if necessary for clarity
 artifactName: '${productName}-setup-${version}.${ext}'
 
 copyright: 'Copyright © 2025 VI Software'
@@ -9,7 +8,7 @@ asar: true
 compression: 'maximum'
 
 files:
-  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,eslint.config.mjs,scripts}'
+  - '!{dist,.gitignore,.vscode,docs,dev-app-update.yml,.nvmrc,.eslintrc.json}'
 
 extraResources:
   - 'libraries'
@@ -18,11 +17,10 @@ extraResources:
 win: 
   target: 
     - target: 'nsis'
-      arch:
-        - 'x64'
-  # cscLink: './cert/certificate.pfx'
-  # signtoolOptions:
-  #   publisherName: 'VI Software'
+      arch: 'x64'
+  cscLink: './cert/certificate.pfx'
+  signtoolOptions:
+    publisherName: 'VI Software'
 
 # Windows Installer Configuration
 nsis:
@@ -39,31 +37,19 @@ mac:
       arch:
         - 'x64'
         - 'arm64'
-  artifactName: '${productName}-${version}-${arch}.${ext}'
+  artifactName: '${productName}-setup-${version}-${arch}.${ext}'
   category: 'public.app-category.games'
 
 # Linux Configuration
 linux: 
-  target:
-    - target: 'AppImage'
-      arch:
-        - 'x64'
-        - 'arm64'
+  target: 'AppImage'
   maintainer: 'VI Software'
   vendor: 'VI Software'
   synopsis: 'Modded Minecraft Launcher'
   description: 'Conéctate a los servidores de VI Software sin preocupaciones, permite al VIS Launcher actualizar, pre configurar tus instalaciones de mods de las experiencias VIS por ti.'
-  artifactName: '${productName}-${version}-${arch}.${ext}'
   category: 'Game'
-  compression: 'normal' # Override default compression level for AppImage
 
 
 directories:
   buildResources: 'build'
   output: 'dist'
-
-publish:
-  provider: github
-  owner: VI-Software
-  repo: vis-launcher
-  releaseType: release

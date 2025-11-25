@@ -3,16 +3,17 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
-
-    License: AGPL-3.0
-    https://www.gnu.org/licenses/agpl-3.0.en.html
-
+                         
+    © 2025 VI Software. Todos los derechos reservados.
+    
     GitHub: https://github.com/VI-Software
-    Website: https://visoftware.dev
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+    Web: https://visoftware.dev
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
 */
 
 
@@ -28,50 +29,17 @@
  */
 // Requirements
 const ConfigManager          = require('./configmanager')
-const { LoggerUtil }         = require('@visoftware/vis-launcher-core')
-const { RestResponseStatus } = require('@visoftware/vis-launcher-core/common')
-const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('@visoftware/vis-launcher-core/mojang')
+const { LoggerUtil }         = require('vis-launcher-core')
+const { RestResponseStatus } = require('vis-launcher-core/common')
+const { MojangRestAPI, mojangErrorDisplayable, MojangErrorCode } = require('vis-launcher-core/mojang')
+const { MicrosoftAuth, microsoftErrorDisplayable, MicrosoftErrorCode } = require('vis-launcher-core/microsoft')
+const { AZURE_CLIENT_ID }    = require('./ipcconstants')
 const http                   = require('http')
 const { shell }              = require('electron')
-const { API_BASE_URL, WEBLOGIN_URL, OAUTH_AUTHORIZATION_ENDPOINT, OAUTH_TOKEN_ENDPOINT, OAUTH_USERINFO_ENDPOINT, OAUTH_CLIENT_ID, OAUTH_REDIRECT_URI, OAUTH_SCOPE } = require('./apiconstants')
+const { API_BASE_URL, WEBLOGIN_URL } = require('./apiconstants')
 const got                    = require('got')
-const LangLoader             = require('./langloader')
-const crypto                 = require('crypto')
 
 const log = LoggerUtil.getLogger('AuthManager')
-
-/**
- * Generate a random string for PKCE code verifier
- * @param {number} length Length of the string (43-128)
- * @returns {string} Random string
- */
-exports.generateCodeVerifier = function generateCodeVerifier(length = 64) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~'
-    let result = ''
-    for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length))
-    }
-    return result
-}
-
-/**
- * Generate code challenge from code verifier using S256
- * @param {string} codeVerifier 
- * @returns {string} Base64URL encoded challenge
- */
-exports.generateCodeChallenge = function generateCodeChallenge(codeVerifier) {
-    const hash = crypto.createHash('sha256').update(codeVerifier).digest()
-    return hash.toString('base64url')
-}
-
-/**
- * Generate random state for CSRF protection
- * @param {number} length Length of state string
- * @returns {string} Random state
- */
-exports.generateState = function generateState(length = 32) {
-    return crypto.randomBytes(length).toString('hex')
-}
 
 // Functions
 
@@ -113,6 +81,105 @@ const addMojangAccount = async function(username, password) {
 
 exports.addMojangAccount = addMojangAccount
 
+const AUTH_MODE = { FULL: 0, MS_REFRESH: 1, MC_REFRESH: 2 }
+
+/**
+ * Perform the full MS Auth flow in a given mode.
+ * 
+ * AUTH_MODE.FULL = Full authorization for a new account.
+ * AUTH_MODE.MS_REFRESH = Full refresh authorization.
+ * AUTH_MODE.MC_REFRESH = Refresh of the MC token, reusing the MS token.
+ * 
+ * @param {string} entryCode FULL-AuthCode. MS_REFRESH=refreshToken, MC_REFRESH=accessToken
+ * @param {*} authMode The auth mode.
+ * @returns An object with all auth data. AccessToken object will be null when mode is MC_REFRESH.
+ */
+async function fullMicrosoftAuthFlow(entryCode, authMode) {
+    try {
+
+        let accessTokenRaw
+        let accessToken
+        if(authMode !== AUTH_MODE.MC_REFRESH) {
+            const accessTokenResponse = await MicrosoftAuth.getAccessToken(entryCode, authMode === AUTH_MODE.MS_REFRESH, AZURE_CLIENT_ID)
+            if(accessTokenResponse.responseStatus === RestResponseStatus.ERROR) {
+                return Promise.reject(microsoftErrorDisplayable(accessTokenResponse.microsoftErrorCode))
+            }
+            accessToken = accessTokenResponse.data
+            accessTokenRaw = accessToken.access_token
+        } else {
+            accessTokenRaw = entryCode
+        }
+        
+        const xblResponse = await MicrosoftAuth.getXBLToken(accessTokenRaw)
+        if(xblResponse.responseStatus === RestResponseStatus.ERROR) {
+            return Promise.reject(microsoftErrorDisplayable(xblResponse.microsoftErrorCode))
+        }
+        const xstsResonse = await MicrosoftAuth.getXSTSToken(xblResponse.data)
+        if(xstsResonse.responseStatus === RestResponseStatus.ERROR) {
+            return Promise.reject(microsoftErrorDisplayable(xstsResonse.microsoftErrorCode))
+        }
+        const mcTokenResponse = await MicrosoftAuth.getMCAccessToken(xstsResonse.data)
+        if(mcTokenResponse.responseStatus === RestResponseStatus.ERROR) {
+            return Promise.reject(microsoftErrorDisplayable(mcTokenResponse.microsoftErrorCode))
+        }
+        const mcProfileResponse = await MicrosoftAuth.getMCProfile(mcTokenResponse.data.access_token)
+        if(mcProfileResponse.responseStatus === RestResponseStatus.ERROR) {
+            return Promise.reject(microsoftErrorDisplayable(mcProfileResponse.microsoftErrorCode))
+        }
+        return {
+            accessToken,
+            accessTokenRaw,
+            xbl: xblResponse.data,
+            xsts: xstsResonse.data,
+            mcToken: mcTokenResponse.data,
+            mcProfile: mcProfileResponse.data
+        }
+    } catch(err) {
+        log.error(err)
+        return Promise.reject(microsoftErrorDisplayable(MicrosoftErrorCode.UNKNOWN))
+    }
+}
+
+/**
+ * Calculate the expiry date. Advance the expiry time by 10 seconds
+ * to reduce the liklihood of working with an expired token.
+ * 
+ * @param {number} nowMs Current time milliseconds.
+ * @param {number} epiresInS Expires in (seconds)
+ * @returns 
+ */
+function calculateExpiryDate(nowMs, epiresInS) {
+    return nowMs + ((epiresInS-10)*1000)
+}
+
+/**
+ * Add a Microsoft account. This will pass the provided auth code to Mojang's OAuth2.0 flow.
+ * The resultant data will be stored as an auth account in the configuration database.
+ * 
+ * @param {string} authCode The authCode obtained from microsoft.
+ * @returns {Promise.<Object>} Promise which resolves the resolved authenticated account object.
+ */
+exports.addMicrosoftAccount = async function(authCode) {
+
+    const fullAuth = await fullMicrosoftAuthFlow(authCode, AUTH_MODE.FULL)
+
+    // Advance expiry by 10 seconds to avoid close calls.
+    const now = new Date().getTime()
+
+    const ret = ConfigManager.addMicrosoftAuthAccount(
+        fullAuth.mcProfile.id,
+        fullAuth.mcToken.access_token,
+        fullAuth.mcProfile.name,
+        calculateExpiryDate(now, fullAuth.mcToken.expires_in),
+        fullAuth.accessToken.access_token,
+        fullAuth.accessToken.refresh_token,
+        calculateExpiryDate(now, fullAuth.accessToken.expires_in)
+    )
+    ConfigManager.save()
+
+    return ret
+}
+
 /**
  * Check if a challenge is still valid
  * @param {string} challengeId The challenge ID to check
@@ -133,7 +200,6 @@ async function checkChallenge(challengeId, secret) {
         }
         return false
     } catch (err) {
-        log.error('Error checking challenge validity:', err)
         return false
     }
 }
@@ -146,11 +212,9 @@ exports.addVISWebAccount = async function() {
     const cleanup = () => {
         if (pollInterval) {
             clearInterval(pollInterval)
-            pollInterval = null
         }
         if (serverInstance && serverInstance.listening) {
             serverInstance.close()
-            serverInstance = null
         }
     }
 
@@ -250,11 +314,7 @@ exports.addVISWebAccount = async function() {
         updateSelectedAccount(ret)
         await prepareSettings(true)
         
-        // Refresh distribution with the new account's authentication
-        await ConfigManager.refreshDistroAndSettings(ret)
-
-        // Final cleanup of sensitive data
-        cleanup()
+        await ConfigManager.getSelectedAccount() // It also refreshes CDN authentification to the new account
 
         return ret
 
@@ -289,210 +349,6 @@ exports.addVISWebAccount = async function() {
 }
 
 /**
- * Add a VI Software Web account using the OAuth v3 flow.
- * This is a proper OAuth implementation replacing the challenge-based v2 system.
- * 
- * @returns {Promise.<Object>}
- */
-exports.addVISWebAccountV3 = async function() {
-    let pollInterval
-    let serverInstance
-    let expectedState
-    let codeVerifier
-    let codeChallenge
-    let tokenResponse
-    let userInfo
-
-    const cleanup = () => {
-        if (pollInterval) {
-            clearInterval(pollInterval)
-            pollInterval = null
-        }
-        if (serverInstance && serverInstance.listening) {
-            serverInstance.close()
-            serverInstance = null
-        }
-        if (codeVerifier) codeVerifier = null
-        if (codeChallenge) codeChallenge = null
-        if (expectedState) expectedState = null
-        if (tokenResponse) tokenResponse = null
-        if (userInfo) userInfo = null
-    }
-
-    try {
-        const port = 43124
-        let codeResolve, codeReject
-        const codePromise = new Promise((resolve, reject) => {
-            codeResolve = resolve
-            codeReject = reject
-        })
-
-        codeVerifier = exports.generateCodeVerifier()
-        codeChallenge = exports.generateCodeChallenge(codeVerifier)
-        expectedState = exports.generateState()
-
-        const authUrl = new URL(OAUTH_AUTHORIZATION_ENDPOINT)
-        authUrl.searchParams.set('client_id', OAUTH_CLIENT_ID)
-        authUrl.searchParams.set('redirect_uri', OAUTH_REDIRECT_URI)
-        authUrl.searchParams.set('response_type', 'code')
-        authUrl.searchParams.set('scope', OAUTH_SCOPE)
-        authUrl.searchParams.set('state', expectedState)
-        authUrl.searchParams.set('code_challenge', codeChallenge)
-        authUrl.searchParams.set('code_challenge_method', 'S256')
-
-        serverInstance = http.createServer((req, res) => {
-            const url = new URL(req.url, `http://127.0.0.1:${port}`)
-            
-            if (url.pathname === '/callback') {
-                const code = url.searchParams.get('code')
-                const state = url.searchParams.get('state')
-                const error = url.searchParams.get('error')
-                
-                if (error) {
-                    res.writeHead(400, { 'Content-Type': 'text/html' })
-                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authentication failed</h1><p>Please close this window and try again.</p></body></html>')
-                    serverInstance.close()
-                    codeReject(new Error(`OAuth error: ${error}`))
-                    return
-                }
-                
-                if (state !== expectedState) {
-                    res.writeHead(400, { 'Content-Type': 'text/html' })
-                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authentication failed</h1><p>Invalid state parameter.</p></body></html>')
-                    serverInstance.close()
-                    codeReject(new Error('State parameter mismatch'))
-                    return
-                }
-                
-                if (code) {
-                    res.writeHead(200, { 'Content-Type': 'text/html' })
-                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authorization successful!</h1><p>You may now close this window.</p></body></html>')
-                    serverInstance.close()
-                    codeResolve(code)
-                } else {
-                    res.writeHead(400, { 'Content-Type': 'text/html' })
-                    res.end('<html><body style="background-color:#333;color:#fff;"><h1>Authentication failed</h1><p>No authorization code received.</p></body></html>')
-                    serverInstance.close()
-                    codeReject(new Error('No authorization code received'))
-                }
-            }
-        })
-
-        // Callback server error handling
-        serverInstance.on('error', (err) => {
-            cleanup()
-            codeReject(err)
-        })
-
-        serverInstance.listen(port, '127.0.0.1', async () => {
-            log.info(`OAuth v3 server listening on port ${port}`)
-            
-            shell.openExternal(authUrl.toString())
-
-            pollInterval = setTimeout(() => {
-                cleanup()
-                codeReject(new Error('Authentication timeout'))
-            }, 15 * 60 * 1000) // 15 minutes
-        })
-
-        const code = await codePromise
-        cleanup()
-
-        tokenResponse = await got.post(OAUTH_TOKEN_ENDPOINT, {
-            form: {
-                grant_type: 'authorization_code',
-                code: code,
-                redirect_uri: OAUTH_REDIRECT_URI,
-                client_id: OAUTH_CLIENT_ID,
-                code_verifier: codeVerifier
-            }
-        }).json()
-
-        if (!tokenResponse.access_token) {
-            throw new Error('No access token received')
-        }
-
-        userInfo = await got.get(OAUTH_USERINFO_ENDPOINT, {
-            headers: {
-                'authorization': `Bearer ${tokenResponse.access_token}`,
-                'X-Launcher-Version': require('../../../package.json').version
-            }
-        }).json()
-
-        if (!userInfo.minecraft || !Array.isArray(userInfo.minecraft) || userInfo.minecraft.length !== 1) {
-            console.log('Full userInfo:', userInfo)
-            throw new Error('Invalid user info received. Expected exactly one Minecraft account, but got ' + (userInfo.minecraft ? userInfo.minecraft.length : 'none'))
-        }
-
-        const selectedAccount = userInfo.minecraft[0]
-
-        if (!selectedAccount.username || !selectedAccount.login) {
-            throw new Error('Backend must provide Minecraft username and login credentials')
-        }
-
-        let ret
-        try {
-            const mojangUsername = selectedAccount.username
-            const mojangPassword = selectedAccount.login
-            
-            log.debug(`Attempting Ydrassl auth with username: ${mojangUsername}`)
-            ret = await addMojangAccount(mojangUsername, mojangPassword)
-        } catch (err) {
-            cleanup()
-            log.error('Error adding Mojang account:', err)
-            return Promise.reject({
-                title: 'Login Failed',
-                message: err && err.message ? err.message : 'Failed to add account. Please try again.'
-            })
-        }
-        
-        if(ConfigManager.getClientToken() == null) {
-            ConfigManager.setClientToken(uuidv4())
-        }
-        
-        ConfigManager.save()
-        updateSelectedAccount(ret)
-        await prepareSettings(true)
-        
-        // Refresh distribution with the new account's authentication
-        await ConfigManager.refreshDistroAndSettings(ret)
-
-        // Final cleanup of sensitive data
-        cleanup()
-
-        return ret
-
-    } catch (err) {
-        cleanup()
-        log.error('Error during VI Software Web OAuth v3:', err)
-
-        try {
-            if (err && err.name === 'HTTPError' && err.response && err.response.statusCode === 429) {
-                const title = LangLoader.queryJS('auth.visweb.tooManyRequestsTitle')
-                const message = LangLoader.queryJS('auth.visweb.tooManyRequestsMessage')
-                const action = LangLoader.queryJS('auth.visweb.tooManyRequestsAction')
-
-                return Promise.reject({
-                    title,
-                    message: `${message}`,
-                    action
-                })
-            }
-        } catch (langErr) {
-            // If localization fails, fall through to generic message
-            log.error('Error while querying localization for VIS Web OAuth v3 429 message:', langErr)
-        }
-
-        return Promise.reject({
-            title: 'Login Failed',
-            message: err.message === 'Authentication timeout'
-                ? 'Authentication timeout. Please try again.'
-                : 'Failed to authenticate with VI Software. Please try again.'
-        })
-    }
-}
-
-/**
  * Remove a Mojang account. This will invalidate the access token associated
  * with the account and then remove it from the database.
  * 
@@ -511,6 +367,24 @@ exports.removeMojangAccount = async function(uuid){
             log.error('Error while removing account', response.error)
             return Promise.reject(response.error)
         }
+    } catch (err){
+        log.error('Error while removing account', err)
+        return Promise.reject(err)
+    }
+}
+
+/**
+ * Remove a Microsoft account. It is expected that the caller will invoke the OAuth logout
+ * through the ipc renderer.
+ * 
+ * @param {string} uuid The UUID of the account to be removed.
+ * @returns {Promise.<void>} Promise which resolves to void when the action is complete.
+ */
+exports.removeMicrosoftAccount = async function(uuid){
+    try {
+        ConfigManager.removeAuthAccount(uuid)
+        ConfigManager.save()
+        return Promise.resolve()
     } catch (err){
         log.error('Error while removing account', err)
         return Promise.reject(err)
@@ -553,11 +427,81 @@ async function validateSelectedMojangAccount(){
 }
 
 /**
+ * Validate the selected account with Microsoft's authserver. If the account is not valid,
+ * we will attempt to refresh the access token and update that value. If that fails, a
+ * new login will be required.
+ * 
+ * @returns {Promise.<boolean>} Promise which resolves to true if the access token is valid,
+ * otherwise false.
+ */
+async function validateSelectedMicrosoftAccount(){
+    const current = ConfigManager.getSelectedAccount()
+    const now = new Date().getTime()
+    const mcExpiresAt = current.expiresAt
+    const mcExpired = now >= mcExpiresAt
+
+    if(!mcExpired) {
+        return true
+    }
+
+    // MC token expired. Check MS token.
+
+    const msExpiresAt = current.microsoft.expires_at
+    const msExpired = now >= msExpiresAt
+
+    if(msExpired) {
+        // MS expired, do full refresh.
+        try {
+            const res = await fullMicrosoftAuthFlow(current.microsoft.refresh_token, AUTH_MODE.MS_REFRESH)
+
+            ConfigManager.updateMicrosoftAuthAccount(
+                current.uuid,
+                res.mcToken.access_token,
+                res.accessToken.access_token,
+                res.accessToken.refresh_token,
+                calculateExpiryDate(now, res.accessToken.expires_in),
+                calculateExpiryDate(now, res.mcToken.expires_in)
+            )
+            ConfigManager.save()
+            return true
+        } catch(err) {
+            return false
+        }
+    } else {
+        // Only MC expired, use existing MS token.
+        try {
+            const res = await fullMicrosoftAuthFlow(current.microsoft.access_token, AUTH_MODE.MC_REFRESH)
+
+            ConfigManager.updateMicrosoftAuthAccount(
+                current.uuid,
+                res.mcToken.access_token,
+                current.microsoft.access_token,
+                current.microsoft.refresh_token,
+                current.microsoft.expires_at,
+                calculateExpiryDate(now, res.mcToken.expires_in)
+            )
+            ConfigManager.save()
+            return true
+        }
+        catch(err) {
+            return false
+        }
+    }
+}
+
+/**
  * Validate the selected auth account.
  * 
  * @returns {Promise.<boolean>} Promise which resolves to true if the access token is valid,
  * otherwise false.
  */
 exports.validateSelected = async function(){
-    return await validateSelectedMojangAccount()
+    const current = ConfigManager.getSelectedAccount()
+
+    if(current.type === 'microsoft') {
+        return await validateSelectedMicrosoftAccount()
+    } else {
+        return await validateSelectedMojangAccount()
+    }
+    
 }

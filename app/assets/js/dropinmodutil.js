@@ -6,19 +6,21 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
-
-    License: AGPL-3.0
-    https://www.gnu.org/licenses/agpl-3.0.en.html
-
+                         
+    © 2025 VI Software. Todos los derechos reservados.
+    
     GitHub: https://github.com/VI-Software
-    Website: https://visoftware.dev
+    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
+    Web: https://visoftware.dev
+    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+
 */
 
 
 const fs        = require('fs-extra')
 const path      = require('path')
 const { ipcRenderer, shell } = require('electron')
+const { SHELL_OPCODE } = require('./ipcconstants')
 
 // Group #1: File Name (without .disabled, if any)
 // Group #2: File Extension (jar, zip, or litemod)
@@ -199,6 +201,8 @@ exports.scanForShaderpacks = function(instanceDir){
  * @returns {string} The file name of the enabled shaderpack.
  */
 exports.getEnabledShaderpack = function(instanceDir){
+    exports.validateDir(instanceDir)
+
     const optionsShaders = path.join(instanceDir, SHADER_CONFIG)
     if(fs.existsSync(optionsShaders)){
         const buf = fs.readFileSync(optionsShaders, {encoding: 'utf-8'})
