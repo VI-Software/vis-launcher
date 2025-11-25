@@ -26,3 +26,6 @@ canaryWebsiteURL = "https://visoftware.dev/launcher"
 [ejs.settings]
 sourceGithubLink = "https://github.com/VI-Software/vis-launcher"
 supportLink = "https://github.com/VI-Software/vis-launcher/issues"
+
+[launcher]
+guestModeEnabled = true

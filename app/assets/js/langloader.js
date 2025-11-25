@@ -58,6 +58,26 @@ exports.query = function(id, placeHolders){
     return text
 }
 
+/**
+ * Query raw value from lang object without string conversion.
+ * Useful for boolean/number settings in settings.toml.
+ * 
+ * @param {string} id The path to the value (e.g., 'launcher.guestModeEnabled')
+ * @returns {*} The raw value (boolean, number, string, etc.) or undefined if not found
+ */
+exports.queryRaw = function(id) {
+    let query = id.split('.')
+    let res = lang
+    
+    for (let q of query) {
+        if (res === undefined || res === null) {
+            return undefined
+        }
+        res = res[q]
+    }
+    return res
+}
+
 exports.queryJS = function(id, placeHolders){
     return exports.query(`js.${id}`, placeHolders)
 }

@@ -117,8 +117,43 @@ function setLaunchEnabled(val){
     document.getElementById('launch_button').disabled = !val
 }
 
+/**
+ * Show guest mode login prompt overlay.
+ */
+function showGuestModeLoginPrompt() {
+    setOverlayContent(
+        Lang.queryJS('guestMode.loginRequiredTitle'),
+        Lang.queryJS('guestMode.loginRequiredMessage'),
+        Lang.queryJS('guestMode.loginButton'),
+        Lang.queryJS('guestMode.cancelButton')
+    )
+    
+    setOverlayHandler(() => {
+        toggleOverlay(false)
+        ConfigManager.endGuestMode()
+        hideGuestModeBanner()
+        loginOptionsViewOnLoginSuccess = VIEWS.landing
+        loginOptionsViewOnLoginCancel = VIEWS.landing
+        switchView(getCurrentView(), VIEWS.loginOptions)
+    })
+    
+    setDismissHandler(() => {
+        toggleOverlay(false)
+        toggleLaunchArea(false)
+    })
+    
+    toggleOverlay(true, true)
+}
+
 // Bind launch button
 document.getElementById('launch_button').addEventListener('click', async e => {
+    // Check if user is in guest mode
+    if (ConfigManager.isGuestMode()) {
+        loggerLanding.info('Launch attempted in guest mode - prompting for login')
+        showGuestModeLoginPrompt()
+        return
+    }
+    
     try {
         setLaunchDetails(Lang.queryJS('landing.launch.checkingClient'))
         toggleLaunchArea(true)
@@ -230,6 +265,64 @@ document.getElementById('avatarOverlay').onclick = async e => {
     })
 }
 
+/**
+ * Hide the guest mode banner.
+ */
+function hideGuestModeBanner() {
+    const banner = document.getElementById('guestModeBanner')
+    if (banner) {
+        banner.style.display = 'none'
+    }
+    
+    const landingContainer = document.getElementById('landingContainer')
+    if (landingContainer) {
+        landingContainer.classList.remove('guest-mode')
+    }
+    
+    const avatarContainer = document.getElementById('avatarContainer')
+    if (avatarContainer) {
+        avatarContainer.classList.remove('guest-avatar')
+    }
+}
+
+/**
+ * Show the guest mode banner.
+ */
+function showGuestModeBanner() {
+    const banner = document.getElementById('guestModeBanner')
+    if (banner) {
+        banner.style.display = 'flex'
+    }
+}
+
+// Bind guest mode login button
+const guestModeLoginButton = document.getElementById('guestModeLoginButton')
+if (guestModeLoginButton) {
+    guestModeLoginButton.onclick = () => {
+        ConfigManager.endGuestMode()
+        hideGuestModeBanner()
+        loginOptionsViewOnLoginSuccess = VIEWS.landing
+        loginOptionsViewOnLoginCancel = VIEWS.landing
+        switchView(getCurrentView(), VIEWS.loginOptions)
+    }
+}
+
+// Bind guest mode sign up button
+const guestModeSignUpButton = document.getElementById('guestModeSignUpButton')
+if (guestModeSignUpButton) {
+    guestModeSignUpButton.onclick = () => {
+        // Open sign up page in default browser
+        require('electron').shell.openExternal(Lang.queryJS('guestMode.signUpUrl'))
+    }
+}
+
+function initGuestModeState() {
+    if (ConfigManager.isGuestMode()) {
+        showGuestModeBanner()
+        user_text.innerHTML = Lang.queryJS('guestMode.guestUser')
+        document.getElementById('avatarContainer').style.backgroundImage = 'none'
+    }
+}
 // Bind selected account
 function updateSelectedAccount(authUser){
     let username = Lang.queryJS('landing.selectedAccount.noAccountSelected')

@@ -1154,6 +1154,7 @@ progress::-webkit-progress-bar {
 .loginOptionActions {
     display: flex;
     flex-direction: column;
+    align-items: center;
     row-gap: 10px;
 }
 
@@ -1180,6 +1181,47 @@ progress::-webkit-progress-bar {
 .loginOptionButton:focus {
     background: rgba(54, 54, 54, 0.25);
     text-shadow: 0px 0px 20px white;
+}
+
+/* Guest Mode Button Styles */
+.loginOptionGuestButton {
+    background: rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+}
+
+.loginOptionGuestButton:hover,
+.loginOptionGuestButton:focus {
+    background: rgba(138, 43, 226, 0.3);
+    border-color: rgba(138, 43, 226, 0.6);
+    text-shadow: 0px 0px 20px rgba(138, 43, 226, 0.8);
+}
+
+/* Guest Mode Divider */
+.loginOptionDivider {
+    display: flex;
+    align-items: center;
+    width: 16em;
+    margin: 10px 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.loginOptionDivider::before,
+.loginOptionDivider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.loginOptionDivider::before {
+    margin-right: 10px;
+}
+
+.loginOptionDivider::after {
+    margin-left: 10px;
 }
 
 #loginOptionCancelContainer {
@@ -2866,6 +2908,208 @@ input:checked + .toggleSwitchSlider:before {
     overflow-y: hidden;
 }
 
+/* =====================================================
+   Guest Mode Banner Styles
+   ===================================================== */
+
+#guestModeBanner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.9) 0%, rgba(106, 27, 154, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: guestBannerSlideIn 0.5s ease-out;
+}
+
+@keyframes guestBannerSlideIn {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+#guestModeBannerContent {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.guestModeBannerIcon {
+    width: 20px;
+    height: 20px;
+    color: white;
+    opacity: 0.9;
+}
+
+#guestModeBannerText {
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+#guestModeLoginButton,
+#guestModeSignUpButton {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+#guestModeLoginButton:hover,
+#guestModeSignUpButton:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+#guestModeLoginButton:active,
+#guestModeSignUpButton:active {
+    transform: translateY(0);
+}
+
+#guestModeSignUpButton {
+    background: rgba(255, 255, 255, 0.9);
+    color: #6a1b9a;
+    border-color: transparent;
+}
+
+#guestModeSignUpButton:hover {
+    background: white;
+}
+
+/* Adjust upper container when guest banner is visible */
+#landingContainer.guest-mode > #upper {
+    height: calc(77% - 40px);
+    margin-top: 40px;
+}
+
+/* Guest mode lock icon for restricted features */
+.guest-mode-locked {
+    position: relative;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.guest-mode-locked::after {
+    content: '🔒';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 24px;
+    z-index: 10;
+}
+
+/* Guest mode settings restrictions */
+.guest-mode-settings .guest-mode-disabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+    pointer-events: none;
+}
+
+.guest-mode-settings input:disabled,
+.guest-mode-settings button:disabled,
+.guest-mode-settings select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.guest-mode-settings .rangeSlider.guest-mode-disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Reusable guest mode banner class */
+.guestModeBanner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(135deg, rgba(138, 43, 226, 0.9) 0%, rgba(106, 27, 154, 0.9) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    animation: guestBannerSlideIn 0.5s ease-out;
+}
+
+.guestModeBannerContent {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.guestModeBannerText {
+    color: white;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.guestModeLoginBtn,
+.guestModeSignUpBtn {
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+}
+
+.guestModeLoginBtn:hover,
+.guestModeSignUpBtn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.guestModeLoginBtn:active,
+.guestModeSignUpBtn:active {
+    transform: translateY(0);
+}
+
+.guestModeSignUpBtn {
+    background: rgba(255, 255, 255, 0.9);
+    color: #6a1b9a;
+    border-color: transparent;
+}
+
+.guestModeSignUpBtn:hover {
+    background: white;
+}
+
+/* Settings guest mode banner */
+#settingsGuestModeBanner {
+    display: none !important;
+}
+
+/* =====================================================
+   End Guest Mode Banner Styles
+   ===================================================== */
+
 /* Upper content container. */
 #landingContainer > #upper {
     position: relative;
@@ -3395,6 +3639,14 @@ input:checked + .toggleSwitchSlider:before {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+}
+
+/* Guest mode avatar style */
+#avatarContainer.guest-avatar {
+    background-image: url('https://skins.visoftware.dev/2d/skin/VI_Software/head?scale=5');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 /* Avatar edit overlay. */

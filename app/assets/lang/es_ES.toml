@@ -33,6 +33,9 @@ newsErrorLoadSpan = "Verificando noticias.."
 newsErrorFailedSpan = "Error al cargar noticias"
 newsErrorRetryButton = "Intentar de nuevo"
 newsErrorNoneSpan = "Sin noticias"
+guestModeBannerText = "Estás navegando como Invitado"
+guestModeLoginButton = "Iniciar Sesión"
+guestModeSignUpButton = "Registrarse"
 
 [ejs.login]
 loginCancelText = "Cancelar"
@@ -55,6 +58,8 @@ loginOptionsTitle = "Opciones de inicio de sesión"
 loginWithVISWeb = "Iniciar sesión con VI Software Dashboard"
 loginWithVIS = "Iniciar sesión con VI Software Yggdrasi (Legacy)"
 cancelButton = "Cancelar"
+orContinueAs = "o continuar como"
+continueAsGuest = "Continuar como Invitado"
 
 [ejs.overlay]
 serverSelectHeader = "Lista de servidores de VI Software"
@@ -211,6 +216,16 @@ requiredValue = "* Requerido"
 [js.login.error.unknown]
 title = "Error desconocido durante el inicio de sesión"
 desc = "Ha ocurrido un error desconocido. Consulta la consola para obtener más detalles (CTRL + Shift + i)"
+
+[js.guestMode]
+guestUser = "Invitado"
+signUpUrl = "https://visoftware.dev/auth/"
+loginRequiredTitle = "Inicio de Sesión Requerido"
+loginRequiredMessage = "Para iniciar juegos, necesitas iniciar sesión con una cuenta de VI Software. El modo invitado te permite explorar el launcher, pero los lanzamientos de juegos requieren autenticación."
+loginButton = "Iniciar Sesión"
+cancelButton = "Cancelar"
+disabledTitle = "Modo Invitado No Disponible"
+disabledMessage = "El modo invitado ha sido deshabilitado por el administrador del launcher."
 
 [js.landing.launch]
 pleaseWait = "Por favor espera..."

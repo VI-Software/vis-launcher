@@ -33,6 +33,9 @@ newsErrorLoadSpan = "Comprovant notícies.."
 newsErrorFailedSpan = "No s'han pogut carregar les notícies"
 newsErrorRetryButton = "Tornar a provar"
 newsErrorNoneSpan = "Sense notícies"
+guestModeBannerText = "Estàs navegant com a Convidat"
+guestModeLoginButton = "Iniciar Sessió"
+guestModeSignUpButton = "Registrar-se"
 
 [ejs.login]
 loginCancelText = "Cancel·lar"
@@ -55,6 +58,8 @@ loginOptionsTitle = "Opcions d'inici de sessió"
 loginWithVISWeb = "Inicia sessió amb VI Software Dashboard"
 loginWithVIS = "Inicia sessió amb VI Software Yggdrasi (Legacy)"
 cancelButton = "Cancel·lar"
+orContinueAs = "o continuar com"
+continueAsGuest = "Continuar com a Convidat"
 
 [ejs.overlay]
 serverSelectHeader = "Llista de servidors de VI Software"
@@ -211,6 +216,16 @@ requiredValue = "* Obligatori"
 [js.login.error.unknown]
 title = "Error desconegut durant l'inici de sessió"
 desc = "S'ha produït un error desconegut. Comprova la consola per a més detalls (CTRL + Shift + i)"
+
+[js.guestMode]
+guestUser = "Convidat"
+signUpUrl = "https://visoftware.dev/auth/"
+loginRequiredTitle = "Inici de Sessió Requerit"
+loginRequiredMessage = "Per iniciar jocs, necessites iniciar sessió amb un compte de VI Software. El mode convidat et permet explorar el launcher, però els llançaments de jocs requereixen autenticació."
+loginButton = "Iniciar Sessió"
+cancelButton = "Cancel·lar"
+disabledTitle = "Mode Convidat No Disponible"
+disabledMessage = "El mode convidat ha estat deshabilitat per l'administrador del launcher."
 
 [js.landing.launch]
 pleaseWait = "Si us plau, espereu..."

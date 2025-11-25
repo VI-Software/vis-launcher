@@ -117,7 +117,8 @@ const DEFAULT_CONFIG = {
             dataDirectory: dataPath,
             legalAcceptedVersion: null,
             canaryAcknowledgedVersion: null,
-            christmasSnowflakes: true
+            christmasSnowflakes: true,
+            guestModeEnabled: true
         }
     },
     newsCache: {
@@ -1100,4 +1101,94 @@ exports.importConfiguration = function(jsonData){
         logger.error('Failed to import configuration:', err)
         throw err
     }
+}
+
+let guestModeActive = false
+let guestModeStartTime = null
+
+/**
+ * Check if guest mode feature is enabled in launcher settings.
+ * Reads from settings.toml first, falls back to default config.
+ * Third-party launchers can disable this feature via settings.toml.
+ * 
+ * @returns {boolean} True if guest mode feature is enabled.
+ */
+exports.isGuestModeFeatureEnabled = function() {
+    // Check settings.toml first (via LangLoader.queryRaw for boolean support)
+    try {
+        const settingsValue = Lang.queryRaw('launcher.guestModeEnabled')
+        if (typeof settingsValue === 'boolean') {
+            return settingsValue
+        }
+    } catch {
+        logger.debug('Guest mode setting not found in settings.toml, using config fallback')
+
+    }
+    return config.settings.launcher.guestModeEnabled !== false
+}
+
+/**
+ * Enable or disable the guest mode feature for third-party launchers.
+ * 
+ * @param {boolean} enabled Whether guest mode feature should be enabled.
+ */
+exports.setGuestModeFeatureEnabled = function(enabled) {
+    config.settings.launcher.guestModeEnabled = enabled
+}
+
+/**
+ * Start a guest mode session.
+ * Guest sessions are not persisted and will end when the app closes.
+ */
+exports.startGuestMode = function() {
+    if (!exports.isGuestModeFeatureEnabled()) {
+        logger.warn('Guest mode feature is disabled')
+        return false
+    }
+    guestModeActive = true
+    guestModeStartTime = Date.now()
+    logger.info('Guest mode session started')
+    return true
+}
+
+/**
+ * End the current guest mode session.
+ */
+exports.endGuestMode = function() {
+    if (guestModeActive) {
+        const sessionDuration = Date.now() - guestModeStartTime
+        logger.info(`Guest mode session ended. Duration: ${Math.round(sessionDuration / 1000)}s`)
+    }
+    guestModeActive = false
+    guestModeStartTime = null
+}
+
+/**
+ * Check if guest mode is currently active.
+ * 
+ * @returns {boolean} True if guest mode is active.
+ */
+exports.isGuestMode = function() {
+    return guestModeActive
+}
+
+/**
+ * Get guest mode session duration in milliseconds.
+ * 
+ * @returns {number|null} Session duration in ms, or null if not in guest mode.
+ */
+exports.getGuestModeSessionDuration = function() {
+    if (!guestModeActive || !guestModeStartTime) {
+        return null
+    }
+    return Date.now() - guestModeStartTime
+}
+
+/**
+ * Get guest mode session start time.
+ * 
+ * @returns {number|null} Session start timestamp, or null if not in guest mode.
+ */
+exports.getGuestModeStartTime = function() {
+    return guestModeStartTime
 }

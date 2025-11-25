@@ -1784,6 +1784,57 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
+    
+    // Apply guest mode restrictions if active
+    applyGuestModeSettingsRestrictions()
+}
+
+/**
+ * Apply restrictions to settings when in guest mode.
+ * Settings are view-only in guest mode.
+ */
+function applyGuestModeSettingsRestrictions() {
+    const settingsGuestBanner = document.getElementById('settingsGuestModeBanner')
+    
+    if (!ConfigManager.isGuestMode()) {
+        document.getElementById('settingsContainer').classList.remove('guest-mode-settings')
+        if (settingsGuestBanner) {
+            settingsGuestBanner.style.display = 'none'
+        }
+        return
+    }
+    
+    if (settingsGuestBanner) {
+        settingsGuestBanner.style.display = 'block'
+        
+        const loginBtn = document.getElementById('settingsGuestModeLoginButton')
+        const signUpBtn = document.getElementById('settingsGuestModeSignUpButton')
+        
+        if (loginBtn) {
+            loginBtn.onclick = () => {
+                ConfigManager.endGuestMode()
+                switchView(getCurrentView(), VIEWS.loginOptions)
+            }
+        }
+        
+        if (signUpBtn) {
+            signUpBtn.onclick = () => {
+                shell.openExternal('https://visoftware.dev/auth/')
+            }
+        }
+    }
+    
+    document.getElementById('settingsContainer').classList.add('guest-mode-settings')
+    
+    const settingsContainer = document.getElementById('settingsContainer')
+    const inputs = settingsContainer.querySelectorAll('input, button:not(#settingsNavDone):not(.guestModeLoginBtn):not(.guestModeSignUpBtn), select, .settingsFileSelButton, .rangeSlider')
+    
+    inputs.forEach(el => {
+        if (!el.classList.contains('settingsNavItem') && el.id !== 'settingsNavDone') {
+            el.disabled = true
+            el.classList.add('guest-mode-disabled')
+        }
+    })
 }
 
 /**

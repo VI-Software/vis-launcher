@@ -33,6 +33,9 @@ newsErrorLoadSpan = "Checking news.."
 newsErrorFailedSpan = "Failed to load news"
 newsErrorRetryButton = "Try again"
 newsErrorNoneSpan = "No news"
+guestModeBannerText = "You're browsing as a Guest"
+guestModeLoginButton = "Log In"
+guestModeSignUpButton = "Sign Up"
 
 [ejs.login]
 loginCancelText = "Cancel"
@@ -55,6 +58,8 @@ loginOptionsTitle = "Login options"
 loginWithVISWeb = "Log in with VI Software Dashboard"
 loginWithVIS = "Log in with VI Software Yggdrasi (Legacy)"
 cancelButton = "Cancel"
+orContinueAs = "or continue as"
+continueAsGuest = "Continue as Guest"
 
 [ejs.overlay]
 serverSelectHeader = "VI Software server list"
@@ -212,6 +217,16 @@ requiredValue = "* Required"
 [js.login.error.unknown]
 title = "Unknown error during login"
 desc = "An unknown error occurred. Check the console for more details (CTRL + Shift + i)"
+
+[js.guestMode]
+guestUser = "Guest"
+signUpUrl = "https://visoftware.dev/auth/"
+loginRequiredTitle = "Login Required"
+loginRequiredMessage = "To launch games, you need to log in with a VI Software account. Guest mode allows you to explore the launcher, but game launches require authentication."
+loginButton = "Log In"
+cancelButton = "Cancel"
+disabledTitle = "Guest Mode Unavailable"
+disabledMessage = "Guest mode has been disabled by the launcher administrator."
 
 [js.landing.launch]
 pleaseWait = "Please wait..."

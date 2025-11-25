@@ -22,6 +22,9 @@ const loginOptionsCancelButton = document.getElementById('loginOptionCancelButto
 const loginOptionVISWeb = document.getElementById('loginOptionVISWeb')
 const loginOptionBackContainer = document.getElementById('loginOptionBackContainer')
 const loginOptionBackButton = document.getElementById('loginOptionBackButton')
+const loginOptionGuest = document.getElementById('loginOptionGuest')
+const guestModeButtonContainer = document.getElementById('guestModeButtonContainer')
+const guestModeDivider = document.getElementById('guestModeDivider')
 
 let loginOptionsCancellable = false
 let loginOptionsFromSettings = false
@@ -30,6 +33,21 @@ let loginOptionsViewOnLoginSuccess
 let loginOptionsViewOnLoginCancel
 let loginOptionsViewOnCancel
 let loginOptionsViewCancelHandler
+
+/**
+ * Initialize guest mode UI visibility based on feature flag.
+ */
+function initGuestModeUI() {
+    const guestModeEnabled = ConfigManager.isGuestModeFeatureEnabled()
+    if (guestModeButtonContainer) {
+        guestModeButtonContainer.style.display = guestModeEnabled ? 'block' : 'none'
+    }
+    if (guestModeDivider) {
+        guestModeDivider.style.display = guestModeEnabled ? 'flex' : 'none'
+    }
+}
+
+initGuestModeUI()
 
 function loginOptionsCancelEnabled(val){
     if(val){
@@ -100,4 +118,68 @@ loginOptionBackButton.onclick = (e) => {
     switchView(getCurrentView(), VIEWS.settings, 500, 500, () => {
         loginOptionsFromSettings = false
     })
+}
+
+loginOptionGuest.onclick = (e) => {
+    const started = ConfigManager.startGuestMode()
+    if (!started) {
+        setOverlayContent(
+            Lang.queryJS('guestMode.disabledTitle'),
+            Lang.queryJS('guestMode.disabledMessage'),
+            'OK'
+        )
+        setOverlayHandler(() => {
+            toggleOverlay(false)
+        })
+        toggleOverlay(true)
+        return
+    }
+    
+    updateGuestModeUI()
+    
+    switchView(getCurrentView(), VIEWS.landing, 500, 500, () => {
+        showGuestModeBanner()
+    })
+}
+
+/**
+ * Update the UI elements for guest mode.
+ * Called when entering guest mode.
+ */
+function updateGuestModeUI() {
+    const userText = document.getElementById('user_text')
+    if (userText) {
+        userText.innerHTML = Lang.queryJS('guestMode.guestUser')
+    }
+    
+    const avatarContainer = document.getElementById('avatarContainer')
+    if (avatarContainer) {
+        avatarContainer.style.backgroundImage = 'url("https://skins.visoftware.dev/2d/skin/VI_Software/head?scale=5")'
+        avatarContainer.classList.add('guest-avatar')
+    }
+    
+    const landingContainer = document.getElementById('landingContainer')
+    if (landingContainer) {
+        landingContainer.classList.add('guest-mode')
+    }
+}
+
+/**
+ * Show the guest mode banner.
+ */
+function showGuestModeBanner() {
+    const banner = document.getElementById('guestModeBanner')
+    if (banner) {
+        banner.style.display = 'flex'
+    }
+}
+
+/**
+ * Hide the guest mode banner.
+ */
+function hideGuestModeBanner() {
+    const banner = document.getElementById('guestModeBanner')
+    if (banner) {
+        banner.style.display = 'none'
+    }
 }
