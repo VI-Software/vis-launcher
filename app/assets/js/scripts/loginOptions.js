@@ -63,9 +63,18 @@ function showLoginOptions(fromSettings = false) {
     if(fromSettings) {
         $(loginOptionBackContainer).show()
         $(loginOptionsCancelContainer).hide()
+        // Hide guest mode when adding account from settings (user is already logged in)
+        if (guestModeButtonContainer) {
+            guestModeButtonContainer.style.display = 'none'
+        }
+        if (guestModeDivider) {
+            guestModeDivider.style.display = 'none'
+        }
     } else {
         $(loginOptionsCancelContainer).show()
         $(loginOptionBackContainer).hide()
+        // Show guest mode based on feature flag when not from settings
+        initGuestModeUI()
     }
     switchView(getCurrentView(), VIEWS.loginOptions, 500, 500)
 }
