@@ -20,7 +20,7 @@ jobs:
       - name: Install and setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Create certificate folder
         run: mkdir -p cert
@@ -38,6 +38,19 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+        shell: bash
+
+      - name: Set release type for prerelease
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          if [[ "$VERSION" =~ .*(-nightly|-canary).* ]]; then
+            node -e "
+              const fs = require('fs');
+              let content = fs.readFileSync('electron-builder.yml', 'utf8');
+              content = content.replace(/releaseType: release/, 'releaseType: prerelease');
+              fs.writeFileSync('electron-builder.yml', content);
+            "
+          fi
         shell: bash
 
       - name: Build

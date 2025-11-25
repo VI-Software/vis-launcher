@@ -1,0 +1,173 @@
+/*
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+    © 2025 VI Software. All rights reserved.
+
+    License: AGPL-3.0
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    GitHub: https://github.com/VI-Software
+    Website: https://visoftware.dev
+*/
+
+@font-face {
+    font-family: 'Sen';
+    src: url('../fonts/Sen-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Sen Medium';
+    src: url('../fonts/Sen-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Asap';
+    src: url('../fonts/Asap-Regular.ttf');
+}
+
+:root {
+  --bg: #0f0f0f;
+  --panel: #1d1d1d;
+  --muted: #9aa0a6;
+  --accent: #3fb2ff;
+  --accept: #2ecc71;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: 'Sen', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  background: var(--bg);
+  color: #e9ecef;
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+header img {
+  height: 25px;
+  width: 25px;
+}
+
+header h1 {
+  font-size: 18px;
+  margin: 0;
+}
+
+header .sub {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.container {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  flex: 1;
+  overflow: auto;
+}
+
+.section {
+  background: var(--panel);
+  padding: 12px;
+  border-radius: 8px;
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.6);
+}
+
+.section h2 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+}
+
+.notice {
+  background: #131313;
+  padding: 20px;
+  border-radius: 6px;
+  max-height: 54vh;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: #ddd;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.notice.done {
+  outline: 3px solid rgba(46, 204, 113, 0.08);
+}
+
+footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.01), transparent);
+}
+
+.progress {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#declineBtn {
+  background: #b33838;
+  color: white;
+}
+
+#acceptBtn {
+  background: var(--accept);
+  color: #062b11;
+}
+
+#acceptBtn[disabled] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.notice::-webkit-scrollbar {
+  width: 12px;
+}
+
+.notice::-webkit-scrollbar-thumb {
+  background: linear-gradient(#2b2b2b, #222);
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+
+

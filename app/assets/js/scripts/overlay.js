@@ -3,17 +3,16 @@
 \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
-   \___/   |___| /_______  /\____/|__|   \/\_/  (____  /__|    \___  >
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-                         
-    © 2025 VI Software. Todos los derechos reservados.
-    
-    GitHub: https://github.com/VI-Software
-    Documentación: https://docs.visoftware.dev/vi-software/vis-launcher
-    Web: https://visoftware.dev
-    Licencia del proyecto: https://github.com/VI-Software/vis-launcher/blob/main/LICENSE
+    © 2025 VI Software. All rights reserved.
 
+    License: AGPL-3.0
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    GitHub: https://github.com/VI-Software
+    Website: https://visoftware.dev
 */
 
 
@@ -131,6 +130,14 @@ function toggleOverlay(toggleState, dismissable = false, content = 'overlayConte
                 } else {
                     $('#overlayDismiss').hide()
                 }
+
+                try {
+                    const sd = document.getElementById('serverDetailsDialog')
+                    if(sd) sd.style.display = 'none'
+                } catch (e) {
+                    // doop
+                }
+                selectedServer = null
             }
         })
     }
@@ -138,6 +145,15 @@ function toggleOverlay(toggleState, dismissable = false, content = 'overlayConte
 
 async function toggleServerSelection(toggleState){
     await prepareServerSelectionList()
+    
+    // Clear search input when opening/closing
+    const searchInput = document.getElementById('serverSearchInput')
+    if(searchInput) {
+        searchInput.value = ''
+        // Trigger input event to reset the server list display
+        searchInput.dispatchEvent(new Event('input'))
+    }
+    
     toggleOverlay(toggleState, true, 'serverSelectContent')
 }
 
@@ -215,6 +231,8 @@ document.getElementById('accountSelectConfirm').addEventListener('click', async 
         if(listings[i].hasAttribute('selected')){
             const authAcc = ConfigManager.setSelectedAccount(listings[i].getAttribute('uuid'))
             ConfigManager.save()
+            // Manually refresh distribution when switching accounts
+            await ConfigManager.refreshDistroAndSettings(authAcc)
             updateSelectedAccount(authAcc)
             if(getCurrentView() === VIEWS.settings) {
                 await prepareSettings()
@@ -228,6 +246,8 @@ document.getElementById('accountSelectConfirm').addEventListener('click', async 
     if(listings.length > 0){
         const authAcc = ConfigManager.setSelectedAccount(listings[0].getAttribute('uuid'))
         ConfigManager.save()
+        // Manually refresh distribution when switching accounts
+        await ConfigManager.refreshDistroAndSettings(authAcc)
         updateSelectedAccount(authAcc)
         if(getCurrentView() === VIEWS.settings) {
             await prepareSettings()
@@ -242,6 +262,13 @@ document.getElementById('serverSelectCancel').addEventListener('click', () => {
     toggleOverlay(false)
 })
 
+// Bind server select global list button.
+document.getElementById('serverSelectGlobalList').addEventListener('click', () => {
+    const { shell } = require('electron')
+    const { MAINWEBSITE_URL } = require('./assets/js/apiconstants')
+    shell.openExternal(`${MAINWEBSITE_URL}/servers`)
+})
+
 document.getElementById('accountSelectCancel').addEventListener('click', () => {
     $('#accountSelectContent').fadeOut(250, () => {
         $('#overlayContent').fadeIn(250)
@@ -252,6 +279,9 @@ let selectedServer = null
 
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
+    const { shell } = require('electron')
+    const { API_BASE_URL } = require('./assets/js/apiconstants')
+    
     listings.map((val) => {
         val.onclick = async (e) => {
             const serverId = val.getAttribute('servid')
@@ -267,7 +297,11 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
             document.getElementById('serverDetailsWebsite').onclick = () => {
-                require('electron').shell.openExternal(`https://visoftware.dev/servers/${serverId}`)
+                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}`)
+            }
+
+            document.getElementById('serverDetailsReport').onclick = () => {
+                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}?report=true`)
             }
 
             // Show dialog
@@ -392,30 +426,43 @@ async function populateServerListings(){
     const giaSel = ConfigManager.getSelectedServer()
     const servers = distro.servers
     let htmlString = ''
+    
+    if(servers.length === 0) {
+        document.getElementById('serverSelectListScrollable').style.display = 'none'
+        document.getElementById('noServersMessage').style.display = 'flex'
+        document.getElementById('noServersMessageText').textContent = Lang.queryJS('settings.serverListing.noServersAvailable')
+        document.getElementById('noServersMessageHint').textContent = Lang.queryJS('settings.serverListing.checkBackLater')
+        document.getElementById('serverSelectListScrollable').innerHTML = ''
+        return
+    }
+    
+    document.getElementById('serverSelectListScrollable').style.display = 'block'
+    
     for(const serv of servers){
         htmlString += `<button class="serverListing" servid="${serv.rawServer.id}" ${serv.rawServer.id === giaSel ? 'selected' : ''}>
-            <img class="serverListingImg" src="${serv.rawServer.icon}"/>
+            <img class="serverListingImg" src="${serv.rawServer.icon}" alt="${serv.rawServer.name}"/>
             <div class="serverListingDetails">
                 <span class="serverListingName">${serv.rawServer.name}</span>
                 <span class="serverListingDescription">${serv.rawServer.description}</span>
-                <div class="serverListingInfo">
-                    <div class="serverListingVersion">${serv.rawServer.minecraftVersion}</div>
-                    <div class="serverListingRevision">${serv.rawServer.version}</div>
-                    ${serv.rawServer.mainServer ? `<div class="serverListingStarWrapper">
-                        <svg id="Layer_1" viewBox="0 0 107.45 104.74" width="20px" height="20px">
-                            <defs>
-                                <style>.cls-1{fill:#fff;}.cls-2{fill:none;stroke:#fff;stroke-miterlimit:10;}</style>
-                            </defs>
-                            <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
-                            <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
-                        </svg>
-                        <span class="serverListingStarTooltip">${Lang.queryJS('settings.serverListing.mainServer')}</span>
-                    </div>` : ''}
-                </div>
+            </div>
+            <div class="serverListingInfo">
+                <div class="serverListingVersion">${serv.rawServer.minecraftVersion}</div>
+                <div class="serverListingRevision">v${serv.rawServer.version}</div>
+                ${serv.rawServer.mainServer ? `<div class="serverListingStarWrapper">
+                    <svg id="Layer_1" viewBox="0 0 107.45 104.74" width="18px" height="18px">
+                        <defs>
+                            <style>.cls-1{fill:#ffd700;}.cls-2{fill:none;stroke:#ffd700;stroke-miterlimit:10;}</style>
+                        </defs>
+                        <path class="cls-1" d="M100.93,65.54C89,62,68.18,55.65,63.54,52.13c2.7-5.23,18.8-19.2,28-27.55C81.36,31.74,63.74,43.87,58.09,45.3c-2.41-5.37-3.61-26.52-4.37-39-.77,12.46-2,33.64-4.36,39-5.7-1.46-23.3-13.57-33.49-20.72,9.26,8.37,25.39,22.36,28,27.55C39.21,55.68,18.47,62,6.52,65.55c12.32-2,33.63-6.06,39.34-4.9-.16,5.87-8.41,26.16-13.11,37.69,6.1-10.89,16.52-30.16,21-33.9,4.5,3.79,14.93,23.09,21,34C70,86.84,61.73,66.48,61.59,60.65,67.36,59.49,88.64,63.52,100.93,65.54Z"/>
+                        <circle class="cls-2" cx="53.73" cy="53.9" r="38"/>
+                    </svg>
+                    <span class="serverListingStarTooltip">${Lang.queryJS('settings.serverListing.mainServer')}</span>
+                </div>` : ''}
             </div>
         </button>`
     }
     document.getElementById('serverSelectListScrollable').innerHTML = htmlString
+    document.getElementById('noServersMessage').style.display = 'none'
 }
 
 async function populateAccountListings(){
@@ -444,11 +491,26 @@ function prepareAccountSelectionList(){
 document.getElementById('serverSearchInput').addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase()
     const servers = document.getElementsByClassName('serverListing')
+    let visibleCount = 0
     
     Array.from(servers).forEach(server => {
         const name = server.querySelector('.serverListingName').textContent.toLowerCase()
         const description = server.querySelector('.serverListingDescription').textContent.toLowerCase()
         const matches = name.includes(searchTerm) || description.includes(searchTerm)
         server.style.display = matches ? 'flex' : 'none'
+        if(matches) visibleCount++
     })
+    
+    // Show/hide no results message and scrollable container
+    const noServersMsg = document.getElementById('noServersMessage')
+    const scrollableContainer = document.getElementById('serverSelectListScrollable')
+    if(visibleCount === 0 && servers.length > 0) {
+        scrollableContainer.style.display = 'none'
+        noServersMsg.style.display = 'flex'
+        document.getElementById('noServersMessageText').textContent = Lang.queryJS('settings.serverListing.noServersFound')
+        document.getElementById('noServersMessageHint').textContent = Lang.queryJS('settings.serverListing.adjustSearch')
+    } else {
+        scrollableContainer.style.display = 'block'
+        noServersMsg.style.display = 'none'
+    }
 })
