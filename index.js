@@ -31,7 +31,11 @@ const { pathToFileURL }                 = require('url')
 const LangLoader                        = require('./app/assets/js/langloader')
 const ConfigManager                     = require('./app/assets/js/configmanager')
 const pjson                             = require('./package.json')
+const { Client: DiscordRPCClient }      = require('@visoftware/discord-rpc')
 let isExitingThroughTray = false
+
+let discordClient = null
+let discordActivity = null
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
@@ -210,6 +214,66 @@ ipcMain.on('splash-done', (_event) => {
     try {
         if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-done')
     } catch { /* best-effort forward */ }
+})
+
+
+// Discord RPC IPC handlers
+// We run the Discord RPC client in the main process because we need full Node API support
+ipcMain.on('discord-rpc-init', (_event, data) => {
+    const { genSettings, servSettings, initialDetails, state } = data
+    
+    if (discordClient) {
+        try {
+            discordClient.destroy()
+        } catch { /* doop */ }
+        discordClient = null
+    }
+    
+    discordClient = new DiscordRPCClient({
+        clientId: genSettings.clientId
+    })
+
+    discordActivity = {
+        details: initialDetails,
+        state: state,
+        largeImageKey: servSettings.largeImageKey,
+        largeImageText: servSettings.largeImageText,
+        smallImageKey: genSettings.smallImageKey,
+        smallImageText: genSettings.smallImageText,
+        startTimestamp: new Date().getTime(),
+        instance: false
+    }
+
+    discordClient.on('ready', () => {
+        console.log('[DiscordWrapper] Discord RPC Connected')
+        discordClient.user?.setActivity(discordActivity)
+    })
+    
+    discordClient.login().catch(error => {
+        if (error.message.includes('ENOENT')) {
+            console.log('[DiscordWrapper] Unable to initialize Discord Rich Presence, no client detected.')
+        } else {
+            console.log('[DiscordWrapper] Unable to initialize Discord Rich Presence: ' + error.message)
+        }
+    })
+})
+
+ipcMain.on('discord-rpc-update-details', (_event, details) => {
+    if (discordActivity && discordClient) {
+        discordActivity.details = details
+        discordClient.user?.setActivity(discordActivity)
+    }
+})
+
+ipcMain.on('discord-rpc-shutdown', (_event) => {
+    if (discordClient) {
+        try {
+            discordClient.user?.clearActivity()
+            discordClient.destroy()
+        } catch { /* ignore */ }
+        discordClient = null
+        discordActivity = null
+    }
 })
 
 // Handle legal acceptance/decline from legal window
