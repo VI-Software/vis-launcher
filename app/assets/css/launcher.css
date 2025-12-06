@@ -1212,6 +1212,47 @@ progress::-webkit-progress-bar {
     margin-left: 10px;
 }
 
+/* Guest Mode Button Styles */
+.loginOptionGuestButton {
+    background: rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.4);
+}
+
+.loginOptionGuestButton:hover,
+.loginOptionGuestButton:focus {
+    background: rgba(138, 43, 226, 0.3);
+    border-color: rgba(138, 43, 226, 0.6);
+    text-shadow: 0px 0px 20px rgba(138, 43, 226, 0.8);
+}
+
+/* Guest Mode Divider */
+.loginOptionDivider {
+    display: flex;
+    align-items: center;
+    width: 16em;
+    margin: 10px 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.loginOptionDivider::before,
+.loginOptionDivider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.loginOptionDivider::before {
+    margin-right: 10px;
+}
+
+.loginOptionDivider::after {
+    margin-left: 10px;
+}
+
 #loginOptionCancelContainer {
     position: absolute;
     bottom: -100px;
