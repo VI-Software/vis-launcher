@@ -245,15 +245,15 @@ ipcMain.on('discord-rpc-init', (_event, data) => {
     }
 
     discordClient.on('ready', () => {
-        console.log('[DiscordWrapper] Discord RPC Connected')
+        win.webContents.send('main-log', '[DiscordWrapper] Discord RPC Connected')
         discordClient.user?.setActivity(discordActivity)
     })
     
     discordClient.login().catch(error => {
         if (error.message.includes('ENOENT')) {
-            console.log('[DiscordWrapper] Unable to initialize Discord Rich Presence, no client detected.')
+            win.webContents.send('main-log', '[DiscordWrapper] Unable to initialize Discord Rich Presence, no client detected.')
         } else {
-            console.log('[DiscordWrapper] Unable to initialize Discord Rich Presence: ' + error.message)
+            win.webContents.send('main-log', '[DiscordWrapper] Unable to initialize Discord Rich Presence: ' + error.message)
         }
     })
 })

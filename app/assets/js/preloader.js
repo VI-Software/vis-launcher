@@ -24,6 +24,7 @@ const ConfigManager  = require('./configmanager')
 const { DistroAPI }  = require('./distromanager')
 const LangLoader     = require('./langloader')
 const { LoggerUtil } = require('@visoftware/vis-launcher-core')
+const { ipcRenderer } = require('electron')
 /* eslint-disable no-unused-vars */
 const { HeliosDistribution } = require('@visoftware/vis-launcher-core/common')
 
@@ -135,4 +136,9 @@ fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => 
     } else {
         logger.info('Directorio de nativos limpiado.')
     }
+})
+
+// Listen for main process logs
+ipcRenderer.on('main-log', (event, message) => {
+    console.log(message)
 })
