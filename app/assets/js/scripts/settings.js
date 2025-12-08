@@ -35,6 +35,8 @@ const settingsState = {
  * See: https://github.com/electron-userland/electron-builder/issues/1727
  */
 function relaunchApp() {
+    remote.app.isQuitting = true
+    
     if (remote.app.isPackaged && process.env.APPIMAGE) {
         execFile(process.env.APPIMAGE, process.argv)
         remote.app.quit()
