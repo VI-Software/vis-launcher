@@ -209,9 +209,27 @@ ipcMain.on('distributionIndexDone', (event, res) => {
     event.sender.send('distributionIndexDone', res)
 })
 
+// Handle app restart request
 ipcMain.on('restart-app', () => {
-    app.relaunch()
-    app.quit()
+    const { spawn } = require('child_process')
+    
+    // Set flag to bypass tray quit prevention
+    isExitingThroughTray = true
+    app.isQuitting = true
+    
+    // AppImage workaround
+    // see: https://github.com/electron-userland/electron-builder/issues/1727
+    if (app.isPackaged && process.env.APPIMAGE) {
+        // Spawn detached process to avoid EPIPE errors
+        spawn(process.env.APPIMAGE, process.argv.slice(1), {
+            detached: true,
+            stdio: 'ignore'
+        }).unref()
+        app.quit()
+    } else {
+        app.relaunch()
+        app.exit(0)
+    }
 })
 
 // Forward splash progress/messages from preloader (which sends to main)

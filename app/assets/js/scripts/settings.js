@@ -20,7 +20,6 @@
 const os     = require('os')
 const semver = require('semver')
 const fs     = require('fs-extra')
-const { execFile } = require('child_process')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
 const LangLoader = require('./assets/js/langloader')
@@ -35,16 +34,10 @@ const settingsState = {
  * See: https://github.com/electron-userland/electron-builder/issues/1727
  */
 function relaunchApp() {
-    remote.app.isQuitting = true
-    
-    if (remote.app.isPackaged && process.env.APPIMAGE) {
-        execFile(process.env.APPIMAGE, process.argv)
-        remote.app.quit()
-    } else {
-        // Normal relaunch for non-AppImage
-        remote.app.relaunch()
-        remote.app.exit(0)
-    }
+    // Use IPC to trigger restart in main process
+    // This ensures proper handling of AppImage and system tray
+    const { ipcRenderer } = require('electron')
+    ipcRenderer.send('restart-app')
 }
 
 function bindSettingsSelect(){
