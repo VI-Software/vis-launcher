@@ -141,8 +141,8 @@ jvmOptsTitle = "Opcions addicionals de JVM"
 jvmOptsDesc = "Opcions que es proporcionaran a la JVM en temps d'execució. <em>-Xms</em> i <em>-Xmx</em> no s'han d'incloure."
 launcherTabHeaderText = "Configuració del llançador"
 launcherTabHeaderDesc = "Opcions relacionades amb el llançador."
-allowPrereleaseTitle = "Canal d'actualització nocturn."
-allowPrereleaseDesc = "Les versions nocturnes inclouen noves funcions que poden no haver estat completament provades o integrades.<br>Aquesta opció es considerarà activa sempre que estiguis en una versió nocturna."
+updateChannelTitle = "Canal d'Actualització"
+updateChannelDesc = "Selecciona des de quin canal rebre actualitzacions del llançador. Canviar això requereix reiniciar.<br><strong>Canary:</strong> Compilacions de vanguardia amb les últimes funcions (poden ser inestables).<br><strong>Nightly:</strong> Compilacions diàries amb noves funcions (més estables que Canary).<br><strong>Stable:</strong> Només versions d'alliberament estables."
 christmasSnowflakesTitle = "Flocs de Neu Nadalencs"
 christmasSnowflakesDesc = "Mostra flocs de neu festius durant desembre. Activa o desactiva aquest efecte estacional."
 dataDirectoryTitle = "Directori de Dades"
@@ -432,6 +432,12 @@ tooManyRequestsAction = "Tornar-ho a intentar"
 [js.settings.language]
 restartRequiredTitle = "Cal reiniciar"
 restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi d'idioma tingui efecte."
+restartNowButton = "Reiniciar ara"
+restartLaterButton = "Més tard"
+
+[js.settings.updateChannel]
+restartRequiredTitle = "Cal reiniciar"
+restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi de canal d'actualització tingui efecte. El llançador buscarà actualitzacions al nou canal després de reiniciar."
 restartNowButton = "Reiniciar ara"
 restartLaterButton = "Més tard"
 

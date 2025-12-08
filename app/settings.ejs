@@ -362,14 +362,18 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%- lang('settings.allowPrereleaseTitle') %></span>
-                    <span class="settingsFieldDesc"><%- lang('settings.allowPrereleaseDesc') %></span>
+                    <span class="settingsFieldTitle"><%- lang('settings.updateChannelTitle') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.updateChannelDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
-                    <label class="toggleSwitch">
-                        <input type="checkbox" cValue="AllowPrerelease">
-                        <span class="toggleSwitchSlider"></span>
-                    </label>
+                    <div class="settingsSelectContainer">
+                        <div class="settingsSelectSelected" id="settingsUpdateChannelSelected">Canary</div>
+                        <div class="settingsSelectOptions" id="settingsUpdateChannelOptions" hidden>
+                            <div class="settingsSelectOption" value="canary">Canary</div>
+                            <div class="settingsSelectOption" value="nightly">Nightly</div>
+                            <div class="settingsSelectOption" value="latest">Stable</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <% const now = new Date(); const isDecember = now.getMonth() === 11; %>

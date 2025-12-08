@@ -247,9 +247,7 @@ function saveSettingsValues(){
                     sFnOpts.push(v.checked)
                     sFn.apply(null, sFnOpts)
                     // Special Conditions
-                    if(cVal === 'AllowPrerelease'){
-                        changeAllowPrerelease(v.checked)
-                    } else if(cVal === 'ChristmasSnowflakes'){
+                    if(cVal === 'ChristmasSnowflakes'){
                         changeChristmasSnowflakes(v.checked)
                     }
                 }
@@ -1775,6 +1773,7 @@ async function prepareSettings(first = false) {
         initSettingsValidators()
         prepareUpdateTab()
         setupLanguageSelector()
+        setupUpdateChannelSelector()
         initStorageManagement()
         initConfigurationManagement()
     } else {
@@ -1892,6 +1891,71 @@ function setupLanguageSelector() {
         })
         
         languageOptions.appendChild(option)
+    })
+}
+
+/**
+ * Set up the update channel selector dropdown in the launcher tab.
+ */
+function setupUpdateChannelSelector() {
+    const channelOptions = document.getElementById('settingsUpdateChannelOptions')
+    const channelSelected = document.getElementById('settingsUpdateChannelSelected')
+    
+    const channels = {
+        'canary': 'Canary',
+        'nightly': 'Nightly',
+        'latest': 'Stable'
+    }
+    
+    const currentChannel = ConfigManager.getChannel()
+    
+    channelSelected.innerHTML = channels[currentChannel] || channels['canary']
+    
+    channelOptions.innerHTML = ''
+    
+    Object.entries(channels).forEach(([channelCode, channelName]) => {
+        const option = document.createElement('div')
+        option.classList.add('settingsSelectOption')
+        option.setAttribute('value', channelCode)
+        option.innerHTML = channelName
+        if (channelCode === currentChannel) {
+            option.setAttribute('selected', '')
+        }
+        
+        option.addEventListener('click', () => {
+            if (channelCode === currentChannel) return
+            
+            channelSelected.innerHTML = channelName
+            
+            Array.from(channelOptions.children).forEach(child => {
+                child.removeAttribute('selected')
+            })
+            option.setAttribute('selected', '')
+            
+            ConfigManager.setChannel(channelCode)
+            ConfigManager.save()
+            
+            // Require restart to apply channel change
+            setOverlayContent(
+                Lang.queryJS('settings.updateChannel.restartRequiredTitle'),
+                Lang.queryJS('settings.updateChannel.restartRequiredMessage'),
+                Lang.queryJS('settings.updateChannel.restartNowButton'),
+                Lang.queryJS('settings.updateChannel.restartLaterButton')
+            )
+            
+            setOverlayHandler(() => {
+                remote.app.relaunch()
+                remote.app.exit(0)
+            })
+            
+            setDismissHandler(() => {
+                toggleOverlay(false)
+            })
+            
+            toggleOverlay(true, true)
+        })
+        
+        channelOptions.appendChild(option)
     })
 }
 

@@ -141,8 +141,8 @@ jvmOptsTitle = "Additional JVM Options"
 jvmOptsDesc = "Options to be provided to the JVM at runtime. <em>-Xms</em> and <em>-Xmx</em> should not be included."
 launcherTabHeaderText = "Launcher Settings"
 launcherTabHeaderDesc = "Options related to the launcher itself."
-allowPrereleaseTitle = "Nightly update channel."
-allowPrereleaseDesc = "Nightly versions include new features that may not have been fully tested or integrated.<br>This option will be considered active whenever you are on a nightly version."
+updateChannelTitle = "Update Channel"
+updateChannelDesc = "Select which update channel to receive launcher updates from. Changing this requires a restart.<br><strong>Canary:</strong> Bleeding-edge builds with latest features (may be unstable).<br><strong>Nightly:</strong> Daily builds with new features (more stable than Canary).<br><strong>Stable:</strong> Stable release versions only."
 christmasSnowflakesTitle = "Christmas Snowflakes"
 christmasSnowflakesDesc = "Display festive snowflakes during December. Toggle to enable or disable this seasonal effect."
 dataDirectoryTitle = "Data Directory"
@@ -434,6 +434,12 @@ tooManyRequestsAction = "Try again"
 [js.settings.language]
 restartRequiredTitle = "Restart Required"
 restartRequiredMessage = "You need to restart the launcher for the language change to take effect."
+restartNowButton = "Restart Now"
+restartLaterButton = "Later"
+
+[js.settings.updateChannel]
+restartRequiredTitle = "Restart Required"
+restartRequiredMessage = "You need to restart the launcher for the update channel change to take effect. The launcher will check for updates in the new channel after restart."
 restartNowButton = "Restart Now"
 restartLaterButton = "Later"
 

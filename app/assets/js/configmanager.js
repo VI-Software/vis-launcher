@@ -19,6 +19,7 @@ const fs   = require('fs-extra')
 const { LoggerUtil } = require('@visoftware/vis-launcher-core')
 const os   = require('os')
 const path = require('path')
+const semver = require('semver')
 
 const logger = LoggerUtil.getLogger('ConfigManager')
 const pjson = require('../../../package.json')
@@ -118,7 +119,9 @@ const DEFAULT_CONFIG = {
             legalAcceptedVersion: null,
             canaryAcknowledgedVersion: null,
             christmasSnowflakes: true,
-            guestModeEnabled: true
+            guestModeEnabled: true,
+            channel: null, // Will be inferred from app version if null
+            channelChanged: false
         }
     },
     newsCache: {
@@ -947,6 +950,65 @@ exports.getChristmasSnowflakesEnabled = function(def = false){
 exports.setChristmasSnowflakesEnabled = function(enabled){
     config.settings.launcher.christmasSnowflakes = enabled
 }
+
+/**
+ * Get the update channel for the launcher. If no channel is configured,
+ * infers it from the current version's prerelease tag.
+ * 
+ * @param {boolean} def Optional. If true, the default value will be returned.
+ * @returns {string} The update channel ('canary', 'nightly', or 'latest').
+ */
+exports.getChannel = function(def = false){
+    if(def) {
+        const version = pjson.version
+        const prerelease = semver.prerelease(version)
+        if(prerelease && prerelease.length > 0) {
+            const tag = prerelease[0].toString().toLowerCase()
+            if(tag.includes('canary')) return 'canary'
+            if(tag.includes('nightly')) return 'nightly'
+        }
+        return 'latest'
+    }
+    
+    if(!config.settings.launcher.channel) {
+        const version = pjson.version
+        const prerelease = semver.prerelease(version)
+        if(prerelease && prerelease.length > 0) {
+            const tag = prerelease[0].toString().toLowerCase()
+            if(tag.includes('canary')) return 'canary'
+            if(tag.includes('nightly')) return 'nightly'
+        }
+        return 'latest'
+    }
+    
+    return config.settings.launcher.channel
+}
+
+/**
+ * Set the update channel for the launcher.
+ * 
+ * @param {string} channel The update channel ('canary', 'nightly', or 'latest').
+ */
+exports.setChannel = function(channel){
+    config.settings.launcher.channel = channel
+    config.settings.launcher.channelChanged = true
+}
+
+/**
+ * Check if the channel was recently changed and reset the flag.
+ * Used to determine if allowDowngrade should be enabled.
+ * 
+ * @returns {boolean} True if channel was changed since last check.
+ */
+exports.wasChannelChanged = function(){
+    const changed = config.settings.launcher.channelChanged || false
+    if (changed) {
+        config.settings.launcher.channelChanged = false
+        exports.save()
+    }
+    return changed
+}
+
 /**
  * Export launcher configuration to a JSON file.
  * This function filters out sensitive data like accounts and authentication tokens.

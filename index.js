@@ -47,6 +47,9 @@ function initAutoUpdater(event, data) {
         // autoUpdater.allowPrerelease = true
     }
     
+    // Set the update channel from config
+    autoUpdater.channel = ConfigManager.getChannel()
+    
     if(isDev){
         autoUpdater.autoInstallOnAppQuit = false
         autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
@@ -92,6 +95,14 @@ function initAutoUpdater(event, data) {
 function configureAutoUpdaterForSplash(allowPrerelease = false) {
     try {
         autoUpdater.allowPrerelease = !!allowPrerelease
+        
+        // Set the update channel from config
+        autoUpdater.channel = ConfigManager.getChannel()
+        
+        // Allow downgrade if user just switched channels (e.g., canary -> stable)
+        // This enables users to move to a lower version when changing to a more stable channel
+        autoUpdater.allowDowngrade = ConfigManager.wasChannelChanged()
+        
         if (isDev) {
             autoUpdater.autoInstallOnAppQuit = false
             autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
@@ -196,6 +207,11 @@ ipcMain.on('autoUpdateAction', (event, arg, data) => {
 // Redirect distribution index event from preloader to renderer.
 ipcMain.on('distributionIndexDone', (event, res) => {
     event.sender.send('distributionIndexDone', res)
+})
+
+ipcMain.on('restart-app', () => {
+    app.relaunch()
+    app.quit()
 })
 
 // Forward splash progress/messages from preloader (which sends to main)

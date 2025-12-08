@@ -141,8 +141,8 @@ jvmOptsTitle = "Opciones Adicionales de JVM"
 jvmOptsDesc = "Opciones que se proporcionarán a la JVM en tiempo de ejecución. <em>-Xms</em> y <em>-Xmx</em> no deben incluirse."
 launcherTabHeaderText = "Configuración del launcher"
 launcherTabHeaderDesc = "Opciones relacionadas con el launcher en sí."
-allowPrereleaseTitle = "Canal de actualización Nightly."
-allowPrereleaseDesc = "Las versiones nightly incluyen nuevas funciones que pueden no haber sido completamente probadas o integradas.<br>Esta opción será considerada como activa siempre que se esté en una versión nightly."
+updateChannelTitle = "Canal de Actualización"
+updateChannelDesc = "Selecciona desde qué canal recibir actualizaciones del launcher. Cambiar esto requiere reiniciar.<br><strong>Canary:</strong> Compilaciones de vanguardia con las últimas funciones (pueden ser inestables).<br><strong>Nightly:</strong> Compilaciones diarias con nuevas funciones (más estables que Canary).<br><strong>Stable:</strong> Solo versiones de lanzamiento estables."
 christmasSnowflakesTitle = "Copos de Nieve Navideños"
 christmasSnowflakesDesc = "Muestra copos de nieve festivos durante diciembre. Activa o desactiva este efecto estacional."
 dataDirectoryTitle = "Directorio de Datos"
@@ -433,6 +433,12 @@ tooManyRequestsAction = "Intentar de nuevo"
 [js.settings.language]
 restartRequiredTitle = "Reinicio Requerido"
 restartRequiredMessage = "Necesitas reiniciar el lanzador para que el cambio de idioma surta efecto."
+restartNowButton = "Reiniciar Ahora"
+restartLaterButton = "Más Tarde"
+
+[js.settings.updateChannel]
+restartRequiredTitle = "Reinicio Requerido"
+restartRequiredMessage = "Necesitas reiniciar el lanzador para que el cambio de canal de actualización surta efecto. El lanzador buscará actualizaciones en el nuevo canal después de reiniciar."
 restartNowButton = "Reiniciar Ahora"
 restartLaterButton = "Más Tarde"
 
