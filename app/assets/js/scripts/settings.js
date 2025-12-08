@@ -20,12 +20,29 @@
 const os     = require('os')
 const semver = require('semver')
 const fs     = require('fs-extra')
+const { execFile } = require('child_process')
 
 const DropinModUtil  = require('./assets/js/dropinmodutil')
 const LangLoader = require('./assets/js/langloader')
 
 const settingsState = {
     invalid: new Set()
+}
+
+/**
+ * Relaunch the application. Handles AppImage relaunch workaround.
+ * AppImages run from a temp directory, so app.relaunch() doesn't work.
+ * See: https://github.com/electron-userland/electron-builder/issues/1727
+ */
+function relaunchApp() {
+    if (remote.app.isPackaged && process.env.APPIMAGE) {
+        execFile(process.env.APPIMAGE, process.argv)
+        remote.app.quit()
+    } else {
+        // Normal relaunch for non-AppImage
+        remote.app.relaunch()
+        remote.app.exit(0)
+    }
 }
 
 function bindSettingsSelect(){
@@ -1879,8 +1896,7 @@ function setupLanguageSelector() {
             )
             
             setOverlayHandler(() => {
-                remote.app.relaunch()
-                remote.app.exit(0)
+                relaunchApp()
             })
             
             setDismissHandler(() => {
@@ -1944,8 +1960,7 @@ function setupUpdateChannelSelector() {
             )
             
             setOverlayHandler(() => {
-                remote.app.relaunch()
-                remote.app.exit(0)
+                relaunchApp()
             })
             
             setDismissHandler(() => {
