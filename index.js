@@ -375,7 +375,7 @@ ipcMain.on('open-mod-store', () => {
     createModStoreWindow()
 })
 
-// IPC handlers for modstore secure access
+// IPC handlers for modstore
 ipcMain.handle('modstore-get-common-directory', () => {
     return ConfigManager.getCommonDirectory()
 })
