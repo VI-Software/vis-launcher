@@ -1487,7 +1487,7 @@ async function installSelectedMod() {
         successMessage.style.color = 'var(--color-error)'
         installSuccess.querySelector('svg').style.color = 'var(--color-error)'
 
-        btn.innerHTML = originalText
+        btn.textContent = originalText
         btn.disabled = false
 
         // Allow user to close after error
