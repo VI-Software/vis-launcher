@@ -142,3 +142,6 @@ fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => 
 ipcRenderer.on('main-log', (event, message) => {
     console.log(message)
 })
+
+// Expose to renderer
+window.LoggerUtil = LoggerUtil

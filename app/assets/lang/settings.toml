@@ -29,3 +29,4 @@ supportLink = "https://github.com/VI-Software/vis-launcher/issues"
 
 [launcher]
 guestModeEnabled = true
+modStoreEnabled = true

@@ -830,6 +830,69 @@ function bindDropinModFileSystemButton(){
 }
 
 /**
+ * Bind functionality to open the mod store
+ */
+function bindModStoreButton(){
+    const { ipcRenderer } = require('electron')
+    const modStoreBtn = document.getElementById('settingsOpenModStoreButton')
+    if(modStoreBtn) {
+        modStoreBtn.onclick = () => {
+            // Check if user has disabled the warning
+            if(ConfigManager.getModStoreDisableWarning()) {
+                ipcRenderer.send('open-mod-store')
+                return
+            }
+            
+            // Show warning overlay
+            setOverlayContent(
+                '<i class="fas fa-exclamation-triangle" style="color: #ff9800; margin-right: 8px;"></i>' + Lang.queryJS('settings.modStore.warningTitle'),
+                Lang.queryJS('settings.modStore.warningMessage'),
+                Lang.queryJS('settings.modStore.warningAccept'),
+                Lang.queryJS('settings.modStore.warningCancel')
+            )
+            
+            // Show the checkbox
+            const checkboxContainer = document.getElementById('overlayCheckboxContainer')
+            const checkbox = document.getElementById('overlayDontShowAgain')
+            const checkboxLabel = document.getElementById('overlayCheckboxLabel')
+            if(checkboxContainer) {
+                checkboxContainer.style.display = 'block'
+                checkbox.checked = false
+                if(checkboxLabel) {
+                    checkboxLabel.textContent = Lang.queryJS('settings.modStore.warningDontShow')
+                }
+            }
+            
+            setOverlayHandler(() => {
+                // Save preference if checkbox is checked
+                if(checkbox && checkbox.checked) {
+                    ConfigManager.setModStoreDisableWarning(true)
+                    ConfigManager.save()
+                }
+                
+                // Hide checkbox for next time
+                if(checkboxContainer) {
+                    checkboxContainer.style.display = 'none'
+                }
+                
+                toggleOverlay(false)
+                ipcRenderer.send('open-mod-store')
+            })
+            
+            setDismissHandler(() => {
+                // Hide checkbox for next time
+                if(checkboxContainer) {
+                    checkboxContainer.style.display = 'none'
+                }
+                toggleOverlay(false)
+            })
+            
+            toggleOverlay(true, true)
+        }
+    }
+}
+
+/**
  * Save drop-in mod states. Enabling and disabling is just a matter
  * of adding/removing the .disabled extension.
  */
@@ -871,6 +934,7 @@ async function reloadDropinMods(){
     await resolveDropinModsForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
+    bindModStoreButton()
     bindModsToggleSwitch()
 }
 
@@ -1026,6 +1090,7 @@ async function prepareModsTab(first){
     await resolveShaderpacksForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
+    bindModStoreButton()
     bindShaderpackButton()
     bindModsToggleSwitch()
     await loadSelectedServerOnModsTab()
@@ -1557,6 +1622,17 @@ function initStorageManagement() {
         clearInstancesButton.addEventListener('click', clearAllInstances)
     }
     
+    // Hide modstore storage UI if disabled
+    if (!ConfigManager.isModStoreEnabled()) {
+        const storageItems = document.querySelectorAll('.settingsStorageItem')
+        if (storageItems.length > 0) {
+            storageItems[0].style.display = 'none' // Modstore storage item
+        }
+        if (clearModstoreButton) {
+            clearModstoreButton.style.display = 'none'
+        }
+    }
+    
     // Update storage info when settings are opened
     updateStorageInfo()
 }
@@ -1795,6 +1871,14 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
+    
+    // Hide modstore UI if disabled
+    if (!ConfigManager.isModStoreEnabled()) {
+        const modStoreContainer = document.getElementById('settingsModStoreContainer')
+        if (modStoreContainer) {
+            modStoreContainer.style.display = 'none'
+        }
+    }
     
     // Apply guest mode restrictions if active
     applyGuestModeSettingsRestrictions()

@@ -30,6 +30,7 @@ const semver                            = require('semver')
 const { pathToFileURL }                 = require('url')
 const LangLoader                        = require('./app/assets/js/langloader')
 const ConfigManager                     = require('./app/assets/js/configmanager')
+const { DistroAPI }                     = require('./app/assets/js/distromanager')
 const pjson                             = require('./package.json')
 const { Client: DiscordRPCClient }      = require('@visoftware/discord-rpc')
 let isExitingThroughTray = false
@@ -369,6 +370,75 @@ ipcMain.on('legal-declined', (event) => {
     app.quit()
 })
 
+// Mod Store window IPC handler
+ipcMain.on('open-mod-store', () => {
+    createModStoreWindow()
+})
+
+// IPC handlers for modstore secure access
+ipcMain.handle('modstore-get-common-directory', () => {
+    return ConfigManager.getCommonDirectory()
+})
+
+ipcMain.handle('modstore-get-instance-directory', () => {
+    return ConfigManager.getInstanceDirectory()
+})
+
+ipcMain.handle('modstore-is-modstore-enabled', () => {
+    return ConfigManager.isModStoreEnabled()
+})
+
+ipcMain.handle('modstore-get-selected-server', () => {
+    return ConfigManager.getSelectedServer()
+})
+
+ipcMain.handle('modstore-set-selected-server', (event, id) => {
+    ConfigManager.setSelectedServer(id)
+    ConfigManager.save()
+})
+
+ipcMain.handle('modstore-get-server-by-id', async (event, id) => {
+    DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
+    DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
+    const distro = await DistroAPI.getDistribution()
+    return distro.getServerById(id)
+})
+
+ipcMain.handle('modstore-get-main-server', async () => {
+    DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
+    DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
+    const distro = await DistroAPI.getDistribution()
+    return distro.getMainServer()
+})
+
+ipcMain.on('modstore-log', (event, level, message) => {
+    const { LoggerUtil } = require('@visoftware/vis-launcher-core')
+    const logger = LoggerUtil.getLogger('ModStore')
+    logger[level](message)
+})
+
+ipcMain.on('modstore-window-close', (event) => {
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        modStoreWin.close()
+    }
+})
+
+ipcMain.on('modstore-window-minimize', (event) => {
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        modStoreWin.minimize()
+    }
+})
+
+ipcMain.on('modstore-window-maximize', (event) => {
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        if (modStoreWin.isMaximized()) {
+            modStoreWin.unmaximize()
+        } else {
+            modStoreWin.maximize()
+        }
+    }
+})
+
 // Disable hardware acceleration.
 // https://electronjs.org/docs/tutorial/offscreen-rendering
 app.disableHardwareAcceleration()
@@ -378,6 +448,7 @@ app.disableHardwareAcceleration()
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 let splashWin
+let modStoreWin
 // Timestamp (ms) when splash was shown. Used to enforce a minimum display time.
 let splashShownAt = 0
 
@@ -395,7 +466,8 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            devTools: ConfigManager.getChannel() !== 'latest'
         },
         backgroundColor: '#171614'
     })
@@ -468,6 +540,53 @@ function createSplashWindow(){
         splashWin.show()
     })
     splashWin.on('closed', () => { splashWin = null })
+}
+
+function createModStoreWindow() {
+    // Don't create if already exists
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        modStoreWin.focus()
+        return
+    }
+
+    modStoreWin = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        minWidth: 900,
+        minHeight: 600,
+        parent: win,
+        modal: false,
+        icon: getPlatformIcon('vis-icon'),
+        frame: false,
+        show: false,
+        backgroundColor: '#1a1a2e',
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: false,
+            preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
+            devTools: true
+        }
+    })
+    remoteMain.enable(modStoreWin.webContents)
+
+    const data = {
+        lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders),
+        LangLoader: LangLoader
+    }
+    Object.entries(data).forEach(([key, val]) => ejse.data(key, val))
+
+    modStoreWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'modstore.ejs')).toString())
+
+    
+    modStoreWin.once('ready-to-show', () => {
+        modStoreWin.show()
+        // modStoreWin.webContents.openDevTools({ mode: 'detach' })
+    })
+    modStoreWin.removeMenu()
+
+    modStoreWin.on('closed', () => {
+        modStoreWin = null
+    })
 }
 
 function createMenu() {

@@ -120,8 +120,12 @@ const DEFAULT_CONFIG = {
             canaryAcknowledgedVersion: null,
             christmasSnowflakes: true,
             guestModeEnabled: true,
+            modStoreEnabled: true,
             channel: null, // Will be inferred from app version if null
             channelChanged: false
+        },
+        modStore: {
+            disableWarning: false
         }
     },
     newsCache: {
@@ -327,6 +331,28 @@ exports.getSelectedServer = function(def = false){
 exports.setSelectedServer = function(serverID){
     config.selectedServer = serverID
 }
+
+// ModStore Settings
+
+/**
+ * Get the modStore warning disabled setting.
+ * 
+ * @returns {boolean} Whether or not the mod store warning is disabled.
+ */
+exports.getModStoreDisableWarning = function(){
+    return config.settings.modStore.disableWarning
+}
+
+/**
+ * Set the modStore warning disabled setting.
+ * 
+ * @param {boolean} disableWarning Whether or not to disable the mod store warning.
+ */
+exports.setModStoreDisableWarning = function(disableWarning){
+    config.settings.modStore.disableWarning = disableWarning
+}
+
+// Auth Account Settings
 
 /**
  * Get an array of each account currently authenticated by the launcher.
@@ -1196,6 +1222,23 @@ exports.isGuestModeFeatureEnabled = function() {
  */
 exports.setGuestModeFeatureEnabled = function(enabled) {
     config.settings.launcher.guestModeEnabled = enabled
+}
+
+/**
+ * Check if the modstore feature is enabled.
+ * 
+ * @returns {boolean} True if modstore feature is enabled.
+ */
+exports.isModStoreEnabled = function() {
+    try {
+        const settingsValue = Lang.queryRaw('launcher.modStoreEnabled')
+        if (typeof settingsValue === 'boolean') {
+            return settingsValue
+        }
+    } catch {
+        /* doop */
+    }
+    return config.settings.launcher.modStoreEnabled !== false
 }
 
 /**
