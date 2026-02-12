@@ -28,6 +28,8 @@ window.lang = (key, placeholders) => LangLoader.queryJS(key, placeholders)
 var ModStoreManager
 // eslint-disable-next-line no-var
 var isModStoreInitialized = false
+// Web worker for async rendering
+let modStoreWorker = null
 
 /* ===================================================================
    WINDOW FRAME HANDLERS
@@ -155,6 +157,7 @@ const modStoreState = {
     versionChannel: 'all', // 'all', 'release', 'beta', 'alpha'
     allVersionsData: [], // Store all versions for sorting/filtering
     supportPromptShown: false,
+    lastRenderedMods: [], // Store last rendered mods for event handling
 }
 
 /* ===================================================================
@@ -330,6 +333,40 @@ async function initModStore() {
 
         await loadFilters()
 
+        if (typeof Worker !== 'undefined') {
+            modStoreWorker = new Worker('./assets/js/scripts/modstore-worker.js')
+            modStoreWorker.onmessage = function(e) {
+                const { htmlStrings } = e.data
+                const container = document.getElementById('modstore-results')
+                if (container) {
+                    container.innerHTML = `<div id="modStoreGrid">${htmlStrings.join('')}</div>`
+                    container.querySelectorAll('.modStoreCard').forEach(card => {
+                        card.addEventListener('click', () => {
+                            const title = card.querySelector('.modStoreCardTitle').textContent.replace('Installed', '').trim()
+                            // We don't have the mod object directly, so we search for it by title. It is not the cleanest way, but it gets the kind of job done
+                            // TODO: Find a better way to associate the card with its mod data
+                            const mod = modStoreState.lastRenderedMods?.find(m => m.title === title)
+                            if (mod) openModDetails(mod)
+                        })
+                        card.addEventListener('keydown', (e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                                e.preventDefault()
+                                const title = card.querySelector('.modStoreCardTitle').textContent.replace('Installed', '').trim()
+                                const mod = modStoreState.lastRenderedMods?.find(m => m.title === title)
+                                if (mod) openModDetails(mod)
+                            }
+                        })
+                    })
+                    setupLazyLoading()
+                }
+                modStoreState.isLoading = false
+            }
+            modStoreWorker.onerror = function(error) {
+                logger.error('Worker error:', error)
+                modStoreState.isLoading = false
+            }
+        }
+
         // Wait for DOM to be fully ready
         // TODO: Better way to ensure DOM is ready?
         await new Promise((resolve) => setTimeout(resolve, 100))
@@ -391,25 +428,25 @@ async function loadFilters() {
         } catch (error) {
             logger.warn('Categories endpoint not available, using fallback')
             categories = [
-                { name: 'adventure', icon: '🗺️' },
-                { name: 'cursed', icon: '👻' },
-                { name: 'decoration', icon: '🎨' },
-                { name: 'economy', icon: '💰' },
-                { name: 'equipment', icon: '⚔️' },
-                { name: 'food', icon: '🍖' },
-                { name: 'game-mechanics', icon: '⚙️' },
-                { name: 'library', icon: '📚' },
-                { name: 'magic', icon: '✨' },
-                { name: 'management', icon: '📊' },
-                { name: 'minigame', icon: '🎮' },
-                { name: 'mobs', icon: '🐺' },
-                { name: 'optimization', icon: '⚡' },
-                { name: 'social', icon: '👥' },
-                { name: 'storage', icon: '📦' },
-                { name: 'technology', icon: '🔧' },
-                { name: 'transportation', icon: '🚂' },
-                { name: 'utility', icon: '🛠️' },
-                { name: 'worldgen', icon: '🌍' },
+                { name: 'adventure' },
+                { name: 'cursed' },
+                { name: 'decoration' },
+                { name: 'economy' },
+                { name: 'equipment' },
+                { name: 'food' },
+                { name: 'game-mechanics' },
+                { name: 'library' },
+                { name: 'magic' },
+                { name: 'management' },
+                { name: 'minigame' },
+                { name: 'mobs' },
+                { name: 'optimization' },
+                { name: 'social' },
+                { name: 'storage' },
+                { name: 'technology' },
+                { name: 'transportation' },
+                { name: 'utility' },
+                { name: 'worldgen' },
             ]
         }
         renderCategories(categories)
@@ -456,12 +493,6 @@ async function loadFilters() {
             if (modStoreState.detectedVersion) {
                 gameVersions = [
                     { version: modStoreState.detectedVersion, version_type: 'release' },
-                ]
-            } else {
-                gameVersions = [
-                    { version: '1.20.1', version_type: 'release' },
-                    { version: '1.19.4', version_type: 'release' },
-                    { version: '1.18.2', version_type: 'release' },
                 ]
             }
         }
@@ -807,61 +838,113 @@ async function searchMods() {
 }
 
 function renderResults(mods) {
-    const container = document.getElementById('modstore-results')
+    if (modStoreWorker) {
+        showLoading()
+        // Process mods to add installation status and pre-format data
+        const processedMods = mods.map((mod) => {
+            // Check by slug in installedMods Map
+            let isInstalled = modStoreState.installedMods.has(mod.slug.toLowerCase())
+            let installedInfo = isInstalled
+                ? modStoreState.installedMods.get(mod.slug.toLowerCase())
+                : null
 
-    if (mods.length === 0) {
-        container.innerHTML = `
-            <div class="modStoreEmptyState">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <h3>No mods found</h3>
-                <p>Try adjusting your search or filters</p>
-            </div>
-        `
-        return
-    }
-
-    const fragment = document.createDocumentFragment()
-    const grid = document.createElement('div')
-    grid.id = 'modStoreGrid'
-
-    mods.forEach((mod) => {
-    // Check by slug in installedMods Map
-        let isInstalled = modStoreState.installedMods.has(mod.slug.toLowerCase())
-        let installedInfo = isInstalled
-            ? modStoreState.installedMods.get(mod.slug.toLowerCase())
-            : null
-
-        // Also check if mod slug appears in any user-installed filename
-        if (!isInstalled) {
-            const modSlug = mod.slug.toLowerCase().replace(/-/g, '_')
-            const hasMatch = modStoreState.userModFiles.some(
-                (filename) =>
-                    filename.includes(mod.slug.toLowerCase()) ||
-          filename.includes(modSlug)
-            )
-            if (hasMatch) {
-                isInstalled = true
-                installedInfo = {
-                    source: 'user',
-                    removable: true,
+            // Also check if mod slug appears in any user-installed filename
+            if (!isInstalled) {
+                const modSlug = mod.slug.toLowerCase().replace(/-/g, '_')
+                const hasMatch = modStoreState.userModFiles.some(
+                    (filename) =>
+                        filename.includes(mod.slug.toLowerCase()) ||
+              filename.includes(modSlug)
+                )
+                if (hasMatch) {
+                    isInstalled = true
+                    installedInfo = {
+                        source: 'user',
+                        removable: true,
+                    }
                 }
             }
+
+            // Pre-format data for worker
+            const categories = (mod.categories || []).filter(
+                (c) => !['fabric', 'forge', 'neoforge', 'quilt'].includes(c)
+            )
+            const category = categories[0] || 'misc'
+
+            return {
+                ...mod,
+                isInstalled,
+                installedInfo,
+                formattedTitle: escapeHtml(mod.title),
+                formattedAuthor: escapeHtml(mod.author || 'Unknown'),
+                formattedDescription: escapeHtml(mod.description),
+                formattedDownloads: formatNumber(mod.downloads),
+                formattedFollows: formatNumber(mod.follows),
+                formattedCategory: formatCategoryName(category),
+                installedBadge: isInstalled ? '<span class="modStoreInstalledBadge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="8" height="8" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>Installed</span>' : ''
+            }
+        })
+        modStoreState.lastRenderedMods = processedMods
+        modStoreWorker.postMessage({ mods: processedMods })
+    } else {
+        // Fallback: original synchronous rendering
+        const container = document.getElementById('modstore-results')
+
+        if (mods.length === 0) {
+            container.innerHTML = `
+                <div class="modStoreEmptyState">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <h3>No mods found</h3>
+                    <p>Try adjusting your search or filters</p>
+                </div>
+            `
+            return
         }
 
-        mod.isInstalled = isInstalled
-        mod.installedInfo = installedInfo
+        const fragment = document.createDocumentFragment()
+        const grid = document.createElement('div')
+        grid.id = 'modStoreGrid'
 
-        const card = createModCard(mod)
-        grid.appendChild(card)
-    })
+        mods.forEach((mod) => {
+        // Check by slug in installedMods Map
+            let isInstalled = modStoreState.installedMods.has(mod.slug.toLowerCase())
+            let installedInfo = isInstalled
+                ? modStoreState.installedMods.get(mod.slug.toLowerCase())
+                : null
 
-    fragment.appendChild(grid)
-    container.innerHTML = ''
-    container.appendChild(fragment)
+            // Also check if mod slug appears in any user-installed filename
+            if (!isInstalled) {
+                const modSlug = mod.slug.toLowerCase().replace(/-/g, '_')
+                const hasMatch = modStoreState.userModFiles.some(
+                    (filename) =>
+                        filename.includes(mod.slug.toLowerCase()) ||
+              filename.includes(modSlug)
+                )
+                if (hasMatch) {
+                    isInstalled = true
+                    installedInfo = {
+                        source: 'user',
+                        removable: true,
+                    }
+                }
+            }
 
-    setupLazyLoading()
+            mod.isInstalled = isInstalled
+            mod.installedInfo = installedInfo
+
+            const card = createModCard(mod)
+            grid.appendChild(card)
+        })
+
+        modStoreState.lastRenderedMods = mods
+        fragment.appendChild(grid)
+        container.innerHTML = ''
+        container.appendChild(fragment)
+
+        setupLazyLoading()
+    }
 }
 
 function setupLazyLoading() {
@@ -1699,6 +1782,10 @@ function showSupportPrompt(modTitle, modPageUrl) {
 }
 
 function closeModStore() {
+    if (modStoreWorker) {
+        modStoreWorker.terminate()
+        modStoreWorker = null
+    }
     if (typeof toggleModStore === 'function') {
         toggleModStore()
     }
@@ -1718,7 +1805,6 @@ function updatePagination() {
     const startResult = modStoreState.offset + 1
     const endResult = modStoreState.offset + modStoreState.currentPageResults
 
-    // Format total hits with "~" to indicate estimate
     const totalText =
     modStoreState.totalHits >= 1000
         ? `~${(modStoreState.totalHits / 1000).toFixed(1)}k`.replace('.0k', 'k')
@@ -1736,7 +1822,6 @@ function updatePagination() {
         pageInfo.textContent = LangLoader.queryJS('modstore.noResultsFound')
     }
 
-    // Update page input constraints
     if (pageInput) {
         pageInput.setAttribute('max', totalPages)
         pageInput.setAttribute('placeholder', `1-${totalPages}`)
