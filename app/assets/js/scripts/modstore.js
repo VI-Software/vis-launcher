@@ -126,7 +126,7 @@ if (typeof require !== 'undefined') {
         })
     } catch (err) {
         console.log(
-            '[ModStore] Running in embedded mode, frame handlers not initialized'
+            '[ModStore] Running in embedded mode, frame handlers not initialized',
         )
     }
 }
@@ -203,11 +203,11 @@ async function scanInstalledMods() {
     const modules = modStoreState.currentServer.rawServer.modules
     if (modules && Array.isArray(modules)) {
         const modModules = modules.filter(
-            (mod) => mod.type === 'ForgeMod' || mod.type === 'FabricMod'
+            (mod) => mod.type === 'ForgeMod' || mod.type === 'FabricMod',
         )
 
         logger.info(
-            `Found ${modModules.length} admin-configured mod modules in distribution`
+            `Found ${modModules.length} admin-configured mod modules in distribution`,
         )
 
         for (const mod of modModules) {
@@ -235,7 +235,7 @@ async function scanInstalledMods() {
     // Scan user-installed mods from mods directory
     try {
         const instanceDir = await ipcRenderer.invoke(
-            'modstore-get-instance-directory'
+            'modstore-get-instance-directory',
         )
         if (instanceDir && modStoreState.currentServer?.rawServer?.id) {
             const serverId = modStoreState.currentServer.rawServer.id
@@ -256,7 +256,7 @@ async function scanInstalledMods() {
     }
 
     logger.info(
-        `Registered ${modStoreState.installedMods.size} installed mods for tracking`
+        `Registered ${modStoreState.installedMods.size} installed mods for tracking`,
     )
 }
 
@@ -285,14 +285,14 @@ async function initModStore() {
 
     try {
         const selectedServerId = await ipcRenderer.invoke(
-            'modstore-get-selected-server'
+            'modstore-get-selected-server',
         )
 
         let server = null
         if (selectedServerId != null) {
             server = await ipcRenderer.invoke(
                 'modstore-get-server-by-id',
-                selectedServerId
+                selectedServerId,
             )
         }
 
@@ -300,7 +300,7 @@ async function initModStore() {
             server = await ipcRenderer.invoke('modstore-get-main-server')
             await ipcRenderer.invoke(
                 'modstore-set-selected-server',
-                server.rawServer.id
+                server.rawServer.id,
             )
             logger.info('Determinando el servidor predeterminado...')
         }
@@ -314,10 +314,10 @@ async function initModStore() {
         }
 
         modStoreState.detectedLoader = ModStoreManager.detectLoader(
-            modStoreState.currentServer
+            modStoreState.currentServer,
         )
         modStoreState.detectedVersion = ModStoreManager.detectGameVersion(
-            modStoreState.currentServer
+            modStoreState.currentServer,
         )
 
         await scanInstalledMods()
@@ -335,24 +335,34 @@ async function initModStore() {
 
         if (typeof Worker !== 'undefined') {
             modStoreWorker = new Worker('./assets/js/scripts/modstore-worker.js')
-            modStoreWorker.onmessage = function(e) {
+            modStoreWorker.onmessage = function (e) {
                 const { htmlStrings } = e.data
                 const container = document.getElementById('modstore-results')
                 if (container) {
                     container.innerHTML = `<div id="modStoreGrid">${htmlStrings.join('')}</div>`
-                    container.querySelectorAll('.modStoreCard').forEach(card => {
+                    container.querySelectorAll('.modStoreCard').forEach((card) => {
                         card.addEventListener('click', () => {
-                            const title = card.querySelector('.modStoreCardTitle').textContent.replace('Installed', '').trim()
+                            const title = card
+                                .querySelector('.modStoreCardTitle')
+                                .textContent.replace('Installed', '')
+                                .trim()
                             // We don't have the mod object directly, so we search for it by title. It is not the cleanest way, but it gets the kind of job done
                             // TODO: Find a better way to associate the card with its mod data
-                            const mod = modStoreState.lastRenderedMods?.find(m => m.title === title)
+                            const mod = modStoreState.lastRenderedMods?.find(
+                                (m) => m.title === title,
+                            )
                             if (mod) openModDetails(mod)
                         })
                         card.addEventListener('keydown', (e) => {
                             if (e.key === 'Enter' || e.key === ' ') {
                                 e.preventDefault()
-                                const title = card.querySelector('.modStoreCardTitle').textContent.replace('Installed', '').trim()
-                                const mod = modStoreState.lastRenderedMods?.find(m => m.title === title)
+                                const title = card
+                                    .querySelector('.modStoreCardTitle')
+                                    .textContent.replace('Installed', '')
+                                    .trim()
+                                const mod = modStoreState.lastRenderedMods?.find(
+                                    (m) => m.title === title,
+                                )
                                 if (mod) openModDetails(mod)
                             }
                         })
@@ -361,7 +371,7 @@ async function initModStore() {
                 }
                 modStoreState.isLoading = false
             }
-            modStoreWorker.onerror = function(error) {
+            modStoreWorker.onerror = function (error) {
                 logger.error('Worker error:', error)
                 modStoreState.isLoading = false
             }
@@ -406,7 +416,7 @@ function updateHeaderInfo() {
     if (modStoreState.detectedLoader) {
         parts.push(
             modStoreState.detectedLoader.charAt(0).toUpperCase() +
-        modStoreState.detectedLoader.slice(1)
+        modStoreState.detectedLoader.slice(1),
         )
     }
     if (modStoreState.detectedVersion) {
@@ -457,7 +467,7 @@ async function loadFilters() {
             // Filter to only show client mod loaders: forge, neoforge, fabric, quilt
             const allowedLoaders = ['forge', 'neoforge', 'fabric', 'quilt']
             loaders = allLoaders.filter((l) =>
-                allowedLoaders.includes(l.name.toLowerCase())
+                allowedLoaders.includes(l.name.toLowerCase()),
             )
         } catch (error) {
             logger.warn('Loaders endpoint not available, using detected loader')
@@ -488,7 +498,7 @@ async function loadFilters() {
             }
         } catch (error) {
             logger.warn(
-                'Game versions endpoint not available? Meh, using detected version'
+                'Game versions endpoint not available? Meh, using detected version',
             )
             if (modStoreState.detectedVersion) {
                 gameVersions = [
@@ -521,7 +531,7 @@ function renderCategories(categories) {
           'technology',
           'utility',
           'worldgen',
-      ].includes(c.name)
+      ].includes(c.name),
     )
 
     relevantCategories.forEach((category) => {
@@ -532,7 +542,7 @@ function renderCategories(categories) {
         item.innerHTML = `
             <div class="modStoreFilterCheckbox"></div>
             <span class="modStoreFilterLabel">${formatCategoryName(
-        category.name
+        category.name,
     )}</span>
         `
         item.addEventListener('click', () => toggleCategory(category.name))
@@ -558,7 +568,7 @@ function renderLoaders(loaders) {
         item.innerHTML = `
             <div class="modStoreFilterCheckbox"></div>
             <span class="modStoreFilterLabel">${formatLoaderName(
-        loader.name
+        loader.name,
     )}</span>
         `
         item.addEventListener('click', () => toggleLoader(loader.name))
@@ -717,7 +727,7 @@ function bindEventListeners() {
         const jumpToPage = () => {
             const pageNum = parseInt(pageInput.value)
             const totalPages = Math.ceil(
-                modStoreState.totalHits / modStoreState.limit
+                modStoreState.totalHits / modStoreState.limit,
             )
 
             if (isNaN(pageNum) || pageNum < 1 || pageNum > totalPages) {
@@ -822,7 +832,7 @@ async function searchMods() {
         const endResult = modStoreState.offset + hits.length
 
         logger.info(
-            `Page ${currentPage} of ${totalPages}: Results ${startResult}-${endResult} of ~${modStoreState.totalHits} mods`
+            `Page ${currentPage} of ${totalPages}: Results ${startResult}-${endResult} of ~${modStoreState.totalHits} mods`,
         )
 
         requestAnimationFrame(() => {
@@ -854,7 +864,7 @@ function renderResults(mods) {
                 const hasMatch = modStoreState.userModFiles.some(
                     (filename) =>
                         filename.includes(mod.slug.toLowerCase()) ||
-              filename.includes(modSlug)
+            filename.includes(modSlug),
                 )
                 if (hasMatch) {
                     isInstalled = true
@@ -867,7 +877,7 @@ function renderResults(mods) {
 
             // Pre-format data for worker
             const categories = (mod.categories || []).filter(
-                (c) => !['fabric', 'forge', 'neoforge', 'quilt'].includes(c)
+                (c) => !['fabric', 'forge', 'neoforge', 'quilt'].includes(c),
             )
             const category = categories[0] || 'misc'
 
@@ -881,13 +891,15 @@ function renderResults(mods) {
                 formattedDownloads: formatNumber(mod.downloads),
                 formattedFollows: formatNumber(mod.follows),
                 formattedCategory: formatCategoryName(category),
-                installedBadge: isInstalled ? '<span class="modStoreInstalledBadge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="8" height="8" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>Installed</span>' : ''
+                installedBadge: isInstalled
+                    ? '<span class="modStoreInstalledBadge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="8" height="8" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>Installed</span>'
+                    : '',
             }
         })
         modStoreState.lastRenderedMods = processedMods
         modStoreWorker.postMessage({ mods: processedMods })
     } else {
-        // Fallback: original synchronous rendering
+    // Fallback: original synchronous rendering
         const container = document.getElementById('modstore-results')
 
         if (mods.length === 0) {
@@ -908,7 +920,7 @@ function renderResults(mods) {
         grid.id = 'modStoreGrid'
 
         mods.forEach((mod) => {
-        // Check by slug in installedMods Map
+            // Check by slug in installedMods Map
             let isInstalled = modStoreState.installedMods.has(mod.slug.toLowerCase())
             let installedInfo = isInstalled
                 ? modStoreState.installedMods.get(mod.slug.toLowerCase())
@@ -920,7 +932,7 @@ function renderResults(mods) {
                 const hasMatch = modStoreState.userModFiles.some(
                     (filename) =>
                         filename.includes(mod.slug.toLowerCase()) ||
-              filename.includes(modSlug)
+            filename.includes(modSlug),
                 )
                 if (hasMatch) {
                     isInstalled = true
@@ -972,7 +984,7 @@ function setupLazyLoading() {
             },
             {
                 rootMargin: '50px',
-            }
+            },
         )
 
         images.forEach((img) => imageObserver.observe(img))
@@ -1002,33 +1014,33 @@ function createModCard(mod) {
     'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect fill=%27%238b5cf6%27 width=%27100%27 height=%27100%27/%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2735%27 fill=%27none%27 stroke=%27white%27 stroke-width=%274%27/%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2748%27 font-weight=%27bold%27 fill=%27white%27 text-anchor=%27middle%27 font-family=%27sans-serif%27%3E%3F%3C/text%3E%3C/svg%3E'
 
     const categories = (mod.categories || []).filter(
-        (c) => !['fabric', 'forge', 'neoforge', 'quilt'].includes(c)
+        (c) => !['fabric', 'forge', 'neoforge', 'quilt'].includes(c),
     )
     const category = categories[0] || 'misc'
 
     const installedBadge = mod.isInstalled
         ? `<span class="modStoreInstalledBadge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="8" height="8" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>${LangLoader.queryJS(
-            'modstore.installedBadge'
+            'modstore.installedBadge',
         )}</span>`
         : ''
 
     card.innerHTML = `
         <div class="modStoreCardHeader">
             <img data-src="${iconUrl}" alt="${escapeHtml(
-    mod.title
+    mod.title,
 )}" class="modStoreCardIcon">
             <div class="modStoreCardInfo">
                 <h3 class="modStoreCardTitle">${escapeHtml(
-        mod.title
+        mod.title,
     )}${installedBadge}</h3>
                 <div class="modStoreCardAuthor">by ${escapeHtml(
-        mod.author || 'Unknown'
+        mod.author || 'Unknown',
     )}</div>
             </div>
         </div>
         <div class="modStoreCardBody">
             <p class="modStoreCardDescription">${escapeHtml(
-        mod.description
+        mod.description,
     )}</p>
         </div>
         <div class="modStoreCardFooter">
@@ -1048,7 +1060,7 @@ function createModCard(mod) {
             </div>
             <div class="modStoreCardTags">
                 <span class="modStoreCardTag">${formatCategoryName(
-        category
+        category,
     )}</span>
             </div>
         </div>
@@ -1211,7 +1223,7 @@ function renderModDetails(mod, versions) {
       mod.updated_datetime ||
       mod.date_published
         updatedEl.textContent = `${LangLoader.queryJS(
-            'modstore.updatedLabel'
+            'modstore.updatedLabel',
         )} ${formatDate(updateDate)}`
     }
 
@@ -1220,24 +1232,24 @@ function renderModDetails(mod, versions) {
         linksContainer.innerHTML = ''
         if (mod.source_url) {
             linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
-                mod.source_url
+                mod.source_url,
             )}'); return false;">${LangLoader.queryJS(
-                'modstore.sourceCodeLink'
+                'modstore.sourceCodeLink',
             )}</a>`
         }
         if (mod.issues_url) {
             linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
-                mod.issues_url
+                mod.issues_url,
             )}'); return false;">${LangLoader.queryJS('modstore.issuesLink')}</a>`
         }
         if (mod.wiki_url) {
             linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
-                mod.wiki_url
+                mod.wiki_url,
             )}'); return false;">${LangLoader.queryJS('modstore.wikiLink')}</a>`
         }
         if (mod.discord_url) {
             linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
-                mod.discord_url
+                mod.discord_url,
             )}'); return false;">${LangLoader.queryJS('modstore.discordLink')}</a>`
         }
     }
@@ -1267,7 +1279,7 @@ function renderModDetails(mod, versions) {
             // User-installed mod
             installBtn.style.display = 'block'
             installBtn.textContent = LangLoader.queryJS(
-                'modstore.updateVersionButton'
+                'modstore.updateVersionButton',
             )
             installBtn.disabled = true // Will be enabled when version selected
         } else {
@@ -1313,7 +1325,7 @@ function renderVersionsList(versions) {
             {
                 loader: modStoreState.detectedLoader,
                 version: modStoreState.detectedVersion,
-            }
+            },
         )}</div>`
         if (showAllBtn) showAllBtn.style.display = 'none'
         return
@@ -1322,7 +1334,7 @@ function renderVersionsList(versions) {
     let filteredVersions = versions
     if (modStoreState.versionChannel !== 'all') {
         filteredVersions = versions.filter(
-            (v) => v.version_type === modStoreState.versionChannel
+            (v) => v.version_type === modStoreState.versionChannel,
         )
     }
 
@@ -1376,14 +1388,14 @@ function renderVersionsList(versions) {
         item.innerHTML = `
             <div class="modStoreVersionHeader">
                 <span class="modStoreVersionName">${escapeHtml(
-        version.name
+        version.name,
     )}</span>
                 ${versionBadge}
                 <span class="modStoreVersionType">${version.version_type}</span>
             </div>
             <div class="modStoreVersionInfo">
                 ${version.game_versions.join(', ')} • ${version.loaders.join(
-    ', '
+    ', ',
 )} • ${formatDate(version.date_published)}
             </div>
         `
@@ -1469,12 +1481,12 @@ async function installSelectedMod() {
 
     try {
         const instanceDir = await ipcRenderer.invoke(
-            'modstore-get-instance-directory'
+            'modstore-get-instance-directory',
         )
 
         if (!instanceDir) {
             throw new Error(
-                'Instance directory not configured. Please check launcher settings.'
+                'Instance directory not configured. Please check launcher settings.',
             )
         }
 
@@ -1509,7 +1521,7 @@ async function installSelectedMod() {
 
         // Progress: 75%
         statusText.textContent = LangLoader.queryJS(
-            'modstore.finalizingInstallation'
+            'modstore.finalizingInstallation',
         )
         progressFill.style.width = '75%'
 
@@ -1565,7 +1577,7 @@ async function installSelectedMod() {
         installProgress.style.display = 'none'
         installSuccess.style.display = 'flex'
         successMessage.textContent = `${LangLoader.queryJS(
-            'modstore.errorPrefix'
+            'modstore.errorPrefix',
         )} ${error.message}`
         successMessage.style.color = 'var(--color-error)'
         installSuccess.querySelector('svg').style.color = 'var(--color-error)'
@@ -1594,12 +1606,12 @@ async function removeSelectedMod() {
 
     try {
         const instanceDir = await ipcRenderer.invoke(
-            'modstore-get-instance-directory'
+            'modstore-get-instance-directory',
         )
 
         if (!instanceDir) {
             throw new Error(
-                'Instance directory not configured. Please check launcher settings.'
+                'Instance directory not configured. Please check launcher settings.',
             )
         }
 
@@ -1649,7 +1661,7 @@ async function removeSelectedMod() {
             logger.info('Falling back to slug-based removal')
             removedCount = await ModStoreManager.removeMod(
                 modStoreState.selectedMod.slug,
-                modsDir
+                modsDir,
             )
         }
 
@@ -1742,7 +1754,7 @@ function showSupportPrompt(modTitle, modPageUrl) {
             countdownEl.textContent = countdown
             dismissBtn.textContent = LangLoader.queryJS(
                 'modstore.noThanksCountdown',
-                { countdown }
+                { countdown },
             )
             timerEl.innerHTML = LangLoader.queryJS('modstore.supportCountdownText', {
                 seconds: `<span id="modStoreSupportCountdown">${countdown}</span>`,
