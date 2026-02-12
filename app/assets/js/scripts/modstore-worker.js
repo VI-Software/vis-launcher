@@ -1,7 +1,7 @@
 self.onmessage = function(e) {
     const { mods } = e.data
     const htmlStrings = mods.map(mod => {
-        const iconUrl = mod.icon_url || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%238b5cf6" width="100" height="100"/></svg>'
+        const iconUrl = mod.icon_url || 'data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect fill=%27%238b5cf6%27 width=%27100%27 height=%27100%27/%3E%3Ccircle cx=%2750%27 cy=%2750%27 r=%2735%27 fill=%27none%27 stroke=%27white%27 stroke-width=%274%27/%3E%3Ctext x=%2750%27 y=%2765%27 font-size=%2748%27 font-weight=%27bold%27 fill=%27white%27 text-anchor=%27middle%27 font-family=%27sans-serif%27%3E%3F%3C/text%3E%3C/svg%3E'
 
         return `
             <div class="modStoreCard" title="Click to view details for ${mod.formattedTitle}" tabindex="0">
