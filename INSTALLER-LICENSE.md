@@ -32,7 +32,7 @@ The Licensor expressly disclaims any and all responsibility for data loss, corru
 
 COPYRIGHT AND LEGAL NOTICE
 
-Copyright (C) 2025 VI Software.
+Copyright (C) 2023-2026 VI Software.
 All rights reserved, except as expressly provided by the GNU Affero General Public License, Version 3.0, or any later version at your option.
 
 You should have received a copy of the GNU Affero General Public License together with this program. If not, the authoritative version is available at:

@@ -6,12 +6,16 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software. All rights reserved.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -31,7 +35,7 @@ const { HeliosDistribution } = require('@visoftware/vis-launcher-core/common')
 const logger = LoggerUtil.getLogger('Preloader')
 
 logger.info('VI Software Launcher')
-logger.info('© 2025 VI Software. All rights reserved.')
+logger.info('© 2023-2026 VI Software. All rights reserved.')
 logger.info('License: AGPL-3.0 https://www.gnu.org/licenses/agpl-3.0.en.html')
 logger.info('GitHub: https://github.com/VI-Software')
 logger.info('Website: https://visoftware.dev')

@@ -3,7 +3,7 @@ productName: 'VI Software Launcher'
 # Include architecture in artifact filenames is not here by default, we add them on each platform config if necessary for clarity
 artifactName: '${productName}-setup-${version}.${ext}'
 
-copyright: 'Copyright © 2025 VI Software'
+copyright: 'Copyright © 2022-2026 VI Software'
 
 asar: true
 compression: 'maximum'

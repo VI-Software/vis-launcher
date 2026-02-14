@@ -5,7 +5,7 @@
 #    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
 #                          \/                                 \/            \/ 
 #                          
-#     © 2025 VI Software. All rights reserved.
+#     © 2023-2026 VI Software. All rights reserved.
 # 
 #     License: AGPL-3.0
 #    https://www.gnu.org/licenses/agpl-3.0.en.html
@@ -51,7 +51,7 @@ loginButtonText = "INICIAR SESSÃO"
 loginNeedAccountLink = "https://puf.visoftware.dev"
 loginNeedAccountText = "Precisa de uma conta?"
 loginPasswordDisclaimer1 = "A sua palavra-passe é enviada diretamente para o servidor VI Software e nunca é armazenada."
-loginPasswordDisclaimer2 = "&copy 2025 VI Software e colaboradores. Todos os direitos reservados."
+loginPasswordDisclaimer2 = "&copy 2026 VI Software e colaboradores. Todos os direitos reservados."
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opções de início de sessão"
