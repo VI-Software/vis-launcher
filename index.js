@@ -490,17 +490,16 @@ function createWindow() {
     // Intentionally do not show main window here. The splash controls
     // when the main window becomes visible to avoid exposing the UI
     // before startup checks finish.
-    /*win.once('ready-to-show', () => {
-        // will be shown after splash closes
-    })*/
-    /*
-        win.once('ready-to-show', () => {
-            // show dev tools
-            if (isDev) {
-                win.webContents.openDevTools({ mode: 'detach' })
-            }
-        })
-    */
+    
+    // Open devtools immediately if requested via CLI flag in development mode
+    if (isDev && (process.argv.includes('--devtools') || process.argv.includes('-d'))) {
+        try {
+            win.webContents.openDevTools({ mode: 'detach' })
+        } catch (err) {
+            console.warn('Failed to open devtools:', err.message)
+        }
+    }
+    
     win.removeMenu()
 
     win.resizable = true

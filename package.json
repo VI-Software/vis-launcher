@@ -10,6 +10,7 @@
   "main": "index.js",
   "scripts": {
     "start": "electron .",
+    "dev": "electron . --devtools",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- -w",
     "dist:mac": " npm run dist -- -m",
