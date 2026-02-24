@@ -1229,6 +1229,34 @@ exports.setGuestModeFeatureEnabled = function(enabled) {
 }
 
 /**
+ * Check if legacy login feature is enabled in launcher settings.
+ * This is a debug option to show/hide the legacy VISoftware login method.
+ * Must be explicitly enabled via settings.toml by third-party launchers.
+ * 
+ * @returns {boolean} True if legacy login feature is enabled.
+ */
+exports.islegacyLoginUIEnabled = function() {
+    try {
+        const settingsValue = Lang.queryRaw('launcher.legacyLoginUIEnabled')
+        if (typeof settingsValue === 'boolean') {
+            return settingsValue
+        }
+    } catch {
+        // If not found in settings.toml, disabled by default
+    }
+    return false
+}
+
+/**
+ * Set whether the legacy login feature is enabled.
+ * 
+ * @param {boolean} enabled Whether legacy login should be enabled.
+ */
+exports.setlegacyLoginUIEnabled = function(enabled) {
+    config.settings.launcher.legacyLoginUIEnabled = enabled
+}
+
+/**
  * Check if the modstore feature is enabled.
  * 
  * @returns {boolean} True if modstore feature is enabled.

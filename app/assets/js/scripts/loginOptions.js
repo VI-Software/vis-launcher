@@ -22,6 +22,7 @@
 
 const loginOptionsCancelContainer = document.getElementById('loginOptionCancelContainer')
 const loginOptionVISoftware = document.getElementById('loginOptionVISoftware')
+const loginOptionVISoftwareContainer = loginOptionVISoftware?.parentElement
 const loginOptionsCancelButton = document.getElementById('loginOptionCancelButton')
 const loginOptionVISWeb = document.getElementById('loginOptionVISWeb')
 const loginOptionBackContainer = document.getElementById('loginOptionBackContainer')
@@ -51,7 +52,19 @@ function initGuestModeUI() {
     }
 }
 
+/**
+ * Initialize legacy login UI visibility based on feature flag.
+ * Legacy login is hidden by default unless explicitly enabled via debug settings.
+ */
+function initLegacyLoginUI() {
+    const legacyLoginUIEnabled = ConfigManager.islegacyLoginUIEnabled()
+    if (loginOptionVISoftwareContainer) {
+        loginOptionVISoftwareContainer.style.display = legacyLoginUIEnabled ? 'block' : 'none'
+    }
+}
+
 initGuestModeUI()
+initLegacyLoginUI()
 
 function loginOptionsCancelEnabled(val){
     if(val){
@@ -79,6 +92,8 @@ function showLoginOptions(fromSettings = false) {
         $(loginOptionBackContainer).hide()
         // Show guest mode based on feature flag when not from settings
         initGuestModeUI()
+        // Show legacy login based on feature flag
+        initLegacyLoginUI()
     }
     switchView(getCurrentView(), VIEWS.loginOptions, 500, 500)
 }
