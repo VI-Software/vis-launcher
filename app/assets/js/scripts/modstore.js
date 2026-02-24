@@ -19,11 +19,7 @@
     Website: https://visoftware.dev
 */
 
-const { ipcRenderer } = require('electron')
-
 const logger = window.LoggerUtil.getLogger('ModStore')
-const path = require('path')
-const LangLoader = require('./assets/js/langloader')
 
 window.lang = (key, placeholders) => LangLoader.queryJS(key, placeholders)
 

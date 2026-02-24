@@ -149,3 +149,6 @@ ipcRenderer.on('main-log', (event, message) => {
 
 // Expose to renderer
 window.LoggerUtil = LoggerUtil
+window.ipcRenderer = ipcRenderer
+window.LangLoader = LangLoader
+window.path = path
