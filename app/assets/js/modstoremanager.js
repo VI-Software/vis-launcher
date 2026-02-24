@@ -70,13 +70,10 @@ class ModStoreManager {
         const cached = this._getCache(cacheKey)
         
         if (cached) {
-            logger.info(`Using cached data for ${endpoint}`)
             return cached
         }
 
         try {
-            logger.info(`Fetching from API: ${endpoint}`)
-            
             const url = new URL(`${this.baseURL}${endpoint}`)
             Object.keys(params).forEach(key => {
                 if (params[key] !== undefined) {
@@ -117,8 +114,6 @@ class ModStoreManager {
 
         // Remove undefined params
         Object.keys(params).forEach(key => params[key] === undefined && delete params[key])
-
-        logger.info('API Search Params:', JSON.stringify(params, null, 2))
 
         const results = await this._apiRequest('/search', params)
         
@@ -216,11 +211,8 @@ class ModStoreManager {
             const filePath = path.join(modsDir, primaryFile.filename)
             
             if (await fs.pathExists(filePath)) {
-                logger.info(`Mod already exists: ${primaryFile.filename}`)
                 return filePath
             }
-
-            logger.info(`Downloading mod: ${primaryFile.filename}`)
 
             const downloadStream = got.stream(primaryFile.url)
             const fileWriterStream = fs.createWriteStream(filePath)
@@ -229,7 +221,6 @@ class ModStoreManager {
                 downloadStream.pipe(fileWriterStream)
                 
                 fileWriterStream.on('finish', () => {
-                    logger.info(`Mod installed successfully: ${primaryFile.filename}`)
                     resolve(filePath)
                 })
                 
@@ -248,34 +239,46 @@ class ModStoreManager {
      * @param {string} modsDir Path to mods directory
      * @returns {Promise<number>} Number of files removed
      */
-    async removeMod(modSlug, modsDir) {
+    async removeMod(modSlug, modsDir, filesToRemove) {
         try {
             if (!await fs.pathExists(modsDir)) {
                 logger.warn(`Mods directory does not exist: ${modsDir}`)
                 return 0
             }
 
-            const files = await fs.readdir(modsDir)
             let removedCount = 0
 
-            // Find files that contain the mod slug (case-insensitive)
-            // Most mod files are named like "modslug-version.jar"
-            const modSlugLower = modSlug.toLowerCase()
-            
-            for (const file of files) {
-                const fileLower = file.toLowerCase()
-                if (fileLower.includes(modSlugLower) && file.endsWith('.jar')) {
-                    const filePath = path.join(modsDir, file)
-                    await fs.remove(filePath)
-                    logger.info(`Removed mod file: ${file}`)
-                    removedCount++
+            // If specific files are provided, remove only those
+            if (filesToRemove && Array.isArray(filesToRemove) && filesToRemove.length > 0) {
+                const files = await fs.readdir(modsDir)
+                
+                for (const targetFile of filesToRemove) {
+                    if (files.includes(targetFile) && targetFile.endsWith('.jar')) {
+                        const filePath = path.join(modsDir, targetFile)
+                        await fs.remove(filePath)
+                        removedCount++
+                    }
+                }
+            } else {
+                // Fall back to slug-based matching if no specific files provided
+                const files = await fs.readdir(modsDir)
+
+                // Find files that contain the mod slug (case-insensitive)
+                // Most mod files are named like "modslug-version.jar"
+                const modSlugLower = modSlug.toLowerCase()
+                
+                for (const file of files) {
+                    const fileLower = file.toLowerCase()
+                    if (fileLower.includes(modSlugLower) && file.endsWith('.jar')) {
+                        const filePath = path.join(modsDir, file)
+                        await fs.remove(filePath)
+                        removedCount++
+                    }
                 }
             }
 
             if (removedCount === 0) {
                 logger.warn(`No files found matching mod slug: ${modSlug}`)
-            } else {
-                logger.info(`Removed ${removedCount} file(s) for mod: ${modSlug}`)
             }
 
             return removedCount

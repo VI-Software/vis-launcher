@@ -19,13 +19,33 @@
     Website: https://visoftware.dev
 */
 
-const logger = window.LoggerUtil.getLogger('ModStore')
+// Create a logger proxy since window.LoggerUtil won't be available in sandboxed context
+// Use lazy evaluation to avoid accessing modstoreAPI before preload has injected it
+const logger = {
+    info: (msg) => {
+        if (typeof window.modstoreAPI === 'undefined') return
+        window.modstoreAPI.log('info', msg)
+    },
+    warn: (msg) => {
+        if (typeof window.modstoreAPI === 'undefined') return
+        window.modstoreAPI.log('warn', msg)
+    },
+    error: (msg) => {
+        if (typeof window.modstoreAPI === 'undefined') return
+        window.modstoreAPI.log('error', msg)
+    },
+    debug: (msg) => {
+        if (typeof window.modstoreAPI === 'undefined') return
+        window.modstoreAPI.log('debug', msg)
+    },
+}
 
-window.lang = (key, placeholders) => LangLoader.queryJS(key, placeholders)
+window.lang = (key, placeholders) => {
+    if (typeof window.modstoreAPI === 'undefined') return key
+    return window.modstoreAPI.queryLang(key, placeholders)
+}
 
-// ModStoreManager isloaded on-demand when needed
-// eslint-disable-next-line no-var
-var ModStoreManager
+// ModStoreManager is on the main process
 // eslint-disable-next-line no-var
 var isModStoreInitialized = false
 // Web worker for async rendering
@@ -59,18 +79,18 @@ function syncBackgroundFromMainWindow() {
 
             if (mostRecent && mostRecent.dataUrl) {
                 document.body.style.backgroundImage = `url('${mostRecent.dataUrl}')`
-                logger.info('Synced background from cache')
+                logger.debug('Synced background from cache')
             } else {
                 // Fallback
                 document.body.style.backgroundImage =
           'url(\'assets/images/backgrounds/offline.jpg\')'
-                logger.info('Using fallback background')
+                logger.debug('Using fallback background')
             }
         } else {
             // Fallback
             document.body.style.backgroundImage =
         'url(\'assets/images/backgrounds/offline.jpg\')'
-            logger.info('No background cache found, using fallback')
+            logger.debug('No background cache found, using fallback')
         }
     } catch (error) {
         logger.error('Failed to sync background:', error)
@@ -79,7 +99,8 @@ function syncBackgroundFromMainWindow() {
     }
 }
 
-if (typeof require !== 'undefined') {
+// Initialize mod store window when modstoreAPI is available
+if (typeof window !== 'undefined') {
     try {
         document.addEventListener('DOMContentLoaded', () => {
             syncBackgroundFromMainWindow()
@@ -91,19 +112,19 @@ if (typeof require !== 'undefined') {
 
             if (closeBtn) {
                 closeBtn.addEventListener('click', () => {
-                    ipcRenderer.send('modstore-window-close')
+                    modstoreAPI.closeWindow()
                 })
             }
 
             if (minimizeBtn) {
                 minimizeBtn.addEventListener('click', () => {
-                    ipcRenderer.send('modstore-window-minimize')
+                    modstoreAPI.minimizeWindow()
                 })
             }
 
             if (maximizeBtn) {
                 maximizeBtn.addEventListener('click', () => {
-                    ipcRenderer.send('modstore-window-maximize')
+                    modstoreAPI.maximizeWindow()
                 })
             }
 
@@ -111,7 +132,7 @@ if (typeof require !== 'undefined') {
             const headerCloseBtn = document.getElementById('modStoreCloseBtn')
             if (headerCloseBtn) {
                 headerCloseBtn.addEventListener('click', () => {
-                    ipcRenderer.send('modstore-window-close')
+                    modstoreAPI.closeWindow()
                 })
             }
 
@@ -206,10 +227,6 @@ async function scanInstalledMods() {
             (mod) => mod.type === 'ForgeMod' || mod.type === 'FabricMod',
         )
 
-        logger.info(
-            `Found ${modModules.length} admin-configured mod modules in distribution`,
-        )
-
         for (const mod of modModules) {
             const moduleId = mod.id
             if (!moduleId) continue
@@ -234,30 +251,17 @@ async function scanInstalledMods() {
 
     // Scan user-installed mods from mods directory
     try {
-        const instanceDir = await ipcRenderer.invoke(
-            'modstore-get-instance-directory',
-        )
-        if (instanceDir && modStoreState.currentServer?.rawServer?.id) {
+        if (modStoreState.currentServer?.rawServer?.id) {
             const serverId = modStoreState.currentServer.rawServer.id
-            const modsDir = path.join(instanceDir, serverId, 'mods')
-
-            const fs = require('fs-extra')
-            if (await fs.pathExists(modsDir)) {
-                const files = await fs.readdir(modsDir)
-                const jarFiles = files.filter((f) => f.endsWith('.jar'))
-
-                logger.info(`Found ${jarFiles.length} user-installed mod files`)
-
-                modStoreState.userModFiles = jarFiles.map((f) => f.toLowerCase())
+            const userModFiles = await modstoreAPI.scanUserMods(serverId)
+            
+            if (userModFiles && userModFiles.length > 0) {
+                modStoreState.userModFiles = userModFiles
             }
         }
     } catch (error) {
         logger.warn('Failed to scan user mods directory:', error.message)
     }
-
-    logger.info(
-        `Registered ${modStoreState.installedMods.size} installed mods for tracking`,
-    )
 }
 
 /* ===================================================================
@@ -269,40 +273,28 @@ async function initModStore() {
         return
     }
 
-    if (!(await ipcRenderer.invoke('modstore-is-modstore-enabled'))) {
+    if (!(await modstoreAPI.isEnabled())) {
         return
     }
 
-    if (typeof ModStoreManager === 'undefined' || ModStoreManager === null) {
-        ModStoreManager = require('./assets/js/modstoremanager')
-    }
-
     if (isModStoreInitialized) {
-        logger.info('Mod store already initialized, skipping')
+        logger.debug('Mod store already initialized, skipping')
         return
     }
     isModStoreInitialized = true
 
     try {
-        const selectedServerId = await ipcRenderer.invoke(
-            'modstore-get-selected-server',
-        )
+        const selectedServerId = await modstoreAPI.getSelectedServer()
 
         let server = null
         if (selectedServerId != null) {
-            server = await ipcRenderer.invoke(
-                'modstore-get-server-by-id',
-                selectedServerId,
-            )
+            server = await modstoreAPI.getServerById(selectedServerId)
         }
 
         if (server == null) {
-            server = await ipcRenderer.invoke('modstore-get-main-server')
-            await ipcRenderer.invoke(
-                'modstore-set-selected-server',
-                server.rawServer.id,
-            )
-            logger.info('Determinando el servidor predeterminado...')
+            server = await modstoreAPI.getMainServer()
+            await modstoreAPI.setSelectedServer(server.rawServer.id)
+            logger.debug('Determinando el servidor predeterminado...')
         }
 
         modStoreState.currentServer = server
@@ -313,10 +305,10 @@ async function initModStore() {
             return
         }
 
-        modStoreState.detectedLoader = ModStoreManager.detectLoader(
+        modStoreState.detectedLoader = modstoreAPI.detectLoader(
             modStoreState.currentServer,
         )
-        modStoreState.detectedVersion = ModStoreManager.detectGameVersion(
+        modStoreState.detectedVersion = modstoreAPI.detectGameVersion(
             modStoreState.currentServer,
         )
 
@@ -434,7 +426,7 @@ async function loadFilters() {
     try {
         let categories = []
         try {
-            categories = await ModStoreManager.getCategories()
+            categories = await modstoreAPI.getCategories()
         } catch (error) {
             logger.warn('Categories endpoint not available, using fallback')
             categories = [
@@ -463,7 +455,7 @@ async function loadFilters() {
 
         let loaders = []
         try {
-            const allLoaders = await ModStoreManager.getLoaders()
+            const allLoaders = await modstoreAPI.getLoaders()
             // Filter to only show client mod loaders: forge, neoforge, fabric, quilt
             const allowedLoaders = ['forge', 'neoforge', 'fabric', 'quilt']
             loaders = allLoaders.filter((l) =>
@@ -491,7 +483,7 @@ async function loadFilters() {
                     { version: modStoreState.detectedVersion, version_type: 'release' },
                 ]
             } else {
-                const allVersions = await ModStoreManager.getGameVersions()
+                const allVersions = await modstoreAPI.getGameVersions()
                 gameVersions = allVersions
                     .filter((v) => v.version_type === 'release')
                     .slice(0, 5)
@@ -773,6 +765,17 @@ function bindEventListeners() {
     document
         .getElementById('modStoreModalRemoveBtn')
         .addEventListener('click', removeSelectedMod)
+
+    // External link event delegation
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modStoreModalLink') && e.target.hasAttribute('data-external-url')) {
+            e.preventDefault()
+            const url = e.target.getAttribute('data-external-url')
+            modstoreAPI.openExternal(url).catch((err) => {
+                logger.error('Failed to open URL:', err)
+            })
+        }
+    })
 }
 
 function resetAndSearch() {
@@ -810,7 +813,7 @@ async function searchMods() {
               ? [modStoreState.detectedVersion]
               : []
 
-        const results = await ModStoreManager.searchMods({
+        const results = await modstoreAPI.searchMods({
             query: modStoreState.searchQuery,
             categories: modStoreState.selectedCategories,
             loaders: searchLoaders,
@@ -830,10 +833,6 @@ async function searchMods() {
         const totalPages = Math.ceil(modStoreState.totalHits / modStoreState.limit)
         const startResult = modStoreState.offset + 1
         const endResult = modStoreState.offset + hits.length
-
-        logger.info(
-            `Page ${currentPage} of ${totalPages}: Results ${startResult}-${endResult} of ~${modStoreState.totalHits} mods`,
-        )
 
         requestAnimationFrame(() => {
             renderResults(hits)
@@ -1019,7 +1018,7 @@ function createModCard(mod) {
     const category = categories[0] || 'misc'
 
     const installedBadge = mod.isInstalled
-        ? `<span class="modStoreInstalledBadge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="8" height="8" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>${LangLoader.queryJS(
+        ? `<span class="modStoreInstalledBadge"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="8" height="8" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>${modstoreAPI.queryLang(
             'modstore.installedBadge',
         )}</span>`
         : ''
@@ -1106,9 +1105,9 @@ async function openModDetails(mod) {
     details.style.display = 'none'
 
     try {
-        const fullMod = await ModStoreManager.getModDetails(mod.project_id)
+        const fullMod = await modstoreAPI.getModDetails(mod.project_id)
 
-        const versions = await ModStoreManager.getModVersions(mod.project_id, {
+        const versions = await modstoreAPI.getModVersions(mod.project_id, {
             loaders: modStoreState.detectedLoader
                 ? [modStoreState.detectedLoader]
                 : undefined,
@@ -1173,8 +1172,8 @@ function renderModDetails(mod, versions) {
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" width="10" height="10" fill="currentColor"><path d="M438.6 105.4c12.5 12.5 12.5 32.8 0 45.3l-256 256c-12.5 12.5-32.8 12.5-45.3 0l-128-128c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0L160 338.7 393.4 105.4c12.5-12.5 32.8-12.5 45.3 0z"/></svg>'
             const badgeText =
         installedInfo?.source === 'distribution'
-            ? LangLoader.queryJS('modstore.managedByAdmin')
-            : `${checkIcon} ${LangLoader.queryJS('modstore.installedBadge')}`
+            ? modstoreAPI.queryLang('modstore.managedByAdmin')
+            : `${checkIcon} ${modstoreAPI.queryLang('modstore.installedBadge')}`
             titleEl.innerHTML = `${mod.title} <span class="modStoreInstalledBadge">${badgeText}</span>`
         }
     }
@@ -1222,7 +1221,7 @@ function renderModDetails(mod, versions) {
       mod.updated ||
       mod.updated_datetime ||
       mod.date_published
-        updatedEl.textContent = `${LangLoader.queryJS(
+        updatedEl.textContent = `${modstoreAPI.queryLang(
             'modstore.updatedLabel',
         )} ${formatDate(updateDate)}`
     }
@@ -1231,34 +1230,34 @@ function renderModDetails(mod, versions) {
     if (linksContainer) {
         linksContainer.innerHTML = ''
         if (mod.source_url) {
-            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
+            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" data-external-url="${escapeHtml(
                 mod.source_url,
-            )}'); return false;">${LangLoader.queryJS(
+            )}">${modstoreAPI.queryLang(
                 'modstore.sourceCodeLink',
             )}</a>`
         }
         if (mod.issues_url) {
-            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
+            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" data-external-url="${escapeHtml(
                 mod.issues_url,
-            )}'); return false;">${LangLoader.queryJS('modstore.issuesLink')}</a>`
+            )}">${modstoreAPI.queryLang('modstore.issuesLink')}</a>`
         }
         if (mod.wiki_url) {
-            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
+            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" data-external-url="${escapeHtml(
                 mod.wiki_url,
-            )}'); return false;">${LangLoader.queryJS('modstore.wikiLink')}</a>`
+            )}">${modstoreAPI.queryLang('modstore.wikiLink')}</a>`
         }
         if (mod.discord_url) {
-            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" onclick="require('electron').shell.openExternal('${escapeHtml(
+            linksContainer.innerHTML += `<a href="#" class="modStoreModalLink" data-external-url="${escapeHtml(
                 mod.discord_url,
-            )}'); return false;">${LangLoader.queryJS('modstore.discordLink')}</a>`
+            )}">${modstoreAPI.queryLang('modstore.discordLink')}</a>`
         }
     }
 
     const sourceContainer = document.getElementById('modStoreModalSource')
     if (sourceContainer) {
         const projectUrl = `https://modrinth.com/mod/${mod.slug}`
-        sourceContainer.innerHTML = LangLoader.queryJS('modstore.dataProvidedBy', {
-            provider: `<a href="#" onclick="require('electron').shell.openExternal('${projectUrl}'); return false;">Modrinth</a>`,
+        sourceContainer.innerHTML = modstoreAPI.queryLang('modstore.dataProvidedBy', {
+            provider: `<a href="#" class="modStoreModalLink" data-external-url="${projectUrl}">Modrinth</a>`,
         })
     }
 
@@ -1278,14 +1277,14 @@ function renderModDetails(mod, versions) {
         } else if (isInstalled) {
             // User-installed mod
             installBtn.style.display = 'block'
-            installBtn.textContent = LangLoader.queryJS(
-                'modstore.updateVersionButton',
+            installBtn.textContent = modstoreAPI.queryLang(
+                'modstore.updateVersionButton'
             )
             installBtn.disabled = true // Will be enabled when version selected
         } else {
             // Not installed
             installBtn.style.display = 'block'
-            installBtn.textContent = LangLoader.queryJS('modstore.installModButton')
+            installBtn.textContent = modstoreAPI.queryLang('modstore.installModButton')
             installBtn.disabled = true // Will be enabled when version selected
         }
     }
@@ -1320,7 +1319,7 @@ function renderVersionsList(versions) {
     container.innerHTML = ''
 
     if (versions.length === 0) {
-        container.innerHTML = `<div class="modStoreFilterLoading">${LangLoader.queryJS(
+        container.innerHTML = `<div class="modStoreFilterLoading">${modstoreAPI.queryLang(
             'modstore.noCompatibleVersionsFound',
             {
                 loader: modStoreState.detectedLoader,
@@ -1454,8 +1453,8 @@ async function installSelectedMod() {
 
     const isUpdate = modStoreState.selectedMod?.isInstalled
     btn.textContent = isUpdate
-        ? LangLoader.queryJS('modstore.updatingText')
-        : LangLoader.queryJS('modstore.installingText')
+        ? modstoreAPI.queryLang('modstore.updatingText')
+        : modstoreAPI.queryLang('modstore.installingText')
 
     // Show progress UI
     const modalDetails = document.getElementById('modStoreModalDetails')
@@ -1476,52 +1475,67 @@ async function installSelectedMod() {
     cancelBtn.onclick = () => {
         isCancelled = true
         cancelBtn.disabled = true
-        cancelBtn.textContent = LangLoader.queryJS('modstore.cancellingText')
+        cancelBtn.textContent = modstoreAPI.queryLang('modstore.cancellingText')
     }
 
     try {
-        const instanceDir = await ipcRenderer.invoke(
-            'modstore-get-instance-directory',
-        )
-
-        if (!instanceDir) {
-            throw new Error(
-                'Instance directory not configured. Please check launcher settings.',
-            )
-        }
-
         const serverId = modStoreState.currentServer?.rawServer?.id
 
         if (!serverId) {
             throw new Error('No server selected')
         }
 
-        const modsDir = path.join(instanceDir, serverId, 'mods')
-
-        logger.info(`${isUpdate ? 'Updating' : 'Installing'} mod to:`, modsDir)
+        logger.debug(`${isUpdate ? 'Updating' : 'Installing'} mod for server:`, serverId)
 
         // Progress: 25%
         statusText.textContent = isUpdate
-            ? LangLoader.queryJS('modstore.removingOldVersion')
-            : LangLoader.queryJS('modstore.preparingInstallation')
+            ? modstoreAPI.queryLang('modstore.removingOldVersion')
+            : modstoreAPI.queryLang('modstore.preparingInstallation')
         progressFill.style.width = '25%'
 
         // If updating, remove old version first
         if (isUpdate && modStoreState.selectedMod?.slug) {
             if (isCancelled) throw new Error('Installation cancelled by user')
-            await ModStoreManager.removeMod(modStoreState.selectedMod.slug, modsDir)
+            
+            // Try to match filenames from API for better removal
+            let filesToRemove = []
+            try {
+                const versions = await modstoreAPI.getModVersions(modStoreState.selectedMod.slug)
+                if (versions && versions.length > 0) {
+                    const possibleFilenames = []
+                    for (const version of versions) {
+                        if (version.files && version.files.length > 0) {
+                            const primaryFile = version.files.find(f => f.primary) || version.files[0]
+                            if (primaryFile && primaryFile.filename) {
+                                possibleFilenames.push(primaryFile.filename)
+                            }
+                        }
+                    }
+                    filesToRemove = modStoreState.userModFiles.filter(installed =>
+                        possibleFilenames.includes(installed)
+                    )
+                }
+            } catch (error) {
+                logger.warn('Failed to fetch versions for update removal:', error.message)
+            }
+            
+            await modstoreAPI.removeMod(
+                modStoreState.selectedMod.slug,
+                serverId,
+                filesToRemove.length > 0 ? filesToRemove : undefined
+            )
         }
 
         // Progress: 50%
-        statusText.textContent = LangLoader.queryJS('modstore.downloadingModFiles')
+        statusText.textContent = modstoreAPI.queryLang('modstore.downloadingModFiles')
         progressFill.style.width = '50%'
 
         if (isCancelled) throw new Error('Installation cancelled by user')
-        await ModStoreManager.installMod(modStoreState.selectedVersion, modsDir)
+        await modstoreAPI.installMod(modStoreState.selectedVersion, serverId)
 
         // Progress: 75%
-        statusText.textContent = LangLoader.queryJS(
-            'modstore.finalizingInstallation',
+        statusText.textContent = modstoreAPI.queryLang(
+            'modstore.finalizingInstallation'
         )
         progressFill.style.width = '75%'
 
@@ -1536,10 +1550,10 @@ async function installSelectedMod() {
             installProgress.style.display = 'none'
             installSuccess.style.display = 'flex'
             successMessage.textContent = isUpdate
-                ? LangLoader.queryJS('modstore.modUpdatedSuccessfully', {
+                ? modstoreAPI.queryLang('modstore.modUpdatedSuccessfully', {
                     modTitle: modStoreState.selectedMod.title,
                 })
-                : LangLoader.queryJS('modstore.modInstalledSuccessfully', {
+                : modstoreAPI.queryLang('modstore.modInstalledSuccessfully', {
                     modTitle: modStoreState.selectedMod.title,
                 })
 
@@ -1576,8 +1590,8 @@ async function installSelectedMod() {
         // Show error state
         installProgress.style.display = 'none'
         installSuccess.style.display = 'flex'
-        successMessage.textContent = `${LangLoader.queryJS(
-            'modstore.errorPrefix',
+        successMessage.textContent = `${modstoreAPI.queryLang(
+            'modstore.errorPrefix'
         )} ${error.message}`
         successMessage.style.color = 'var(--color-error)'
         installSuccess.querySelector('svg').style.color = 'var(--color-error)'
@@ -1602,68 +1616,50 @@ async function removeSelectedMod() {
     const btn = document.getElementById('modStoreModalRemoveBtn')
     const originalText = btn.textContent
     btn.disabled = true
-    btn.textContent = LangLoader.queryJS('modstore.removingText')
+    btn.textContent = modstoreAPI.queryLang('modstore.removingText')
 
     try {
-        const instanceDir = await ipcRenderer.invoke(
-            'modstore-get-instance-directory',
-        )
-
-        if (!instanceDir) {
-            throw new Error(
-                'Instance directory not configured. Please check launcher settings.',
-            )
-        }
-
         const serverId = modStoreState.currentServer?.rawServer?.id
 
         if (!serverId) {
             throw new Error('No server selected')
         }
 
-        const modsDir = path.join(instanceDir, serverId, 'mods')
+        logger.debug('Removing mod from server:', serverId)
 
-        logger.info('Removing mod from:', modsDir)
-
-        let targetFilename = null
-
-        if (
-            modStoreState.allVersionsData &&
-      modStoreState.allVersionsData.length > 0
-        ) {
-            for (const version of modStoreState.allVersionsData) {
-                const files = version.files || []
-                for (const file of files) {
-                    if (
-                        modStoreState.userModFiles.includes(file.filename.toLowerCase())
-                    ) {
-                        targetFilename = file.filename
-                        logger.info(`Found installed file to remove: ${targetFilename}`)
-                        break
+        // Fetch mod versions to find the actual filenames
+        let filesToRemove = []
+        try {
+            const versions = await modstoreAPI.getModVersions(modStoreState.selectedMod.slug)
+            if (versions && versions.length > 0) {
+                // Collect all possible primary filenames from all versions
+                const possibleFilenames = []
+                for (const version of versions) {
+                    if (version.files && version.files.length > 0) {
+                        const primaryFile = version.files.find(f => f.primary) || version.files[0]
+                        if (primaryFile && primaryFile.filename) {
+                            possibleFilenames.push(primaryFile.filename)
+                        }
                     }
                 }
-                if (targetFilename) break
+
+                // Match installed files against possible filenames
+                filesToRemove = modStoreState.userModFiles.filter(installed =>
+                    possibleFilenames.includes(installed)
+                )
+
+                logger.debug(`Matched ${filesToRemove.length} files for removal: ${filesToRemove.join(', ')}`)
             }
+        } catch (error) {
+            logger.warn('Failed to fetch mod versions for matching:', error.message)
         }
 
-        let removedCount = 0
-
-        if (targetFilename) {
-            const fs = require('fs-extra')
-            const filePath = path.join(modsDir, targetFilename)
-            if (await fs.pathExists(filePath)) {
-                await fs.remove(filePath)
-                logger.info(`Removed mod file: ${targetFilename}`)
-                removedCount = 1
-            }
-        } else {
-            // slug-based removal
-            logger.info('Falling back to slug-based removal')
-            removedCount = await ModStoreManager.removeMod(
-                modStoreState.selectedMod.slug,
-                modsDir,
-            )
-        }
+        // Remove with matched filenames, or fall back to slug-based matching
+        const removedCount = await modstoreAPI.removeMod(
+            modStoreState.selectedMod.slug,
+            serverId,
+            filesToRemove.length > 0 ? filesToRemove : undefined
+        )
 
         if (removedCount > 0) {
             btn.innerHTML =
@@ -1682,7 +1678,7 @@ async function removeSelectedMod() {
         }
     } catch (error) {
         logger.error('Failed to remove mod:', error)
-        btn.textContent = LangLoader.queryJS('modstore.removeFailedText')
+        btn.textContent = modstoreAPI.queryLang('modstore.removeFailedText')
         setTimeout(() => {
             btn.textContent = originalText
             btn.disabled = false
@@ -1731,7 +1727,7 @@ function showSupportPrompt(modTitle, modPageUrl) {
 
     if (!promptOverlay) return
 
-    titleEl.textContent = LangLoader.queryJS('modstore.supportPromptTitle')
+    titleEl.textContent = modstoreAPI.queryLang('modstore.supportPromptTitle')
 
     promptOverlay.style.display = 'flex'
     visitBtn.style.display = 'block'
@@ -1740,11 +1736,11 @@ function showSupportPrompt(modTitle, modPageUrl) {
     let countdown = 3
     countdownEl.textContent = countdown
     dismissBtn.disabled = true
-    dismissBtn.textContent = LangLoader.queryJS('modstore.noThanksCountdown', {
+    dismissBtn.textContent = modstoreAPI.queryLang('modstore.noThanksCountdown', {
         countdown,
     })
 
-    timerEl.innerHTML = LangLoader.queryJS('modstore.supportCountdownText', {
+    timerEl.innerHTML = modstoreAPI.queryLang('modstore.supportCountdownText', {
         seconds: `<span id="modStoreSupportCountdown">${countdown}</span>`,
     })
 
@@ -1752,17 +1748,17 @@ function showSupportPrompt(modTitle, modPageUrl) {
         countdown--
         if (countdown > 0) {
             countdownEl.textContent = countdown
-            dismissBtn.textContent = LangLoader.queryJS(
+            dismissBtn.textContent = modstoreAPI.queryLang(
                 'modstore.noThanksCountdown',
-                { countdown },
+                { countdown }
             )
-            timerEl.innerHTML = LangLoader.queryJS('modstore.supportCountdownText', {
+            timerEl.innerHTML = modstoreAPI.queryLang('modstore.supportCountdownText', {
                 seconds: `<span id="modStoreSupportCountdown">${countdown}</span>`,
             })
         } else {
             clearInterval(interval)
             dismissBtn.disabled = false
-            dismissBtn.textContent = LangLoader.queryJS('modstore.noThanksButton')
+            dismissBtn.textContent = modstoreAPI.queryLang('modstore.noThanksButton')
             timerEl.style.display = 'none'
             buttonsEl.style.display = 'flex'
         }
@@ -1771,13 +1767,13 @@ function showSupportPrompt(modTitle, modPageUrl) {
     buttonsEl.style.display = 'flex'
 
     visitBtn.onclick = () => {
-        require('electron').shell.openExternal(modPageUrl)
+        modstoreAPI.openExternal(modPageUrl)
         promptOverlay.style.display = 'none'
         closeModal()
         setTimeout(() => {
             timerEl.style.display = 'block'
             buttonsEl.style.display = 'none'
-            dismissBtn.textContent = LangLoader.queryJS('modstore.noThanksButton')
+            dismissBtn.textContent = modstoreAPI.queryLang('modstore.noThanksButton')
         }, 500)
     }
 
@@ -1788,7 +1784,7 @@ function showSupportPrompt(modTitle, modPageUrl) {
         setTimeout(() => {
             timerEl.style.display = 'block'
             buttonsEl.style.display = 'none'
-            dismissBtn.textContent = LangLoader.queryJS('modstore.noThanksButton')
+            dismissBtn.textContent = modstoreAPI.queryLang('modstore.noThanksButton')
         }, 500)
     }
 }
@@ -1823,7 +1819,7 @@ function updatePagination() {
         : `~${modStoreState.totalHits}`
 
     if (modStoreState.totalHits > 0 && modStoreState.currentPageResults > 0) {
-        pageInfo.textContent = LangLoader.queryJS('modstore.showingResults', {
+        pageInfo.textContent = modstoreAPI.queryLang('modstore.showingResults', {
             start: startResult,
             end: endResult,
             total: totalText,
@@ -1831,7 +1827,7 @@ function updatePagination() {
             totalPages: totalPages,
         })
     } else {
-        pageInfo.textContent = LangLoader.queryJS('modstore.noResultsFound')
+        pageInfo.textContent = modstoreAPI.queryLang('modstore.noResultsFound')
     }
 
     if (pageInput) {
@@ -1853,7 +1849,7 @@ function showLoading() {
     container.innerHTML = `
         <div id="modStoreLoading" class="modStoreLoadingState">
             <div class="modStoreLoadingSpinner"></div>
-            <p>${LangLoader.queryJS('modstore.loadingModsText')}</p>
+            <p>${modstoreAPI.queryLang('modstore.loadingModsText')}</p>
         </div>
     `
 }
@@ -1922,18 +1918,18 @@ function translateElement(el) {
             console.error('Invalid placeholders JSON for', key, e)
         }
     }
-    el.textContent = LangLoader.queryJS(key, placeholders)
+    el.textContent = modstoreAPI.queryLang(key, placeholders)
 }
 
 function translatePage() {
     document.querySelectorAll('[data-lang-key]').forEach(translateElement)
     document.querySelectorAll('[data-lang-placeholder]').forEach((el) => {
         const key = el.getAttribute('data-lang-placeholder')
-        el.placeholder = LangLoader.queryJS(key)
+        el.placeholder = modstoreAPI.queryLang(key)
     })
     document.querySelectorAll('[data-lang-title]').forEach((el) => {
         const key = el.getAttribute('data-lang-title')
-        el.title = LangLoader.queryJS(key)
+        el.title = modstoreAPI.queryLang(key)
     })
 }
 

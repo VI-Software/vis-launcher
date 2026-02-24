@@ -25,7 +25,6 @@ const path = require('path')
 const toml = require('toml')
 const merge = require('lodash.merge')
 const os = require('os')
-const { log } = require('console')
 
 let lang
 
@@ -146,7 +145,8 @@ exports.getLauncherDirectory = function() {
             
         return app.getPath('userData')
     } catch {
-        log.warn('Electron app path not accessible, using home directory for launcher data.')
+        // This function is called on the modstore, where the logger is not accessible, so we use console.warn instead of Logger.warn
+        console.warn('Electron app path not accessible, using home directory for launcher data.')
         return path.join(os.homedir(), '.vis-launcher')
     }
 }
