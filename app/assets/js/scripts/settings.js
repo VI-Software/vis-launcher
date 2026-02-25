@@ -1313,19 +1313,17 @@ function populateJavaReqDesc(server) {
 
 function populateJvmOptsLink(server) {
     const major = server.effectiveJavaOptions.suggestedMajor
-    settingsJvmOptsLink.innerHTML = Lang.queryJS('settings.java.availableOptions', { major: major })
-    if(major >= 12) {
-        settingsJvmOptsLink.href = `https://docs.oracle.com/en/java/javase/${major}/docs/specs/man/java.html#extra-options-for-java`
-    }
-    else if(major >= 11) {
-        settingsJvmOptsLink.href = 'https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE'
-    }
-    else if(major >= 9) {
-        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/${major}/tools/java.htm`
-    }
-    else {
-        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/${major}/docs/technotes/tools/${process.platform === 'win32' ? 'windows' : 'unix'}/java.html`
-    }
+    
+    settingsJvmOptsLink.innerHTML = Lang.queryJS('settings.java.availableOptions', { major })
+
+    /**
+     * DevDocs mirrors the OpenJDK manuals.
+     * Java 8 uses '#non-standard-options' for -X flags.
+     * Java 9+ uses '#extra-options-for-java'.
+     */
+    const anchor = major >= 9 ? '#extra-options-for-java' : '#non-standard-options'
+    
+    settingsJvmOptsLink.href = `https://devdocs.io/openjdk~${major}/${anchor}`
 }
 
 function bindMinMaxRam(server) {
