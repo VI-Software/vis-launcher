@@ -240,6 +240,8 @@ async function showMainUI(data) {
     setTimeout(() => {
         $('#loadingContainer').fadeOut(500, () => {
             $('#loadSpinnerImage').removeClass('rotating')
+            // Mark body as loaded to show background image
+            document.body.classList.add('loaded')
         })
 
         // Continue with the rest of the logic
