@@ -284,7 +284,7 @@ let selectedServer = null
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
     const { shell } = require('electron')
-    const { API_BASE_URL } = require('./assets/js/apiconstants')
+    const { MAINWEBSITE_URL } = require('./assets/js/apiconstants')
     
     listings.map((val) => {
         val.onclick = async (e) => {
@@ -301,11 +301,11 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
             document.getElementById('serverDetailsWebsite').onclick = () => {
-                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}`)
+                shell.openExternal(`${MAINWEBSITE_URL}/servers/${serverId}`)
             }
 
             document.getElementById('serverDetailsReport').onclick = () => {
-                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}?report=true`)
+                shell.openExternal(`${MAINWEBSITE_URL}/servers/${serverId}?report=true`)
             }
 
             // Show dialog
