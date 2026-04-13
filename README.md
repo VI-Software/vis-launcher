@@ -86,7 +86,8 @@ VIS Launcher is licensed under the GNU Affero General Public License (AGPL) Vers
 GNU AFFERO GENERAL PUBLIC LICENSE
 =========================================================
 
-    Copyright (C) 2023-2026 VI Software
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
