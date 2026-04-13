@@ -47,6 +47,8 @@ const isWaylandSession = process.argv.some(arg => arg.includes('session-type=way
 if (isWaylandSession && isWaylandNative) {
     logger.info('Detected native Wayland without X11 bridge. Requesting relaunch...')
     sendSplashMessage('Optimizing for Linux display server...')
+    // Request main process to relaunch with X11 compatibility
+    ipcRenderer.send('relaunch-for-x11')
 }
 
 sendSplashProgress(5, 'Starting...')
