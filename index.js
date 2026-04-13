@@ -215,6 +215,30 @@ ipcMain.on('distributionIndexDone', (event, res) => {
     event.sender.send('distributionIndexDone', res)
 })
 
+// Handle X11 relaunch request from splash screen
+ipcMain.on('relaunch-for-x11', () => {
+    const { spawn } = require('child_process')
+    
+    isExitingThroughTray = true
+    app.isQuitting = true
+
+    // AppImage workaround
+    // see: https://github.com/electron-userland/electron-builder/issues/1727
+    if (app.isPackaged && process.env.APPIMAGE) {
+        // Spawn detached process with X11 arguments
+        spawn(process.env.APPIMAGE, process.argv.slice(1).concat(['--ozone-platform=x11', '--no-sandbox']), {
+            detached: true,
+            stdio: 'ignore'
+        }).unref()
+        app.quit()
+    } else {
+        app.relaunch({
+            args: process.argv.slice(1).concat(['--ozone-platform=x11', '--no-sandbox'])
+        })
+        app.exit(0)
+    }
+})
+
 // Handle app restart request
 ipcMain.on('restart-app', () => {
     const { spawn } = require('child_process')
@@ -607,6 +631,10 @@ function createSplashWindow() {
         show: false,
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
+            additionalArguments: [
+                `--session-type=${process.env.XDG_SESSION_TYPE || 'unknown'}`,
+                `--is-wayland-native=${!process.argv.includes('--ozone-platform=x11')}`
+            ],
             nodeIntegration: true,
             contextIsolation: false
         }

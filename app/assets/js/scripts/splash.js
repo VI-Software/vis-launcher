@@ -48,6 +48,10 @@ document.addEventListener('readystatechange', () => {
         if (text) text.textContent = message
     })
     ipcRenderer.on('splash-done', () => setProgress(100, 'Almost there') )
+    
+    ipcRenderer.on('splash-optimize-display', () => {
+        setProgress(50, 'Finalizing setup...')
+    })
 })
 
 function createBgTiles() {
