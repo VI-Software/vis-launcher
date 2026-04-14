@@ -1,5 +1,5 @@
 ========================================================================
-    VIS LAUNCHER // THE "TL;DR" (BECAUSE NOBODY READS THE REST)
+    THE "TL;DR" (BECAUSE NOBODY READS THE REST)
 ========================================================================
 
 We’d much rather be writing code than legal disclaimers, but to keep 
