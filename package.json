@@ -8,7 +8,7 @@
   "private": true,
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
-"scripts": {
+  "scripts": {
     "start": "electron . --no-sandbox --ozone-platform=x11",
     "dev": "electron . --devtools --no-sandbox --ozone-platform=x11",
     "dist": "electron-builder build",
@@ -28,7 +28,7 @@
     "@electron/remote": "^2.1.3",
     "@visoftware/discord-rpc": "^1.4.0",
     "@visoftware/distribution-types": "^1.4.0",
-    "@visoftware/vis-launcher-core": "^2.12.2",
+    "@visoftware/vis-launcher-core": "^2.14.0",
     "adm-zip": "^0.5.16",
     "ejs": "^3.1.10",
     "ejs-electron": "^3.0.0",

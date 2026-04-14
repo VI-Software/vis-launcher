@@ -13,9 +13,11 @@ This document outlines the version support for this specific launcher release.
 
 | Version    | Status |
 |------------|--------|
+| 26.1.1     | 🟢     |
+| 26.X       | 🟠     |
 | 1.21.1     | 🟢     |
-| 1.20.1     | 🟢     |
 | 1.21.X     | 🟠     |
+| 1.20.1     | 🟢     |
 | 1.20.X     | 🟠     |
 | 1.19.2     | 🟢     |
 | 1.19.X     | 🟠     |
