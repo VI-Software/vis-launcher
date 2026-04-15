@@ -59,10 +59,14 @@ async function authLibArgs(args) {
 }
 
 /**
- * Only forge and fabric are top level mod loaders.
+ * Only forge, neoforge, and fabric are top level mod loaders.
  * 
  * Forge 1.13+ launch logic is similar to fabrics, for now using usingFabricLoader flag to
  * change minor details when needed.
+ * 
+ * NeoForge replaces Forge for Minecraft 1.20.2+. It uses a module-path based launch with a
+ * bootstrap launcher, and provides its own game arguments (--fml.neoForgeVersion, etc.)
+ * via the version manifest. It does NOT use --fml.modLists.
  * 
  * Rewrite of this module may be needed in the future.
  */
@@ -83,6 +87,7 @@ class ProcessBuilder {
 
         this.usingLiteLoader = false
         this.usingFabricLoader = false
+        this.usingNeoForgeLoader = false
         this.llPath = null
     }
     
@@ -97,6 +102,8 @@ class ProcessBuilder {
         logger.info('Using liteloader:', this.usingLiteLoader)
         this.usingFabricLoader = this.server.modules.some(mdl => mdl.rawModule.type === Type.Fabric)
         logger.info('Using fabric loader:', this.usingFabricLoader)
+        this.usingNeoForgeLoader = this.server.modules.some(mdl => mdl.rawModule.type === Type.NeoForge)
+        logger.info('Using neoforge loader:', this.usingNeoForgeLoader)
         const modObj = this.resolveModConfiguration(ConfigManager.getModConfiguration(this.server.rawServer.id).mods, this.server.modules)
         
         // Mod list below 1.13
@@ -244,7 +251,7 @@ class ProcessBuilder {
 
         for(let mdl of mdls){
             const type = mdl.rawModule.type
-            if(type === Type.ForgeMod || type === Type.LiteMod || type === Type.LiteLoader || type === Type.FabricMod){
+            if(type === Type.ForgeMod || type === Type.LiteMod || type === Type.LiteLoader || type === Type.FabricMod || type === Type.NeoForgeMod){
                 const o = !mdl.getRequired().value
                 const e = ProcessBuilder.isModEnabled(modCfg[mdl.getVersionlessMavenIdentifier()], mdl.getRequired())
                 if(!o || (o && e)){
@@ -256,7 +263,7 @@ class ProcessBuilder {
                             continue
                         }
                     }
-                    if(type === Type.ForgeMod || type === Type.FabricMod){
+                    if(type === Type.ForgeMod || type === Type.FabricMod || type === Type.NeoForgeMod){
                         fMods.push(mdl)
                     } else {
                         lMods.push(mdl)
@@ -361,11 +368,21 @@ class ProcessBuilder {
     // }
 
     /**
-     * Construct the mod argument list for forge 1.13 and Fabric
+     * Construct the mod argument list for forge 1.13, Fabric, and NeoForge
+     * 
+     * NeoForge does not use --fml.modLists. Mods are discovered automatically
+     * from the mods directory. Game arguments like --fml.neoForgeVersion are
+     * provided by the version manifest (modManifest.arguments.game).
      * 
      * @param {Array.<Object>} mods An array of mods to add to the mod list.
      */
     constructModList(mods) {
+        // NeoForge does not use --fml.modLists or --fml.mavenRoots.
+        // Its mods are placed in the mods directory and discovered automatically.
+        if(this.usingNeoForgeLoader) {
+            return []
+        }
+
         const writeBuffer = mods.map(mod => {
             return this.usingFabricLoader ? mod.getPath() : mod.getExtensionlessMavenIdentifier()
         }).join('\n')
@@ -898,10 +915,10 @@ class ProcessBuilder {
         const mdls = this.server.modules
         let libs = {}
 
-        // Locate Forge/Fabric/Libraries
+        // Locate Forge/NeoForge/Fabric/Libraries
         for(let mdl of mdls){
             const type = mdl.rawModule.type
-            if(type === Type.ForgeHosted || type === Type.Fabric || type === Type.Library){
+            if(type === Type.ForgeHosted || type === Type.Fabric || type === Type.Library || type === Type.NeoForge){
                 libs[mdl.getVersionlessMavenIdentifier()] = mdl.getPath()
                 if(mdl.subModules.length > 0){
                     const res = this._resolveModuleLibraries(mdl)
