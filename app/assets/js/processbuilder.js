@@ -59,7 +59,7 @@ async function authLibArgs(args) {
 }
 
 /**
- * Only forge, neoforge, and fabric are top level mod loaders.
+ * Only Forge, NeoForge, and Fabric are top level mod loaders.
  * 
  * Forge 1.13+ launch logic is similar to fabrics, for now using usingFabricLoader flag to
  * change minor details when needed.
