@@ -18,9 +18,6 @@ win:
   target: 
     - target: 'nsis'
       arch: 'x64'
-  cscLink: './cert/certificate.pfx'
-  signtoolOptions:
-    publisherName: 'VI Software'
 
 # Windows Installer Configuration
 nsis:
