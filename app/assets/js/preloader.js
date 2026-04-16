@@ -6,12 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -24,18 +29,28 @@ const ConfigManager  = require('./configmanager')
 const { DistroAPI }  = require('./distromanager')
 const LangLoader     = require('./langloader')
 const { LoggerUtil } = require('@visoftware/vis-launcher-core')
+const { ipcRenderer } = require('electron')
 /* eslint-disable no-unused-vars */
 const { HeliosDistribution } = require('@visoftware/vis-launcher-core/common')
 
 const logger = LoggerUtil.getLogger('Preloader')
 
 logger.info('VI Software Launcher')
-logger.info('© 2025 VI Software. All rights reserved.')
+logger.info('© 2023-2026 VI Software and contributors.')
 logger.info('License: AGPL-3.0 https://www.gnu.org/licenses/agpl-3.0.en.html')
 logger.info('GitHub: https://github.com/VI-Software')
 logger.info('Website: https://visoftware.dev')
 
 const { sendSplashProgress, sendSplashMessage, sendSplashDone } = require('./splash-utils')
+const isWaylandNative = process.argv.some(arg => arg.includes('is-wayland-native=true'))
+const isWaylandSession = process.argv.some(arg => arg.includes('session-type=wayland'))
+
+if (isWaylandSession && isWaylandNative) {
+    logger.info('Detected native Wayland without X11 bridge. Requesting relaunch...')
+    sendSplashMessage('Optimizing for Linux display server...')
+    // Request main process to relaunch with X11 compatibility
+    ipcRenderer.send('relaunch-for-x11')
+}
 
 sendSplashProgress(5, 'Starting...')
 
@@ -136,3 +151,11 @@ fs.remove(path.join(os.tmpdir(), ConfigManager.getTempNativeFolder()), (err) => 
         logger.info('Directorio de nativos limpiado.')
     }
 })
+
+// Listen for main process logs
+ipcRenderer.on('main-log', (event, message) => {
+    console.log(message)
+})
+
+// Expose to renderer
+window.LoggerUtil = LoggerUtil

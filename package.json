@@ -1,6 +1,6 @@
 {
   "name": "vis-launcher",
-  "version": "2.2.0-nightly.1",
+  "version": "2.2.0-nightly.2",
   "productName": "VI Software Launcher",
   "description": "VI Software Launcher",
   "author": "VI Software",
@@ -9,26 +9,27 @@
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --no-sandbox --ozone-platform=x11",
+    "dev": "electron . --devtools --no-sandbox --ozone-platform=x11",
     "dist": "electron-builder build",
-    "dist:win": "npm run dist -- -w",
-    "dist:mac": " npm run dist -- -m",
-    "dist:linux": "npm run dist -- -l",
-    "dist:linux:arm64": "npm run dist -- -l --arm64",
-    "dist:win:arm64": "npm run dist -- -w --arm64",
+    "dist:win": "npm run dist -- --win",
+    "dist:mac": "npm run dist -- --mac",
+    "dist:linux": "npm run dist -- --linux",
+    "dist:linux:arm64": "npm run dist -- --linux --arm64",
+    "dist:win:arm64": "npm run dist -- --win --arm64",
     "dist:arm64": "npm run dist -- --arm64",
     "lint": "eslint --config ./eslint.config.mjs .",
     "generate-licenses": "npx license-checker --json | node scripts/generate-licenses.js"
   },
   "engines": {
-    "node": "22.x.x"
+    "node": "24.x.x"
   },
   "dependencies": {
     "@electron/remote": "^2.1.3",
+    "@visoftware/discord-rpc": "^1.4.0",
     "@visoftware/distribution-types": "^1.4.0",
-    "@visoftware/vis-launcher-core": "^2.12.2",
+    "@visoftware/vis-launcher-core": "^2.14.0",
     "adm-zip": "^0.5.16",
-    "discord-rpc-patch": "^4.0.1",
     "ejs": "^3.1.10",
     "ejs-electron": "^3.0.0",
     "electron-updater": "^6.6.8",
@@ -43,7 +44,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",
     "@eslint/js": "^9.36.0",
-    "electron": "^38.1.2",
+    "electron": "^41.2.0",
     "electron-builder": "^26.0.20",
     "eslint": "^9.0.0",
     "globals": "^16.4.0",

@@ -6,12 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -21,7 +26,6 @@ const path = require('path')
 const toml = require('toml')
 const merge = require('lodash.merge')
 const os = require('os')
-const { log } = require('console')
 
 let lang
 
@@ -142,7 +146,8 @@ exports.getLauncherDirectory = function() {
             
         return app.getPath('userData')
     } catch {
-        log.warn('Electron app path not accessible, using home directory for launcher data.')
+        // This function is called on the modstore, where the logger is not accessible, so we use console.warn instead of Logger.warn
+        console.warn('Electron app path not accessible, using home directory for launcher data.')
         return path.join(os.homedir(), '.vis-launcher')
     }
 }

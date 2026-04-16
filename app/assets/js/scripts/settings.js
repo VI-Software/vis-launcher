@@ -6,12 +6,16 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -26,6 +30,18 @@ const LangLoader = require('./assets/js/langloader')
 
 const settingsState = {
     invalid: new Set()
+}
+
+/**
+ * Relaunch the application. Handles AppImage relaunch workaround.
+ * AppImages run from a temp directory, so app.relaunch() doesn't work.
+ * See: https://github.com/electron-userland/electron-builder/issues/1727
+ */
+function relaunchApp() {
+    // Use IPC to trigger restart in main process
+    // This ensures proper handling of AppImage and system tray
+    const { ipcRenderer } = require('electron')
+    ipcRenderer.send('restart-app')
 }
 
 function bindSettingsSelect(){
@@ -247,9 +263,7 @@ function saveSettingsValues(){
                     sFnOpts.push(v.checked)
                     sFn.apply(null, sFnOpts)
                     // Special Conditions
-                    if(cVal === 'AllowPrerelease'){
-                        changeAllowPrerelease(v.checked)
-                    } else if(cVal === 'ChristmasSnowflakes'){
+                    if(cVal === 'ChristmasSnowflakes'){
                         changeChristmasSnowflakes(v.checked)
                     }
                 }
@@ -820,6 +834,69 @@ function bindDropinModFileSystemButton(){
 }
 
 /**
+ * Bind functionality to open the mod store
+ */
+function bindModStoreButton(){
+    const { ipcRenderer } = require('electron')
+    const modStoreBtn = document.getElementById('settingsOpenModStoreButton')
+    if(modStoreBtn) {
+        modStoreBtn.onclick = () => {
+            // Check if user has disabled the warning
+            if(ConfigManager.getModStoreDisableWarning()) {
+                ipcRenderer.send('open-mod-store')
+                return
+            }
+            
+            // Show warning overlay
+            setOverlayContent(
+                '<i class="fas fa-exclamation-triangle" style="color: #ff9800; margin-right: 8px;"></i>' + Lang.queryJS('settings.modStore.warningTitle'),
+                Lang.queryJS('settings.modStore.warningMessage'),
+                Lang.queryJS('settings.modStore.warningAccept'),
+                Lang.queryJS('settings.modStore.warningCancel')
+            )
+            
+            // Show the checkbox
+            const checkboxContainer = document.getElementById('overlayCheckboxContainer')
+            const checkbox = document.getElementById('overlayDontShowAgain')
+            const checkboxLabel = document.getElementById('overlayCheckboxLabel')
+            if(checkboxContainer) {
+                checkboxContainer.style.display = 'block'
+                checkbox.checked = false
+                if(checkboxLabel) {
+                    checkboxLabel.textContent = Lang.queryJS('settings.modStore.warningDontShow')
+                }
+            }
+            
+            setOverlayHandler(() => {
+                // Save preference if checkbox is checked
+                if(checkbox && checkbox.checked) {
+                    ConfigManager.setModStoreDisableWarning(true)
+                    ConfigManager.save()
+                }
+                
+                // Hide checkbox for next time
+                if(checkboxContainer) {
+                    checkboxContainer.style.display = 'none'
+                }
+                
+                toggleOverlay(false)
+                ipcRenderer.send('open-mod-store')
+            })
+            
+            setDismissHandler(() => {
+                // Hide checkbox for next time
+                if(checkboxContainer) {
+                    checkboxContainer.style.display = 'none'
+                }
+                toggleOverlay(false)
+            })
+            
+            toggleOverlay(true, true)
+        }
+    }
+}
+
+/**
  * Save drop-in mod states. Enabling and disabling is just a matter
  * of adding/removing the .disabled extension.
  */
@@ -861,6 +938,7 @@ async function reloadDropinMods(){
     await resolveDropinModsForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
+    bindModStoreButton()
     bindModsToggleSwitch()
 }
 
@@ -1016,6 +1094,7 @@ async function prepareModsTab(first){
     await resolveShaderpacksForUI()
     bindDropinModsRemoveButton()
     bindDropinModFileSystemButton()
+    bindModStoreButton()
     bindShaderpackButton()
     bindModsToggleSwitch()
     await loadSelectedServerOnModsTab()
@@ -1234,19 +1313,17 @@ function populateJavaReqDesc(server) {
 
 function populateJvmOptsLink(server) {
     const major = server.effectiveJavaOptions.suggestedMajor
-    settingsJvmOptsLink.innerHTML = Lang.queryJS('settings.java.availableOptions', { major: major })
-    if(major >= 12) {
-        settingsJvmOptsLink.href = `https://docs.oracle.com/en/java/javase/${major}/docs/specs/man/java.html#extra-options-for-java`
-    }
-    else if(major >= 11) {
-        settingsJvmOptsLink.href = 'https://docs.oracle.com/en/java/javase/11/tools/java.html#GUID-3B1CE181-CD30-4178-9602-230B800D4FAE'
-    }
-    else if(major >= 9) {
-        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/${major}/tools/java.htm`
-    }
-    else {
-        settingsJvmOptsLink.href = `https://docs.oracle.com/javase/${major}/docs/technotes/tools/${process.platform === 'win32' ? 'windows' : 'unix'}/java.html`
-    }
+    
+    settingsJvmOptsLink.innerHTML = Lang.queryJS('settings.java.availableOptions', { major })
+
+    /**
+     * DevDocs mirrors the OpenJDK manuals.
+     * Java 8 uses '#non-standard-options' for -X flags.
+     * Java 9+ uses '#extra-options-for-java'.
+     */
+    const anchor = major >= 9 ? '#extra-options-for-java' : '#non-standard-options'
+    
+    settingsJvmOptsLink.href = `https://devdocs.io/openjdk~${major}/${anchor}`
 }
 
 function bindMinMaxRam(server) {
@@ -1547,6 +1624,17 @@ function initStorageManagement() {
         clearInstancesButton.addEventListener('click', clearAllInstances)
     }
     
+    // Hide modstore storage UI if disabled
+    if (!ConfigManager.isModStoreEnabled()) {
+        const storageItems = document.querySelectorAll('.settingsStorageItem')
+        if (storageItems.length > 0) {
+            storageItems[0].style.display = 'none' // Modstore storage item
+        }
+        if (clearModstoreButton) {
+            clearModstoreButton.style.display = 'none'
+        }
+    }
+    
     // Update storage info when settings are opened
     updateStorageInfo()
 }
@@ -1775,6 +1863,7 @@ async function prepareSettings(first = false) {
         initSettingsValidators()
         prepareUpdateTab()
         setupLanguageSelector()
+        setupUpdateChannelSelector()
         initStorageManagement()
         initConfigurationManagement()
     } else {
@@ -1784,6 +1873,14 @@ async function prepareSettings(first = false) {
     prepareAccountsTab()
     await prepareJavaTab()
     prepareAboutTab()
+    
+    // Hide modstore UI if disabled
+    if (!ConfigManager.isModStoreEnabled()) {
+        const modStoreContainer = document.getElementById('settingsModStoreContainer')
+        if (modStoreContainer) {
+            modStoreContainer.style.display = 'none'
+        }
+    }
     
     // Apply guest mode restrictions if active
     applyGuestModeSettingsRestrictions()
@@ -1880,8 +1977,7 @@ function setupLanguageSelector() {
             )
             
             setOverlayHandler(() => {
-                remote.app.relaunch()
-                remote.app.exit(0)
+                relaunchApp()
             })
             
             setDismissHandler(() => {
@@ -1892,6 +1988,70 @@ function setupLanguageSelector() {
         })
         
         languageOptions.appendChild(option)
+    })
+}
+
+/**
+ * Set up the update channel selector dropdown in the launcher tab.
+ */
+function setupUpdateChannelSelector() {
+    const channelOptions = document.getElementById('settingsUpdateChannelOptions')
+    const channelSelected = document.getElementById('settingsUpdateChannelSelected')
+    
+    const channels = {
+        'canary': 'Canary',
+        'nightly': 'Nightly',
+        'latest': 'Stable'
+    }
+    
+    const currentChannel = ConfigManager.getChannel()
+    
+    channelSelected.innerHTML = channels[currentChannel] || channels['canary']
+    
+    channelOptions.innerHTML = ''
+    
+    Object.entries(channels).forEach(([channelCode, channelName]) => {
+        const option = document.createElement('div')
+        option.classList.add('settingsSelectOption')
+        option.setAttribute('value', channelCode)
+        option.innerHTML = channelName
+        if (channelCode === currentChannel) {
+            option.setAttribute('selected', '')
+        }
+        
+        option.addEventListener('click', () => {
+            if (channelCode === currentChannel) return
+            
+            channelSelected.innerHTML = channelName
+            
+            Array.from(channelOptions.children).forEach(child => {
+                child.removeAttribute('selected')
+            })
+            option.setAttribute('selected', '')
+            
+            ConfigManager.setChannel(channelCode)
+            ConfigManager.save()
+            
+            // Require restart to apply channel change
+            setOverlayContent(
+                Lang.queryJS('settings.updateChannel.restartRequiredTitle'),
+                Lang.queryJS('settings.updateChannel.restartRequiredMessage'),
+                Lang.queryJS('settings.updateChannel.restartNowButton'),
+                Lang.queryJS('settings.updateChannel.restartLaterButton')
+            )
+            
+            setOverlayHandler(() => {
+                relaunchApp()
+            })
+            
+            setDismissHandler(() => {
+                toggleOverlay(false)
+            })
+            
+            toggleOverlay(true, true)
+        })
+        
+        channelOptions.appendChild(option)
     })
 }
 

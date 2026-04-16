@@ -6,12 +6,16 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -280,7 +284,7 @@ let selectedServer = null
 function setServerListingHandlers(){
     const listings = Array.from(document.getElementsByClassName('serverListing'))
     const { shell } = require('electron')
-    const { API_BASE_URL } = require('./assets/js/apiconstants')
+    const { MAINWEBSITE_URL } = require('./assets/js/apiconstants')
     
     listings.map((val) => {
         val.onclick = async (e) => {
@@ -297,11 +301,11 @@ function setServerListingHandlers(){
             document.getElementById('serverDetailsAddress').textContent = selectedServer.rawServer.address
 
             document.getElementById('serverDetailsWebsite').onclick = () => {
-                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}`)
+                shell.openExternal(`${MAINWEBSITE_URL}/servers/${serverId}`)
             }
 
             document.getElementById('serverDetailsReport').onclick = () => {
-                shell.openExternal(`${API_BASE_URL.replace('/api', '')}/servers/${serverId}?report=true`)
+                shell.openExternal(`${MAINWEBSITE_URL}/servers/${serverId}?report=true`)
             }
 
             // Show dialog

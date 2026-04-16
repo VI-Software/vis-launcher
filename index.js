@@ -6,12 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -21,33 +26,42 @@ remoteMain.initialize()
 
 // Requirements
 const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron')
-const autoUpdater                       = require('electron-updater').autoUpdater
-const ejse                              = require('ejs-electron')
-const fs                                = require('fs')
-const isDev                             = require('./app/assets/js/isdev')
-const path                              = require('path')
-const semver                            = require('semver')
-const { pathToFileURL }                 = require('url')
-const LangLoader                        = require('./app/assets/js/langloader')
-const ConfigManager                     = require('./app/assets/js/configmanager')
-const pjson                             = require('./package.json')
+const autoUpdater = require('electron-updater').autoUpdater
+const ejse = require('ejs-electron')
+const fs = require('fs')
+const isDev = require('./app/assets/js/isdev')
+const path = require('path')
+const semver = require('semver')
+const { pathToFileURL } = require('url')
+const LangLoader = require('./app/assets/js/langloader')
+const ConfigManager = require('./app/assets/js/configmanager')
+const { DistroAPI } = require('./app/assets/js/distromanager')
+const ModStoreManager = require('./app/assets/js/modstoremanager')
+const pjson = require('./package.json')
+const { Client: DiscordRPCClient } = require('@visoftware/discord-rpc')
 let isExitingThroughTray = false
+
+let discordClient = null
+let discordActivity = null
 
 // Setup auto updater.
 function initAutoUpdater(event, data) {
 
-    if(data){
+    if (data) {
         autoUpdater.allowPrerelease = true
     } else {
         // Defaults to true if application version contains prerelease components (e.g. 0.12.1-alpha.1)
         // autoUpdater.allowPrerelease = true
     }
-    
-    if(isDev){
+
+    // Set the update channel from config
+    autoUpdater.channel = ConfigManager.getChannel()
+
+    if (isDev) {
         autoUpdater.autoInstallOnAppQuit = false
         autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
     }
-    if(process.platform === 'darwin'){
+    if (process.platform === 'darwin') {
         autoUpdater.autoDownload = false
     }
 
@@ -88,6 +102,14 @@ function initAutoUpdater(event, data) {
 function configureAutoUpdaterForSplash(allowPrerelease = false) {
     try {
         autoUpdater.allowPrerelease = !!allowPrerelease
+
+        // Set the update channel from config
+        autoUpdater.channel = ConfigManager.getChannel()
+
+        // Allow downgrade if user just switched channels (e.g., canary -> stable)
+        // This enables users to move to a lower version when changing to a more stable channel
+        autoUpdater.allowDowngrade = ConfigManager.wasChannelChanged()
+
         if (isDev) {
             autoUpdater.autoInstallOnAppQuit = false
             autoUpdater.updateConfigPath = path.join(__dirname, 'dev-app-update.yml')
@@ -134,7 +156,7 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
         })
 
         autoUpdater.on('update-downloaded', (info) => {
-            try { 
+            try {
                 if (splashWin && splashWin.webContents) splashWin.webContents.send('autoUpdateNotification', 'update-downloaded', info)
                 if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-message', 'Installing update...')
             } catch { void 0 }
@@ -157,7 +179,7 @@ function configureAutoUpdaterForSplash(allowPrerelease = false) {
 
 // Open channel to listen for update actions.
 ipcMain.on('autoUpdateAction', (event, arg, data) => {
-    switch(arg){
+    switch (arg) {
         case 'initAutoUpdater':
             console.log('Initializing auto updater.')
             initAutoUpdater(event, data)
@@ -170,9 +192,9 @@ ipcMain.on('autoUpdateAction', (event, arg, data) => {
                 })
             break
         case 'allowPrereleaseChange':
-            if(!data){
+            if (!data) {
                 const preRelComp = semver.prerelease(app.getVersion())
-                if(preRelComp != null && preRelComp.length > 0){
+                if (preRelComp != null && preRelComp.length > 0) {
                     autoUpdater.allowPrerelease = true
                 } else {
                     autoUpdater.allowPrerelease = data
@@ -194,6 +216,53 @@ ipcMain.on('distributionIndexDone', (event, res) => {
     event.sender.send('distributionIndexDone', res)
 })
 
+// Handle X11 relaunch request from splash screen
+ipcMain.on('relaunch-for-x11', () => {
+    const { spawn } = require('child_process')
+    
+    isExitingThroughTray = true
+    app.isQuitting = true
+
+    // AppImage workaround
+    // see: https://github.com/electron-userland/electron-builder/issues/1727
+    if (app.isPackaged && process.env.APPIMAGE) {
+        // Spawn detached process with X11 arguments
+        spawn(process.env.APPIMAGE, process.argv.slice(1).concat(['--ozone-platform=x11', '--no-sandbox']), {
+            detached: true,
+            stdio: 'ignore'
+        }).unref()
+        app.quit()
+    } else {
+        app.relaunch({
+            args: process.argv.slice(1).concat(['--ozone-platform=x11', '--no-sandbox'])
+        })
+        app.exit(0)
+    }
+})
+
+// Handle app restart request
+ipcMain.on('restart-app', () => {
+    const { spawn } = require('child_process')
+
+    // Set flag to bypass tray quit prevention
+    isExitingThroughTray = true
+    app.isQuitting = true
+
+    // AppImage workaround
+    // see: https://github.com/electron-userland/electron-builder/issues/1727
+    if (app.isPackaged && process.env.APPIMAGE) {
+        // Spawn detached process to avoid EPIPE errors
+        spawn(process.env.APPIMAGE, process.argv.slice(1), {
+            detached: true,
+            stdio: 'ignore'
+        }).unref()
+        app.quit()
+    } else {
+        app.relaunch()
+        app.exit(0)
+    }
+})
+
 // Forward splash progress/messages from preloader (which sends to main)
 // back to the splash window renderer so the UI can update.
 ipcMain.on('splash-progress', (_event, payload) => {
@@ -210,6 +279,66 @@ ipcMain.on('splash-done', (_event) => {
     try {
         if (splashWin && splashWin.webContents) splashWin.webContents.send('splash-done')
     } catch { /* best-effort forward */ }
+})
+
+
+// Discord RPC IPC handlers
+// We run the Discord RPC client in the main process because we need full Node API support
+ipcMain.on('discord-rpc-init', (_event, data) => {
+    const { genSettings, servSettings, initialDetails, state } = data
+
+    if (discordClient) {
+        try {
+            discordClient.destroy()
+        } catch { /* doop */ }
+        discordClient = null
+    }
+
+    discordClient = new DiscordRPCClient({
+        clientId: genSettings.clientId
+    })
+
+    discordActivity = {
+        details: initialDetails,
+        state: state,
+        largeImageKey: servSettings.largeImageKey,
+        largeImageText: servSettings.largeImageText,
+        smallImageKey: genSettings.smallImageKey,
+        smallImageText: genSettings.smallImageText,
+        startTimestamp: new Date().getTime(),
+        instance: false
+    }
+
+    discordClient.on('ready', () => {
+        win.webContents.send('main-log', '[DiscordWrapper] Discord RPC Connected')
+        discordClient.user?.setActivity(discordActivity)
+    })
+
+    discordClient.login().catch(error => {
+        if (error.message.includes('ENOENT')) {
+            win.webContents.send('main-log', '[DiscordWrapper] Unable to initialize Discord Rich Presence, no client detected.')
+        } else {
+            win.webContents.send('main-log', '[DiscordWrapper] Unable to initialize Discord Rich Presence: ' + error.message)
+        }
+    })
+})
+
+ipcMain.on('discord-rpc-update-details', (_event, details) => {
+    if (discordActivity && discordClient) {
+        discordActivity.details = details
+        discordClient.user?.setActivity(discordActivity)
+    }
+})
+
+ipcMain.on('discord-rpc-shutdown', (_event) => {
+    if (discordClient) {
+        try {
+            discordClient.user?.clearActivity()
+            discordClient.destroy()
+        } catch { /* ignore */ }
+        discordClient = null
+        discordActivity = null
+    }
 })
 
 // Handle legal acceptance/decline from legal window
@@ -271,6 +400,152 @@ ipcMain.on('legal-declined', (event) => {
     app.quit()
 })
 
+// Mod Store window IPC handler
+ipcMain.on('open-mod-store', () => {
+    createModStoreWindow()
+})
+
+// IPC handlers for modstore
+ipcMain.handle('modstore-get-common-directory', () => {
+    return ConfigManager.getCommonDirectory()
+})
+
+ipcMain.handle('modstore-get-instance-directory', () => {
+    return ConfigManager.getInstanceDirectory()
+})
+
+ipcMain.handle('modstore-is-modstore-enabled', () => {
+    return ConfigManager.isModStoreEnabled()
+})
+
+ipcMain.handle('modstore-get-selected-server', () => {
+    return ConfigManager.getSelectedServer()
+})
+
+ipcMain.handle('modstore-set-selected-server', (event, id) => {
+    ConfigManager.setSelectedServer(id)
+    ConfigManager.save()
+})
+
+ipcMain.handle('modstore-get-server-by-id', async (event, id) => {
+    DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
+    DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
+    const distro = await DistroAPI.getDistribution()
+    return distro.getServerById(id)
+})
+
+ipcMain.handle('modstore-get-main-server', async () => {
+    DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
+    DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
+    const distro = await DistroAPI.getDistribution()
+    return distro.getMainServer()
+})
+
+ipcMain.on('modstore-log', (event, level, message) => {
+    const { LoggerUtil } = require('@visoftware/vis-launcher-core')
+    const logger = LoggerUtil.getLogger('ModStore')
+    logger[level](message)
+})
+
+ipcMain.on('modstore-window-close', (event) => {
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        modStoreWin.close()
+    }
+})
+
+ipcMain.on('modstore-window-minimize', (event) => {
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        modStoreWin.minimize()
+    }
+})
+
+ipcMain.on('modstore-window-maximize', (event) => {
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        if (modStoreWin.isMaximized()) {
+            modStoreWin.unmaximize()
+        } else {
+            modStoreWin.maximize()
+        }
+    }
+})
+
+// ModStoreManager delegated handlers
+ipcMain.handle('modstore-search-mods', async (event, options) => {
+    return await ModStoreManager.searchMods(options)
+})
+
+ipcMain.handle('modstore-get-mod-details', async (event, modId) => {
+    return await ModStoreManager.getModDetails(modId)
+})
+
+ipcMain.handle('modstore-get-mod-versions', async (event, modId, options) => {
+    return await ModStoreManager.getModVersions(modId, options)
+})
+
+ipcMain.handle('modstore-get-version-details', async (event, versionId) => {
+    return await ModStoreManager.getVersionDetails(versionId)
+})
+
+ipcMain.handle('modstore-get-categories', async () => {
+    return await ModStoreManager.getCategories()
+})
+
+ipcMain.handle('modstore-get-loaders', async () => {
+    return await ModStoreManager.getLoaders()
+})
+
+ipcMain.handle('modstore-get-game-versions', async () => {
+    return await ModStoreManager.getGameVersions()
+})
+
+ipcMain.handle('modstore-scan-user-mods', async (event, serverId) => {
+    const instanceDir = ConfigManager.getInstanceDirectory()
+    const fs = require('fs-extra')
+    const path = require('path')
+
+    if (!instanceDir || !serverId) {
+        return []
+    }
+
+    try {
+        const modsDir = path.join(instanceDir, serverId, 'mods')
+        if (await fs.pathExists(modsDir)) {
+            const files = await fs.readdir(modsDir)
+            return files.filter((f) => f.endsWith('.jar')).map((f) => f.toLowerCase())
+        }
+    } catch (error) {
+        const { LoggerUtil } = require('@visoftware/vis-launcher-core')
+        const logger = LoggerUtil.getLogger('ModStore')
+        logger.warn('Failed to scan user mods directory:', error.message)
+    }
+
+    return []
+})
+
+ipcMain.handle('modstore-install-mod', async (event, version, serverId) => {
+    const instanceDir = ConfigManager.getInstanceDirectory()
+    const path = require('path')
+
+    if (!instanceDir || !serverId) {
+        throw new Error('Instance directory or server ID is not available')
+    }
+
+    const modsDir = path.join(instanceDir, serverId, 'mods')
+    return await ModStoreManager.installMod(version, modsDir)
+})
+
+ipcMain.handle('modstore-remove-mod', async (event, modSlug, serverId, filesToRemove) => {
+    const instanceDir = ConfigManager.getInstanceDirectory()
+    const path = require('path')
+
+    if (!instanceDir || !serverId) {
+        throw new Error('Instance directory or server ID is not available')
+    }
+
+    const modsDir = path.join(instanceDir, serverId, 'mods')
+    return await ModStoreManager.removeMod(modSlug, modsDir, filesToRemove)
+})
+
 // Disable hardware acceleration.
 // https://electronjs.org/docs/tutorial/offscreen-rendering
 app.disableHardwareAcceleration()
@@ -280,6 +555,7 @@ app.disableHardwareAcceleration()
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 let splashWin
+let modStoreWin
 // Timestamp (ms) when splash was shown. Used to enforce a minimum display time.
 let splashShownAt = 0
 
@@ -297,7 +573,8 @@ function createWindow() {
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
             nodeIntegration: true,
-            contextIsolation: false
+            contextIsolation: false,
+            devTools: ConfigManager.getChannel() !== 'latest'
         },
         backgroundColor: '#171614'
     })
@@ -316,17 +593,16 @@ function createWindow() {
     // Intentionally do not show main window here. The splash controls
     // when the main window becomes visible to avoid exposing the UI
     // before startup checks finish.
-    /*win.once('ready-to-show', () => {
-        // will be shown after splash closes
-    })*/
-    /*
-        win.once('ready-to-show', () => {
-            // show dev tools
-            if (isDev) {
-                win.webContents.openDevTools({ mode: 'detach' })
-            }
-        })
-    */
+
+    // Open devtools immediately if requested via CLI flag in development mode
+    if (isDev && (process.argv.includes('--devtools') || process.argv.includes('-d'))) {
+        try {
+            win.webContents.openDevTools({ mode: 'detach' })
+        } catch (err) {
+            console.warn('Failed to open devtools:', err.message)
+        }
+    }
+
     win.removeMenu()
 
     win.resizable = true
@@ -336,7 +612,7 @@ function createWindow() {
             event.preventDefault()
             win.hide()
         }
-    
+
         return false
     })
 
@@ -345,7 +621,7 @@ function createWindow() {
     })
 }
 
-function createSplashWindow(){
+function createSplashWindow() {
     splashWin = new BrowserWindow({
         width: 640,
         height: 420,
@@ -356,6 +632,10 @@ function createSplashWindow(){
         show: false,
         webPreferences: {
             preload: path.join(__dirname, 'app', 'assets', 'js', 'preloader.js'),
+            additionalArguments: [
+                `--session-type=${process.env.XDG_SESSION_TYPE || 'unknown'}`,
+                `--is-wayland-native=${!process.argv.includes('--ozone-platform=x11')}`
+            ],
             nodeIntegration: true,
             contextIsolation: false
         }
@@ -372,9 +652,63 @@ function createSplashWindow(){
     splashWin.on('closed', () => { splashWin = null })
 }
 
+function createModStoreWindow() {
+    // Don't create if already exists
+    if (modStoreWin && !modStoreWin.isDestroyed()) {
+        modStoreWin.focus()
+        return
+    }
+
+    modStoreWin = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        minWidth: 900,
+        minHeight: 600,
+        parent: win,
+        modal: false,
+        icon: getPlatformIcon('vis-icon'),
+        frame: false,
+        show: false,
+        backgroundColor: '#1a1a2e',
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'app', 'assets', 'js', 'modstore-preload.js'),
+            sandbox: false,
+            devTools: isDev
+        }
+    })
+
+    const data = {
+        lang: (str, placeHolders) => LangLoader.queryEJS(str, placeHolders),
+        LangLoader: LangLoader
+    }
+    Object.entries(data).forEach(([key, val]) => ejse.data(key, val))
+
+    modStoreWin.loadURL(pathToFileURL(path.join(__dirname, 'app', 'modstore.ejs')).toString())
+
+
+    modStoreWin.once('ready-to-show', () => {
+        modStoreWin.show()
+        if (isDev && (process.argv.includes('--devtools') || process.argv.includes('-d'))) {
+            try {
+                modStoreWin.webContents.openDevTools({ mode: 'detach' })
+            } catch (err) {
+                console.warn('Failed to open devtools:', err.message)
+            }
+        }
+
+    })
+    modStoreWin.removeMenu()
+
+    modStoreWin.on('closed', () => {
+        modStoreWin = null
+    })
+}
+
 function createMenu() {
-    
-    if(process.platform === 'darwin') {
+
+    if (process.platform === 'darwin') {
 
         // Extend default included application menu to continue support for quit keyboard shortcut
         let applicationSubMenu = {
@@ -436,9 +770,9 @@ function createMenu() {
 }
 
 
-function getPlatformIcon(filename){
+function getPlatformIcon(filename) {
     let ext
-    switch(process.platform) {
+    switch (process.platform) {
         case 'win32':
             ext = 'ico'
             break
@@ -452,7 +786,7 @@ function getPlatformIcon(filename){
     return path.join(__dirname, 'app', 'assets', 'images', `${filename}.${ext}`)
 }
 
-function createTray() {    
+function createTray() {
     tray = new Tray(path.join(__dirname, 'app', 'assets', 'images', 'vis-tray.png'))
 
     const trayMenuTemplate = [
@@ -470,11 +804,11 @@ function createTray() {
             }
         }
     ]
-    
+
     let trayMenu = Menu.buildFromTemplate(trayMenuTemplate)
     tray.setContextMenu(trayMenu)
     tray.setToolTip('VI Software Launcher')
-    
+
     tray.on('click', () => {
         win.isVisible() ? win.hide() : win.show()
     })
@@ -493,13 +827,13 @@ if (!gotTheLock) {
             win.show()
         }
     })
-    
+
     app.whenReady().then(async () => {
         let locale = ''
         try {
             // Get the user's preferred system languages (returns array of BCP 47 language tags)
             const systemLanguages = app.getPreferredSystemLanguages()
-            
+
             // Use the first preferred language, or fall back to getLocale() if empty
             locale = systemLanguages && systemLanguages.length > 0 ? systemLanguages[0] : app.getLocale()
 
@@ -510,10 +844,10 @@ if (!gotTheLock) {
             console.error('Error detecting system locale:', error)
             locale = 'en-US'
         }
-        
+
         LangLoader.setupLanguage(locale)
-        
-        function startAfterPrechecks(){
+
+        function startAfterPrechecks() {
 
             if (!ConfigManager.getLegalAccepted()) {
                 // Parent the legal window to the main window if it exists,
@@ -606,7 +940,7 @@ if (!gotTheLock) {
                 ])
 
                 try { canaryWinEarly.close() } catch { void 0 }
-                
+
                 if (canaryRes && canaryRes.channel === 'canary-close') {
                     try { canaryWinEarly.close() } catch { void 0 }
                     app.quit()
@@ -715,7 +1049,7 @@ if (!gotTheLock) {
                         updateResult = await waitForUpdateResolution()
                     } else {
                         // Dev env, still allow auto-updater to run in background but don't block boot.
-                        try { autoUpdater.checkForUpdates().catch(()=>{}) } catch { void 0 }
+                        try { autoUpdater.checkForUpdates().catch(() => { }) } catch { void 0 }
                     }
 
                     if (updateResult.status === 'downloaded') {

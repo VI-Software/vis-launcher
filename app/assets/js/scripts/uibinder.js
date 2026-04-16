@@ -6,12 +6,16 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -80,6 +84,27 @@ function getCurrentView() {
     return currentView
 }
 
+/**
+ * Set background image and wait for it to load
+ * @param {string} imageUrl - The URL or data URL of the image
+ * @returns {Promise} Resolves when image is loaded
+ */
+function setBackgroundAndWait(imageUrl) {
+    return new Promise((resolve) => {
+        const img = new Image()
+        img.onload = () => {
+            document.body.style.backgroundImage = `url('${imageUrl}')`
+            resolve()
+        }
+        img.onerror = () => {
+            // Even on error, set the background and resolve
+            document.body.style.backgroundImage = `url('${imageUrl}')`
+            resolve()
+        }
+        img.src = imageUrl
+    })
+}
+
 async function showMainUI(data) {
     if (!isDev) {
         loggerAutoUpdater.info('Initializing..')
@@ -133,7 +158,7 @@ async function showMainUI(data) {
 
             const TTL = 24 * 60 * 60 * 1000 // 24 hours
             if (entry && entry.timestamp && (Date.now() - entry.timestamp) < TTL) {
-                document.body.style.backgroundImage = `url('${entry.dataUrl}')`
+                await setBackgroundAndWait(entry.dataUrl)
             } else {
                 const headers = {}
                 if (entry && entry.etag) headers['If-None-Match'] = entry.etag
@@ -143,8 +168,8 @@ async function showMainUI(data) {
                 try {
                     resp = await fetch(bgUrl, { headers, cache: 'no-store' })
                 } catch (err) {
-                    if (entry && entry.dataUrl) document.body.style.backgroundImage = `url('${entry.dataUrl}')`
-                    else { document.body.style.backgroundImage = `url('${bgUrl}')`; showBGSWarning() }
+                    if (entry && entry.dataUrl) await setBackgroundAndWait(entry.dataUrl)
+                    else { await setBackgroundAndWait(bgUrl); showBGSWarning() }
                     resp = null
                 }
 
@@ -153,7 +178,7 @@ async function showMainUI(data) {
                         // server says not modified: extend TTL and reuse
                         entry.timestamp = Date.now()
                         try { localStorage.setItem(cacheKey, JSON.stringify(cache)) } catch (e) { console.warn('save bg cache failed', e) }
-                        document.body.style.backgroundImage = `url('${entry.dataUrl}')`
+                        await setBackgroundAndWait(entry.dataUrl)
                     } else if (resp.ok) {
                         const blob = await resp.blob()
                         const dataUrl = await new Promise((res, rej) => {
@@ -166,23 +191,23 @@ async function showMainUI(data) {
                         const newLM = resp.headers.get('last-modified') || null
                         cache[bgUrl] = { dataUrl, etag: newEtag, lastModified: newLM, timestamp: Date.now() }
                         try { localStorage.setItem(cacheKey, JSON.stringify(cache)) } catch (e) { console.warn('save bg cache failed', e) }
-                        document.body.style.backgroundImage = `url('${dataUrl}')`
+                        await setBackgroundAndWait(dataUrl)
                     } else {
-                        if (entry && entry.dataUrl) document.body.style.backgroundImage = `url('${entry.dataUrl}')`
-                        else { document.body.style.backgroundImage = `url('${bgUrl}')`; showBGSWarning() }
+                        if (entry && entry.dataUrl) await setBackgroundAndWait(entry.dataUrl)
+                        else { await setBackgroundAndWait(bgUrl); showBGSWarning() }
                     }
                 }
             }
         } catch (e) {
             console.error('Background cache error:', e)
-            document.body.style.backgroundImage = `url('${bgUrl}')`
+            await setBackgroundAndWait(bgUrl)
             showBGSWarning()
         }
     } catch (error) {
         // On any error, fallback to offline background
         console.error('Failed to fetch background image:', error)
         document.getElementById('frameBar').style.backgroundColor = 'rgba(0, 0, 0, 0.5)'
-        document.body.style.backgroundImage = 'url(\'assets/images/backgrounds/offline.jpg\')'
+        await setBackgroundAndWait('assets/images/backgrounds/offline.jpg')
         showBGSWarning()
     }
 
@@ -215,6 +240,8 @@ async function showMainUI(data) {
     setTimeout(() => {
         $('#loadingContainer').fadeOut(500, () => {
             $('#loadSpinnerImage').removeClass('rotating')
+            // Mark body as loaded to show background image
+            document.body.classList.add('loaded')
         })
 
         // Continue with the rest of the logic

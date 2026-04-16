@@ -1,3 +1,33 @@
+========================================================================
+    THE "TL;DR" (BECAUSE NOBODY READS THE REST)
+========================================================================
+
+We’d much rather be writing code than legal disclaimers, but to keep 
+the project alive and safe from corporate lawsuits, we need the formal 
+stuff below. This launcher is a collective effort-it’s built on our 
+work, the contributions of our community, and several open-source 
+portions authored by others. We’re grateful to everyone helping us 
+build this.
+
+- THE CODE IS YOURS: This launcher is 100% open-source. (It's licensed under AGPL.)
+  You can fork it, hack it, or share it. Just keep the source 
+  open and provide it to anyone interacting with it.
+  
+- THE SERVICES HAVE RULES: If you’re using our official servers for 
+  skins, accounts, or updates, please don't be a jerk. We have a Code 
+  of Conduct and ToS to keep things running smoothly for everyone.
+
+- NO PROMISES: We’re a community project, not a massive corporation. 
+  We do our best to keep things stable, but we provide this "as-is." 
+  Use it at your own risk (and please, back up your modpacks!).
+
+- WE ARE INDEPENDENT: We have absolutely no connection to Microsoft 
+  or Mojang. We just love the game.
+
+If you use VIS Launcher, you’re agreeing to the full, boring legal 
+terms detailed below. Thanks for being part of the community!
+========================================================================
+
 NOTICE OF TERMS, CONDITIONS, AND LICENSE
 
 By downloading, installing, accessing, executing, or otherwise making any use of the product denominated "VI Software Launcher" (hereinafter, "VIS Launcher"), you, the end-user, acknowledge, represent, and irrevocably agree that such use constitutes full and binding acceptance of the terms, conditions, policies, and guidelines promulgated by VI Software ("the Licensor"), together with any ancillary, supplemental, or successor provisions as may from time to time be adopted, amended, or otherwise published.
@@ -26,21 +56,37 @@ Notwithstanding the foregoing license grant under the GNU Affero General Public 
 
 DISCLAIMER OF WARRANTIES AND LIMITATION OF LIABILITY
 
-VIS Launcher is provided "AS IS", WITHOUT WARRANTY OF ANY KIND, either express or implied, including, without limitation, warranties of merchantability, fitness for a particular purpose, non-infringement, uninterrupted operation, or error-free functionality. To the maximum extent permitted by applicable law, under no circumstances shall VI Software, its contributors, licensors, affiliates, officers, or agents be liable for any claim, damages, or other liability, whether in contract, tort, or otherwise, arising from, out of, or in connection with the software or the use, performance, or inability to use the same.
+VIS Launcher is provided "AS IS", WITHOUT WARRANTY OF ANY KIND, either express or implied, including, without limitation, warranties of merchantability, fitness for a particular purpose, non-infringement, uninterrupted operation, or error-free functionality. To the maximum extent permitted by applicable law, under no circumstances shall VI Software, Daniel D. Scalzi, its contributors, licensors, affiliates, officers, or agents be liable for any claim, damages, or other liability, whether in contract, tort, or otherwise, arising from, out of, or in connection with the software or the use, performance, or inability to use the same.
 
 The Licensor expressly disclaims any and all responsibility for data loss, corruption, unauthorized access, or incidental or consequential damages resulting from the installation, execution, or use of VIS Launcher.
 
 COPYRIGHT AND LEGAL NOTICE
 
-Copyright (C) 2025 VI Software.
-All rights reserved, except as expressly provided by the GNU Affero General Public License, Version 3.0, or any later version at your option.
+Copyright (C) 2023-2026 VI Software and contributors.
+Portions Copyright (C) 2017-2026 Daniel D. Scalzi.
 
-You should have received a copy of the GNU Affero General Public License together with this program. If not, the authoritative version is available at:
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+You should have received a copy of the GNU Affero General Public License along with this program. If not, the authoritative version is available at:
 https://www.gnu.org/licenses/
 
-THIRD-PARTY LICENSES
+THIRD-PARTY LICENSES AND PORTIONS
 
-This product may include software components or libraries licensed to third parties. All third-party components are used in accordance with their respective licenses. For a complete listing of third-party software and licenses, please see:
+Portions of this software are authored by Daniel D. Scalzi and are included under the following MIT License:
+
+    Copyright (c) 2017-2026 Daniel D. Scalzi
+    
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+    
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+This product may include additional software components or libraries licensed to third parties. For a complete listing of third-party software and licenses, please see:
 https://github.com/VI-Software/vis-launcher/blob/main/THIRD-PARTIES-LICENSES.md
 
 LEGAL NOTICE REGARDING THIRD-PARTY AFFILIATION, INDEPENDENCE, AND INTELLECTUAL PROPERTY RIGHTS

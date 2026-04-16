@@ -6,12 +6,16 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -44,6 +48,10 @@ document.addEventListener('readystatechange', () => {
         if (text) text.textContent = message
     })
     ipcRenderer.on('splash-done', () => setProgress(100, 'Almost there') )
+    
+    ipcRenderer.on('splash-optimize-display', () => {
+        setProgress(50, 'Finalizing setup...')
+    })
 })
 
 function createBgTiles() {

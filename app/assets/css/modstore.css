@@ -1,0 +1,1503 @@
+/*
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
+
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
+    Website: https://visoftware.dev
+*/
+
+/*******************************************************************************
+ *                                                                             *
+ * Fonts                                                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+@font-face {
+    font-family: 'Sen';
+    src: url('../fonts/Sen-Regular.ttf');
+}
+
+@font-face {
+    font-family: 'Sen Medium';
+    src: url('../fonts/Sen-Medium.ttf');
+}
+
+@font-face {
+    font-family: 'Asap';
+    src: url('../fonts/Asap-Regular.ttf');
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Variables                                                               *
+ *                                                                             *
+ ******************************************************************************/
+
+:root {
+    --color-primary: #8a2be2;
+    --color-primary-dark: #6a1b9a;
+    --color-primary-light: #b39ddb;
+    --color-bg-darkest: #1a1a2e;
+    --color-bg-dark: #16213e;
+    --color-bg-light: #242f4c;
+    --color-surface: rgba(138, 43, 226, 0.1);
+    --color-border: rgba(138, 43, 226, 0.3);
+    --color-text: #ffffff;
+    --color-text-secondary: #b3b3b3;
+    --color-text-disabled: #666666;
+    --transition-fast: 0.15s ease;
+    --transition-normal: 0.25s ease;
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
+    --border-radius-lg: 12px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Window Frame Styles                                                         *
+ *                                                                             *
+ ******************************************************************************/
+
+html, body {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: 'Sen', -apple-system, BlinkMacSystemFont, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+body {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+#frame_bar {
+    height: 30px;
+    background: var(--color-bg-dark);
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    -webkit-app-region: drag;
+    flex-shrink: 0;
+}
+
+/* Windows/Linux Frame Bar */
+.frame_bar_win32,
+.frame_bar_linux {
+    justify-content: space-between;
+}
+
+/* Darwin (macOS) Frame Bar */
+.frame_bar_darwin {
+    justify-content: center;
+    padding: 0 80px 0 15px;
+}
+
+#frame_title {
+    color: var(--color-primary-light);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#frame_title_darwin {
+    color: var(--color-primary-light);
+    font-size: 12px;
+    font-weight: 500;
+    text-align: center;
+}
+
+#frame_buttons {
+    display: flex;
+    gap: 4px;
+    -webkit-app-region: no-drag;
+}
+
+/* Darwin (macOS) Frame Buttons Container */
+#frame_buttons_darwin {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 8px;
+    -webkit-app-region: no-drag;
+}
+
+.frame_button {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-primary-light);
+    cursor: pointer;
+    transition: var(--transition-fast);
+    border-radius: var(--border-radius-sm);
+    font-size: 16px;
+}
+
+.frame_button:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+#frame_button_close:hover {
+    background: rgba(220, 53, 69, 0.8);
+}
+
+/* Darwin Frame Buttons */
+.frame_button_darwin {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    position: relative;
+}
+
+.frame_button_close_darwin {
+    background: #ff5f57;
+}
+
+.frame_button_close_darwin:hover {
+    background: #ff4136;
+}
+
+.frame_button_minimize_darwin {
+    background: #febc2e;
+}
+
+.frame_button_minimize_darwin:hover {
+    background: #ffaa00;
+}
+
+.frame_button_maximize_darwin {
+    background: #28c840;
+}
+
+.frame_button_maximize_darwin:hover {
+    background: #1fad33;
+}
+
+#mod_store_wrapper {
+    height: calc(100% - 30px);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Mod Store                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+#modStoreContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: transparent;
+    color: var(--color-text);
+    overflow: hidden;
+}
+
+#modStoreHeader {
+    background: var(--color-bg-dark);
+    border-bottom: 1px solid var(--color-border);
+    padding: 16px 24px;
+    flex-shrink: 0;
+}
+
+#modStoreHeaderContent {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#modStoreHeaderLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+#modStoreHeaderRight {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.modStoreServerIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-md);
+    object-fit: cover;
+    border: 2px solid var(--color-border);
+    background: var(--color-bg-darkest);
+    flex-shrink: 0;
+}
+
+#modStoreTitle {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#modStoreTitle h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+#modStoreGameInfo {
+    display: block;
+    margin-top: 4px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    font-weight: 400;
+}
+
+.modStoreBtn {
+    padding: 8px 16px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text);
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    font-family: 'Sen', sans-serif;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.modStoreBtn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translate(-50%, -50%);
+    transition: width 0.4s, height 0.4s;
+}
+
+.modStoreBtn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.modStoreBtn:hover:not(:disabled) {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(138, 43, 226, 0.3);
+}
+
+.modStoreBtn:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.modStoreBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.modStoreBtnPrimary {
+    background: var(--color-primary) !important;
+    border-color: var(--color-primary) !important;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.25);
+}
+
+.modStoreBtnPrimary:hover:not(:disabled) {
+    background: var(--color-primary-dark) !important;
+    box-shadow: 0 6px 20px rgba(138, 43, 226, 0.4);
+    transform: translateY(-2px);
+}
+
+.modStoreBtnPrimary:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(138, 43, 226, 0.3);
+}
+
+.modStoreBtnDanger {
+    background: rgba(244, 67, 54, 0.15) !important;
+    border-color: rgba(244, 67, 54, 0.4) !important;
+    color: #ef5350 !important;
+    font-weight: 600;
+}
+
+.modStoreBtnDanger:hover:not(:disabled) {
+    background: rgba(244, 67, 54, 0.3) !important;
+    border-color: rgba(244, 67, 54, 0.6) !important;
+    color: #ff6b6b !important;
+}
+
+.modStoreBtnSecondary {
+    background: var(--color-bg-light) !important;
+    border-color: var(--color-border) !important;
+    font-size: 12px !important;
+    padding: 6px 12px !important;
+}
+
+.modStoreBtnSecondary:hover:not(:disabled) {
+    background: var(--color-surface) !important;
+}
+
+/* Content Area */
+#modStoreContent {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Sidebar - Minimal Style */
+#modStoreSidebar {
+    width: 180px;
+    background: var(--color-bg-dark);
+    border-right: 1px solid var(--color-border);
+    overflow-y: auto;
+    padding: 12px;
+    flex-shrink: 0;
+}
+
+#modStoreSidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+#modStoreSidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+#modStoreSidebar::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--border-radius-sm);
+}
+
+#modStoreSidebar::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Search */
+#modStoreSearch {
+    margin-bottom: 16px;
+}
+
+#modStoreSearchInput {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text);
+    font-size: 13px;
+    font-family: 'Sen', sans-serif;
+    transition: all var(--transition-fast);
+    box-sizing: border-box;
+}
+
+#modStoreSearchInput:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background: var(--color-bg-dark);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+}
+
+#modStoreSearchInput:hover:not(:focus) {
+    border-color: var(--color-primary-light);
+}
+
+#modStoreSearchInput::placeholder {
+    color: var(--color-text-disabled);
+}
+
+/* Filter Sections */
+.modStoreFilterSection {
+    margin-bottom: 20px;
+}
+
+.modStoreFilterHeader {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modStoreFilterContent {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.modStoreFilterItem {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    font-size: 13px;
+    color: var(--color-text);
+}
+
+.modStoreFilterItem:hover {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    transform: translateX(2px);
+}
+
+.modStoreFilterItem.active {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+    font-weight: 500;
+}
+
+.modStoreFilterLoading {
+    padding: 8px 10px;
+    color: var(--color-text-disabled);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.modStoreFilterCheckbox {
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--color-border);
+    border-radius: 3px;
+    margin-right: 8px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-fast);
+}
+
+.modStoreFilterItem.active .modStoreFilterCheckbox {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.modStoreFilterItem.active .modStoreFilterCheckbox::after {
+    content: '✓';
+    color: var(--color-text);
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.modStoreFilterLabel {
+    flex: 1;
+}
+
+/* Main Content Area */
+#modStoreMain {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: rgba(26, 26, 46, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    position: relative;
+}
+
+#modStoreViewOptions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#modStoreViewOptions label {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+}
+
+.modStoreSelect {
+    padding: 6px 12px;
+    background: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text);
+    font-size: 13px;
+    font-family: 'Sen', sans-serif;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.modStoreSelect:hover {
+    border-color: var(--color-primary-light);
+    background: var(--color-bg-dark);
+}
+
+.modStoreSelect:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+}
+
+/* Footer Notice */
+#modStoreFooterNotice {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    background: rgba(138, 43, 226, 0.08);
+    border: 1px solid rgba(138, 43, 226, 0.2);
+    border-radius: var(--border-radius-sm);
+    margin: 0 20px 16px 20px;
+}
+
+#modStoreFooterNotice svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    color: var(--color-primary-light);
+}
+
+#modStoreFooterNotice p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+}
+
+/* Results Area */
+.modStoreResults {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.modStoreResults::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modStoreResults::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modStoreResults::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--border-radius-sm);
+}
+
+.modStoreResults::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+/* Loading State */
+.modStoreLoadingState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 16px;
+    color: var(--color-text-secondary);
+}
+
+.modStoreLoadingSpinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--color-border);
+    border-top-color: var(--color-primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite, pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+/* Empty State */
+.modStoreEmptyState {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 12px;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.modStoreEmptyState svg {
+    width: 48px;
+    height: 48px;
+    opacity: 0.5;
+}
+
+.modStoreEmptyState h3 {
+    margin: 0;
+    font-size: 18px;
+    color: var(--color-text);
+}
+
+.modStoreEmptyState p {
+    margin: 0;
+    font-size: 13px;
+}
+
+/* Mod Grid - Optimized for Performance */
+#modStoreGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    will-change: transform;
+}
+
+/* Mod Cards - Clean and Minimal */
+.modStoreCard {
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    padding: 14px;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.modStoreCard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition-normal);
+}
+
+.modStoreCard:hover {
+    border-color: var(--color-primary);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(138, 43, 226, 0.15);
+}
+
+.modStoreCard:hover::before {
+    transform: scaleX(1);
+}
+
+.modStoreCard:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.modStoreCard:active {
+    transform: translateY(-1px);
+}
+
+.modStoreCardHeader {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+}
+
+.modStoreCardIcon {
+    width: 48px;
+    height: 48px;
+    border-radius: var(--border-radius-sm);
+    object-fit: contain;
+    flex-shrink: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-bg-darkest);
+    padding: 2px;
+}
+
+.modStoreCardInfo {
+    flex: 1;
+    min-width: 0;
+}
+
+.modStoreCardTitle {
+    margin: 0 0 4px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    display: flex;
+    align-items: center;
+    gap: 0;
+    line-height: 1.3;
+    overflow: hidden;
+}
+
+.modStoreCardAuthor {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.modStoreCardBody {
+    flex: 1;
+}
+
+.modStoreCardDescription {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.modStoreCardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--color-border);
+}
+
+.modStoreCardStats {
+    display: flex;
+    gap: 12px;
+}
+
+.modStoreCardStat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    color: var(--color-text-secondary);
+}
+
+.modStoreCardStat svg {
+    width: 14px;
+    height: 14px;
+    opacity: 0.7;
+}
+
+.modStoreCardTags {
+    display: flex;
+    gap: 4px;
+}
+
+.modStoreCardTag {
+    padding: 3px 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 10px;
+    color: var(--color-primary-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.modStoreInstalledBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 6px;
+    background: rgba(76, 175, 80, 0.15);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: var(--border-radius-sm);
+    font-size: 9px;
+    color: #81c784;
+    font-weight: 600;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 4px;
+    flex-shrink: 0;
+}
+
+.modStoreInstalledBadge svg {
+    width: 10px;
+    height: 10px;
+}
+
+/* Pagination */
+#modStorePagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: var(--color-bg-dark);
+    border-top: 1px solid var(--color-border);
+    flex-shrink: 0;
+}
+
+#modStorePageInputGroup {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.modStorePageJump {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.modStorePageJump label {
+    font-weight: 500;
+}
+
+.modStorePageNumberInput {
+    width: 60px;
+    padding: 6px 8px;
+    background: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-text);
+    font-size: 13px;
+    font-family: 'Sen', sans-serif;
+    text-align: center;
+    transition: all var(--transition-fast);
+}
+
+.modStorePageNumberInput:hover {
+    border-color: var(--color-primary-light);
+}
+
+.modStorePageNumberInput:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.15);
+}
+
+.modStorePageNumberInput::-webkit-inner-spin-button,
+.modStorePageNumberInput::-webkit-outer-spin-button {
+    opacity: 1;
+}
+
+#modStorePageInfo {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    min-width: 80px;
+    text-align: center;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Modal Styles                                                                *
+ *                                                                             *
+ ******************************************************************************/
+
+.modStoreModal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modStoreModalOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.modStoreModalContent {
+    position: relative;
+    z-index: 1;
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    max-width: 800px;
+    width: 90%;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.modStoreModalHeader {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--color-border);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.modStoreModalCloseBtn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 24px;
+    border-radius: var(--border-radius-sm);
+    transition: var(--transition-fast);
+}
+
+.modStoreModalCloseBtn:hover {
+    background: var(--color-surface);
+    color: var(--color-text);
+}
+
+.modStoreModalBody {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.modStoreModalBody::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modStoreModalBody::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modStoreModalBody::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--border-radius-sm);
+}
+
+.modStoreModalBody::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+#modStoreModalInfo {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 24px;
+}
+
+#modStoreModalIcon {
+    width: 80px;
+    height: 80px;
+    border-radius: var(--border-radius-md);
+    object-fit: contain;
+    flex-shrink: 0;
+    border: 2px solid var(--color-border);
+    background: var(--color-bg-darkest);
+    padding: 4px;
+}
+
+#modStoreModalMeta {
+    flex: 1;
+}
+
+#modStoreModalMeta h3 {
+    margin: 0 0 8px 0;
+    font-size: 20px;
+    color: var(--color-text);
+}
+
+#modStoreModalAuthor {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: var(--color-primary-light);
+}
+
+#modStoreModalDescription {
+    margin: 0 0 16px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+}
+
+#modStoreModalStats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+#modStoreModalStats > div {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--color-text-secondary);
+}
+
+#modStoreModalStats svg {
+    opacity: 0.7;
+}
+
+.modStoreModalLinks {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.modStoreModalLink {
+    padding: 6px 12px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    color: var(--color-primary-light);
+    text-decoration: none;
+    font-size: 12px;
+    transition: var(--transition-fast);
+}
+
+.modStoreModalLink:hover {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-text);
+}
+
+#modStoreModalVersions {
+    margin-top: 24px;
+}
+
+.modStoreVersionsHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.modStoreVersionsHeader h4 {
+    margin: 0;
+    font-size: 16px;
+    color: var(--color-text);
+}
+
+.modStoreVersionControls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.modStoreVersionControls select {
+    font-size: 12px;
+    padding: 6px 12px;
+}
+
+.modStoreVersionList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.modStoreVersionList::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modStoreVersionList::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.modStoreVersionList::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--border-radius-sm);
+}
+
+.modStoreVersionList::-webkit-scrollbar-thumb:hover {
+    background: var(--color-primary);
+}
+
+.modStoreVersionItem {
+    padding: 12px;
+    background: var(--color-bg-darkest);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    transition: var(--transition-fast);
+}
+
+.modStoreVersionItem:hover {
+    border-color: var(--color-primary);
+}
+
+.modStoreVersionItem.selected {
+    background: var(--color-surface);
+    border-color: var(--color-primary);
+}
+
+.modStoreVersionHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+}
+
+.modStoreVersionName {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.modStoreVersionBadge {
+    padding: 2px 8px;
+    background: rgba(76, 175, 80, 0.15);
+    border: 1px solid rgba(76, 175, 80, 0.3);
+    border-radius: var(--border-radius-sm);
+    font-size: 10px;
+    color: #81c784;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.modStoreVersionType {
+    padding: 2px 8px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 10px;
+    color: var(--color-primary-light);
+    text-transform: uppercase;
+    margin-left: auto;
+}
+
+.modStoreVersionInfo {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+.modStoreModalSource {
+    margin-top: 12px;
+    padding: 8px;
+    background: var(--color-bg-darkest);
+    border-radius: var(--border-radius-sm);
+    font-size: 11px;
+    color: var(--color-text-disabled);
+    text-align: center;
+}
+
+.modStoreModalSource a {
+    color: var(--color-primary-light);
+    text-decoration: none;
+}
+
+.modStoreModalSource a:hover {
+    text-decoration: underline;
+}
+
+.modStoreModalFooter {
+    padding: 16px 20px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Support Prompt Overlay                                                      *
+ *                                                                             *
+ ******************************************************************************/
+
+.modStoreSupportPrompt {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modStoreSupportOverlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.modStoreSupportCard {
+    position: relative;
+    z-index: 1;
+    background: var(--color-bg-dark);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-lg);
+    padding: 32px;
+    max-width: 480px;
+    width: 90%;
+    text-align: center;
+}
+
+.modStoreSupportIcon {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 20px;
+    color: var(--color-primary);
+}
+
+.modStoreSupportIcon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.modStoreSupportCard h3 {
+    margin: 0 0 12px 0;
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.modStoreSupportCard p {
+    margin: 0 0 20px 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+}
+
+.modStoreSupportTimer {
+    padding: 12px 20px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: 20px;
+}
+
+.modStoreSupportTimer span {
+    font-weight: 600;
+    color: var(--color-primary);
+}
+
+.modStoreSupportButtons {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+}
+
+.modStoreSupportButtons .modStoreBtn {
+    flex: 1;
+    max-width: 180px;
+}
+
+/* Installation Progress States */
+#modStoreInstallProgress,
+#modStoreInstallSuccess {
+    display: flex;
+}
+
+#modStoreInstallProgress[style*="display: none"],
+#modStoreInstallSuccess[style*="display: none"] {
+    display: none !important;
+}
+
+#modStoreInstallCancelBtn {
+    background: rgba(244, 67, 54, 0.15);
+    border-color: rgba(244, 67, 54, 0.4);
+    color: #ef5350;
+}
+
+#modStoreInstallCancelBtn:hover:not(:disabled) {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: rgba(244, 67, 54, 0.6);
+    color: #ff6b6b;
+}
+
+#modStoreInstallCancelBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Utility Classes */
+.modStoreHidden {
+    display: none !important;
+}
+/*******************************************************************************
+ *                                                                             *
+ * Frame Button Styles                                                         *
+ *                                                                             *
+ ******************************************************************************/
+
+#frameBar {
+    display: flex;
+    align-items: center;
+    -webkit-app-region: drag;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+#frameMain {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+#frameTitleDock {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    -webkit-app-region: drag;
+}
+
+#frameTitleText {
+    padding-left: 10px;
+}
+
+#frameButtonDockWin {
+    -webkit-app-region: no-drag !important;
+    position: relative;
+    display: flex;
+    height: 22px;
+}
+
+#frameButtonDockWin > .frameButton:not(:first-child) {
+    margin-left: -4px;
+}
+
+#frameButtonDockDarwin {
+    -webkit-app-region: no-drag !important;
+    position: relative;
+    display: flex;
+}
+
+/* Windows / Linux Frame Button Styles */
+.frameButton {
+    background-color: transparent;
+    border: none;
+    color: var(--color-text);
+    transition: background-color 0.2s ease;
+    height: 22px;
+    width: 39px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.frameButton:hover,
+.frameButton:focus {
+    background-color: rgba(156, 156, 156, 0.2);
+}
+
+.frameButton:active {
+    background: rgba(156, 156, 156, 0.43);
+}
+
+.frameButton:focus {
+    outline: 0px;
+}
+
+/* Close button is red */
+#frameButton_close:hover,
+#frameButton_close:focus {
+    background: rgba(255, 53, 53, 0.61) !important;
+}
+
+#frameButton_close:active {
+    background: rgba(235, 0, 0, 0.61) !important;
+}
+
+/* Darwin Frame Button Styles */
+.frameButtonDarwin {
+    height: 12px;
+    width: 12px;
+    border-radius: 50%;
+    border: 0px;
+    margin-left: 5px;
+    -webkit-app-region: no-drag !important;
+    cursor: pointer;
+}
+
+.frameButtonDarwin:focus {
+    outline: 0px;
+}
+
+#frameButtonDarwin_close {
+    background-color: #e74c32;
+}
+
+#frameButtonDarwin_close:hover,
+#frameButtonDarwin_close:focus {
+    background-color: #FF9A8A;
+}
+
+#frameButtonDarwin_close:active {
+    background-color: #ff8d7b;
+}
+
+#frameButtonDarwin_minimize {
+    background-color: #fed045;
+}
+
+#frameButtonDarwin_minimize:hover,
+#frameButtonDarwin_minimize:focus {
+    background-color: #FFE9A9;
+}
+
+#frameButtonDarwin_minimize:active {
+    background-color: #ffde7b;
+}
+
+#frameButtonDarwin_restoredown {
+    background-color: #96e734;
+}
+
+#frameButtonDarwin_restoredown:hover,
+#frameButtonDarwin_restoredown:focus {
+    background-color: #D6FFA6;
+}
+
+#frameButtonDarwin_restoredown:active {
+    background-color: #bfff76;
+}

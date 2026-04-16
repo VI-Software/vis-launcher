@@ -1,18 +1,23 @@
-#    ____   ____.___    _________       _____  __                                 
+# ____   ____.___    _________       _____  __                                 
 # \   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
 #  \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
 #   \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
 #    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
 #                          \/                                 \/            \/ 
 #                          
-#     © 2025 VI Software. All rights reserved.
-# 
-#     License: AGPL-3.0
-#    https://www.gnu.org/licenses/agpl-3.0.en.html
+#     © 2023-2026 VI Software and contributors.
+#     Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 #
-#    GitHub: https://github.com/VI-Software
-#    Website: https://visoftware.dev
+#     License: GNU Affero General Public License v3.0 (AGPL-3.0)
+#     https://www.gnu.org/licenses/agpl-3.0.en.html
 #
+#     This program is distributed in the hope that it will be useful, but WITHOUT 
+#     ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+#     FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+#
+#     GitHub:  https://github.com/VI-Software
+#     Website: https://visoftware.dev
+
 
 [ejs.landing]
 updateAvailableTooltip = "Actualització disponible"
@@ -51,12 +56,12 @@ loginButtonText = "INICIAR SESSIÓ"
 loginNeedAccountLink = "https://puf.visoftware.dev"
 loginNeedAccountText = "Necessites un compte?"
 loginPasswordDisclaimer1 = "La teva contrasenya s'envia directament al servidor de VI Software i mai es guarda."
-loginPasswordDisclaimer2 = "&copy 2025 VI Software i col·laboradors. Tots els drets reservats."
+loginPasswordDisclaimer2 = "&copy 2026 VI Software i col·laboradors. Tots els drets reservats."
 
 [ejs.loginOptions]
 loginOptionsTitle = "Opcions d'inici de sessió"
 loginWithVISWeb = "Inicia sessió amb VI Software Dashboard"
-loginWithVIS = "Inicia sessió amb VI Software Yggdrasi (Legacy)"
+loginWithVIS = "Inicia sessió amb VI Software Yggdrasil (Legacy)"
 cancelButton = "Cancel·lar"
 orContinueAs = "o continuar com"
 continueAsGuest = "Continuar com a Convidat"
@@ -121,6 +126,14 @@ dropinMods = "Mods addicionals"
 dropinModsDesc = "Personalitza l'experiència al teu gust! Afegeix mods que el teu administrador no inclou amb l'experiència aquí."
 addMods = "Afegir mods"
 dropinRefreshNote = "(F5 per actualitzar)"
+modStoreTitle = "Botiga de Mods"
+modStoreDesc = "Explora i instal·la mods des de la botiga en línia"
+modStoreButton = "Obrir Botiga de Mods"
+modStoreWarningTitle = "Advertència de Contingut de Tercers"
+modStoreWarningMessage = "<strong style='color: #ff9800;'>Avís Important:</strong><br><br>La Botiga de Mods conté contingut allotjat per tercers i creat per la comunitat. Tot i que ens esforcem per proporcionar una experiència segura, <strong>els mods poden contenir malware, errors o altre codi nociu</strong>.<br><br><strong>VI Software no es fa responsable de cap dany</strong> causat per contingut generat per tercers. Instal·la mods sota el teu propi risc i només de fonts de confiança.<br><br>Si us plau, revisa les qualificacions, comentaris i reputació de l'autor abans d'instal·lar."
+modStoreWarningAccept = "Ho entenc, Continuar"
+modStoreWarningCancel = "Cancel·lar"
+modStoreWarningDontShow = "No tornar a advertir-me sobre això"
 shaderpacks = "Paquets de shaders"
 shaderpackDesc = "Activa o desactiva els shaders. Tingues en compte que els shaders només funcionaran correctament en configuracions potents. Pots afegir paquets personalitzats aquí."
 selectShaderpack = "Seleccionar paquet de shaders"
@@ -141,8 +154,8 @@ jvmOptsTitle = "Opcions addicionals de JVM"
 jvmOptsDesc = "Opcions que es proporcionaran a la JVM en temps d'execució. <em>-Xms</em> i <em>-Xmx</em> no s'han d'incloure."
 launcherTabHeaderText = "Configuració del llançador"
 launcherTabHeaderDesc = "Opcions relacionades amb el llançador."
-allowPrereleaseTitle = "Canal d'actualització nocturn."
-allowPrereleaseDesc = "Les versions nocturnes inclouen noves funcions que poden no haver estat completament provades o integrades.<br>Aquesta opció es considerarà activa sempre que estiguis en una versió nocturna."
+updateChannelTitle = "Canal d'Actualització"
+updateChannelDesc = "Selecciona des de quin canal rebre actualitzacions del llançador. Canviar això requereix reiniciar.<br><strong>Canary:</strong> Compilacions de vanguardia amb les últimes funcions (poden ser inestables).<br><strong>Nightly:</strong> Compilacions diàries amb noves funcions (més estables que Canary).<br><strong>Stable:</strong> Només versions d'alliberament estables."
 christmasSnowflakesTitle = "Flocs de Neu Nadalencs"
 christmasSnowflakesDesc = "Mostra flocs de neu festius durant desembre. Activa o desactiva aquest efecte estacional."
 dataDirectoryTitle = "Directori de Dades"
@@ -366,6 +379,13 @@ importError = "Error en importar configuració"
 importInvalidFile = "Arxiu de configuració invàlid. Si us plau selecciona un arxiu vàlid."
 importSelectFile = "Seleccionar Arxiu de Configuració"
 
+[js.settings.modStore]
+warningTitle = "Advertència de contingut de tercers"
+warningMessage = "<strong style='color: #ff9800;'>Avís important:</strong> Estàs a punt d'accedir a contingut de tercers des de la botiga de mods.<br><br><ul style='text-align: left; margin: 10px 0;'><li>Els mods són creats i mantinguts per la <strong>comunitat</strong></li><li>No podem garantir compatibilitat o seguretat</li><li>Instal·la mods sota el teu <strong>propi risc</strong></li><li>Sempre revisa els mods abans d'instal·lar-los</li></ul><br>En continuar, reconeix aquests riscos."
+warningAccept = "Entenc, continuar"
+warningCancel = "Cancel·lar"
+warningDontShow = "No tornar a advertir-me sobre això"
+
 [js.settings.serverListing]
 mainServer = "Servidor Destacat"
 noServersFound = "No s'han trobat servidors"
@@ -435,6 +455,12 @@ restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi d'idioma 
 restartNowButton = "Reiniciar ara"
 restartLaterButton = "Més tard"
 
+[js.settings.updateChannel]
+restartRequiredTitle = "Cal reiniciar"
+restartRequiredMessage = "Cal reiniciar el llançador perquè el canvi de canal d'actualització tingui efecte. El llançador buscarà actualitzacions al nou canal després de reiniciar."
+restartNowButton = "Reiniciar ara"
+restartLaterButton = "Més tard"
+
 [js.settings.storageManagement]
 clearModstoreConfirmTitle = "Netejar Caché de Modstore"
 clearModstoreConfirmMessage = "Estàs segur que vols netejar la caché del modstore? Això eliminarà tots els mods descarregats i caldrà tornar-los a descarregar quan iniciïs un modpack."
@@ -443,6 +469,110 @@ clearInstancesConfirmTitle = "Netejar Totes les Instàncies"
 clearInstancesConfirmMessage = "Estàs segur que vols netejar TOTES les instàncies? Això eliminarà permanentment totes les teves instàncies de joc instal·lades, móns, partides desades i configuracions. Aquesta acció no es pot desfer!"
 clearInstancesButton = "Netejar Totes les Instàncies"
 cancelButton = "Cancel·lar"
+
+[ejs.modstore]
+title = "Botiga de Mods"
+viewLabel = "Veure:"
+viewOption20 = "20"
+viewOption50 = "50"
+viewOption100 = "100"
+closeButton = "Tancar"
+searchPlaceholder = "Cercar mods..."
+categoriesHeader = "Categories"
+loadingText = "Carregant..."
+modLoaderHeader = "Carregador de Mods"
+gameVersionHeader = "Versió del Joc"
+loadingModsText = "Carregant mods..."
+footerNotice = "VI Software no allotja aquest contingut. Tots els mods són contingut generat per usuaris de plataformes de tercers."
+previousButton = "Anterior"
+pageInfo = "{current} / {total}"
+goToPageLabel = "Anar a la pàgina:"
+pageInputPlaceholder = "#"
+goButton = "Anar"
+nextButton = "Següent"
+modalLoadingText = "Carregant..."
+installingStatus = "Instal·lant mod..."
+cancelInstallButton = "Cancel·lar"
+installSuccessTitle = "Instal·lació Exitosa!"
+installSuccessMessage = "Mod instal·lat correctament."
+compatibleVersionsHeader = "Versions Compatibles"
+sortByDate = "Ordenar per Data"
+sortByVersion = "Ordenar per Versió"
+allChannels = "Tots els Canals"
+releaseChannel = "Llançament"
+betaChannel = "Beta"
+alphaChannel = "Alpha"
+showAllVersionsButton = "Mostrar Totes les Versions"
+removeModButton = "Treure Mod"
+installModButton = "Instal·lar Mod"
+supportPromptTitle = "Gaudint d'aquest mod?"
+supportPromptMessage = "Considera visitar la pàgina del mod o donar suport a l'autor per ajudar-lo a continuar el desenvolupament!"
+supportCountdownText = "Si us plau espera {seconds} segons..."
+visitModPageButton = "Visitar Pàgina del Mod"
+noThanksButton = "No Gràcies"
+
+[js.modstore]
+title = "Botiga de Mods"
+viewLabel = "Vista:"
+viewOption20 = "20"
+viewOption50 = "50"
+viewOption100 = "100"
+closeButton = "Tancar"
+categoriesHeader = "Categories"
+loadingText = "Carregant..."
+modLoaderHeader = "Carregador de Mods"
+gameVersionHeader = "Versió del Joc"
+loadingModsText = "Carregant mods..."
+footerNotice = "VI Software no allotja aquest contingut. Tots els mods són contingut generat per usuaris provinent de plataformes de tercers."
+previousButton = "Anterior"
+goToPageLabel = "Anar a la pàgina:"
+goButton = "Anar"
+nextButton = "Següent"
+modalLoadingText = "Carregant..."
+installingStatus = "Instal·lant mod..."
+cancelInstallButton = "Cancel·lar"
+installSuccessTitle = "Instal·lació Exitosa!"
+compatibleVersionsHeader = "Versions Compatibles"
+sortByDate = "Ordenar per Data"
+sortByVersion = "Ordenar per Versió"
+allChannels = "Tots els Canals"
+releaseChannel = "Llançament"
+betaChannel = "Beta"
+alphaChannel = "Alpha"
+showAllVersionsButton = "Mostrar Totes les Versions"
+removeModButton = "Eliminar Mod"
+installModButton = "Instal·lar Mod"
+supportPromptTitle = "Gaudint d'aquest mod?"
+supportPromptMessage = "Considera visitar la pàgina del mod o donar suport a l'autor per ajudar-los a continuar amb el desenvolupament!"
+supportCountdownText = "Si us plau espera {seconds} segons..."
+visitModPageButton = "Visitar Pàgina del Mod"
+noThanksButton = "No Gràcies"
+updateVersionButton = "Actualitzar Versió"
+updatingText = "Actualitzant..."
+installingText = "Instal·lant..."
+cancellingText = "Cancel·lant..."
+removingText = "Eliminant..."
+removeFailedText = "Eliminació Fallida"
+updatedLabel = "Actualitzat"
+sourceCodeLink = "Codi Font"
+issuesLink = "Problemes"
+wikiLink = "Wiki"
+discordLink = "Discord"
+errorPrefix = "Error:"
+enjoyingModTitle = "Gaudint de {modTitle}?"
+noThanksCountdown = "No Gràcies ({countdown})"
+showingResults = "Mostrant {start}-{end} de {total} mods - Pàgina {current} de {totalPages}"
+noResultsFound = "No s'han trobat resultats"
+modUpdatedSuccessfully = "{modTitle} s'ha actualitzat correctament!"
+modInstalledSuccessfully = "{modTitle} s'ha instal·lat correctament!"
+removingOldVersion = "Eliminant versió anterior..."
+preparingInstallation = "Preparant instal·lació..."
+downloadingModFiles = "Descarregant fitxers del mod..."
+finalizingInstallation = "Finalitzant instal·lació..."
+dataProvidedBy = "Dades proporcionades per {provider}"
+noCompatibleVersionsFound = "No s'han trobat versions compatibles per a {loader} {version}"
+managedByAdmin = "Gestionat per l'administrador d'experiència"
+installedBadge = "Instal·lat"
 
 [settings]
 languageTitle = "Idioma"

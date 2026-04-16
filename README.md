@@ -17,7 +17,7 @@
 
 ### 🔒 Complete Account Management
 - Add multiple accounts and switch between them easily
-- Compatible with VI Software Dashboard Authentication [VIS Auth 3.0] and Yggdrasi
+- Compatible with VI Software Dashboard Authentication [VIS Auth 3.0] and Yggdrasil
 - Credentials are never stored - transmitted directly to VI Software servers
 
 ### 📂 Efficient Asset Management  
@@ -86,7 +86,8 @@ VIS Launcher is licensed under the GNU Affero General Public License (AGPL) Vers
 GNU AFFERO GENERAL PUBLIC LICENSE
 =========================================================
 
-    Copyright (C) 2025 VI Software
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU Affero General Public License as published by
@@ -110,7 +111,7 @@ VIS Launcher is provided “AS IS”, WITHOUT WARRANTY OF ANY KIND, either expre
 
 ## Credits
 
-- VIS Launcher uses Authlib Injector 1.2.6, an authentication injection library for VI Software's custom services, licensed under AGPL-3.0 with the "AUTHLIB-INJECTOR" exception. Learn more about Authlib Injector on its official [GitHub repository](https://github.com/yushijinhun/authlib-injector).
+- VIS Launcher uses Authlib Injector 1.2.7, an authentication injection library for VI Software's custom services, licensed under AGPL-3.0 with the "AUTHLIB-INJECTOR" exception. Learn more about Authlib Injector on its official [GitHub repository](https://github.com/yushijinhun/authlib-injector).
 
 - Based on [HeliosLauncher (v2.1.0)](https://github.com/dscalzi/helioslauncher)
 

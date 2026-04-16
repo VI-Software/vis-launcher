@@ -6,12 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 -->
 
@@ -152,6 +157,15 @@
                 </div>
             </div>
             <div id="settingsModsContainer">
+                <div id="settingsModStoreContainer" style="margin-bottom: 20px;">
+                    <div class="settingsModsHeader"><%- lang('settings.modStoreTitle') %>
+                        <br>
+                        <small><%- lang('settings.modStoreDesc') %></small>
+                    </div>
+                    <button id="settingsOpenModStoreButton">
+                        <i class="fas fa-box-open"></i> <%- lang('settings.modStoreButton') %>
+                    </button>
+                </div>
                 <div id="settingsReqModsContainer">
                     <div class="settingsModsHeader"><%- lang('settings.requiredMods') %>
                             <br>
@@ -362,14 +376,18 @@
             </div>
             <div class="settingsFieldContainer">
                 <div class="settingsFieldLeft">
-                    <span class="settingsFieldTitle"><%- lang('settings.allowPrereleaseTitle') %></span>
-                    <span class="settingsFieldDesc"><%- lang('settings.allowPrereleaseDesc') %></span>
+                    <span class="settingsFieldTitle"><%- lang('settings.updateChannelTitle') %></span>
+                    <span class="settingsFieldDesc"><%- lang('settings.updateChannelDesc') %></span>
                 </div>
                 <div class="settingsFieldRight">
-                    <label class="toggleSwitch">
-                        <input type="checkbox" cValue="AllowPrerelease">
-                        <span class="toggleSwitchSlider"></span>
-                    </label>
+                    <div class="settingsSelectContainer">
+                        <div class="settingsSelectSelected" id="settingsUpdateChannelSelected">Canary</div>
+                        <div class="settingsSelectOptions" id="settingsUpdateChannelOptions" hidden>
+                            <div class="settingsSelectOption" value="canary">Canary</div>
+                            <div class="settingsSelectOption" value="nightly">Nightly</div>
+                            <div class="settingsSelectOption" value="latest">Stable</div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <% const now = new Date(); const isDecember = now.getMonth() === 11; %>
@@ -485,7 +503,7 @@
                                 <span id="settingsAboutCurrentVersionValue">0.0.1-alpha.18</span>
                             </div>
                             <div id="settingsAboutCurrentVersionLine">
-                                <span id="settingsAboutCurrentVersionText">&copy; 2025 <a
+                                <span id="settingsAboutCurrentVersionText">&copy; 2026 <a
                                         href="https://github.com/VI-Software" style="color: purple;">VI Software</a>
 
                                     VI Software Launcher is an <a style="color: purple;"

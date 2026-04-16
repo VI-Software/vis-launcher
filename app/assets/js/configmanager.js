@@ -6,12 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -19,6 +24,7 @@ const fs   = require('fs-extra')
 const { LoggerUtil } = require('@visoftware/vis-launcher-core')
 const os   = require('os')
 const path = require('path')
+const semver = require('semver')
 
 const logger = LoggerUtil.getLogger('ConfigManager')
 const pjson = require('../../../package.json')
@@ -118,7 +124,13 @@ const DEFAULT_CONFIG = {
             legalAcceptedVersion: null,
             canaryAcknowledgedVersion: null,
             christmasSnowflakes: true,
-            guestModeEnabled: true
+            guestModeEnabled: true,
+            modStoreEnabled: true,
+            channel: null, // Will be inferred from app version if null
+            channelChanged: false
+        },
+        modStore: {
+            disableWarning: false
         }
     },
     newsCache: {
@@ -324,6 +336,28 @@ exports.getSelectedServer = function(def = false){
 exports.setSelectedServer = function(serverID){
     config.selectedServer = serverID
 }
+
+// ModStore Settings
+
+/**
+ * Get the modStore warning disabled setting.
+ * 
+ * @returns {boolean} Whether or not the mod store warning is disabled.
+ */
+exports.getModStoreDisableWarning = function(){
+    return config.settings.modStore.disableWarning
+}
+
+/**
+ * Set the modStore warning disabled setting.
+ * 
+ * @param {boolean} disableWarning Whether or not to disable the mod store warning.
+ */
+exports.setModStoreDisableWarning = function(disableWarning){
+    config.settings.modStore.disableWarning = disableWarning
+}
+
+// Auth Account Settings
 
 /**
  * Get an array of each account currently authenticated by the launcher.
@@ -947,6 +981,65 @@ exports.getChristmasSnowflakesEnabled = function(def = false){
 exports.setChristmasSnowflakesEnabled = function(enabled){
     config.settings.launcher.christmasSnowflakes = enabled
 }
+
+/**
+ * Get the update channel for the launcher. If no channel is configured,
+ * infers it from the current version's prerelease tag.
+ * 
+ * @param {boolean} def Optional. If true, the default value will be returned.
+ * @returns {string} The update channel ('canary', 'nightly', or 'latest').
+ */
+exports.getChannel = function(def = false){
+    if(def) {
+        const version = pjson.version
+        const prerelease = semver.prerelease(version)
+        if(prerelease && prerelease.length > 0) {
+            const tag = prerelease[0].toString().toLowerCase()
+            if(tag.includes('canary')) return 'canary'
+            if(tag.includes('nightly')) return 'nightly'
+        }
+        return 'latest'
+    }
+    
+    if(!config.settings.launcher.channel) {
+        const version = pjson.version
+        const prerelease = semver.prerelease(version)
+        if(prerelease && prerelease.length > 0) {
+            const tag = prerelease[0].toString().toLowerCase()
+            if(tag.includes('canary')) return 'canary'
+            if(tag.includes('nightly')) return 'nightly'
+        }
+        return 'latest'
+    }
+    
+    return config.settings.launcher.channel
+}
+
+/**
+ * Set the update channel for the launcher.
+ * 
+ * @param {string} channel The update channel ('canary', 'nightly', or 'latest').
+ */
+exports.setChannel = function(channel){
+    config.settings.launcher.channel = channel
+    config.settings.launcher.channelChanged = true
+}
+
+/**
+ * Check if the channel was recently changed and reset the flag.
+ * Used to determine if allowDowngrade should be enabled.
+ * 
+ * @returns {boolean} True if channel was changed since last check.
+ */
+exports.wasChannelChanged = function(){
+    const changed = config.settings.launcher.channelChanged || false
+    if (changed) {
+        config.settings.launcher.channelChanged = false
+        exports.save()
+    }
+    return changed
+}
+
 /**
  * Export launcher configuration to a JSON file.
  * This function filters out sensitive data like accounts and authentication tokens.
@@ -1134,6 +1227,51 @@ exports.isGuestModeFeatureEnabled = function() {
  */
 exports.setGuestModeFeatureEnabled = function(enabled) {
     config.settings.launcher.guestModeEnabled = enabled
+}
+
+/**
+ * Check if legacy login feature is enabled in launcher settings.
+ * This is a debug option to show/hide the legacy VISoftware login method.
+ * Must be explicitly enabled via settings.toml by third-party launchers.
+ * 
+ * @returns {boolean} True if legacy login feature is enabled.
+ */
+exports.islegacyLoginUIEnabled = function() {
+    try {
+        const settingsValue = Lang.queryRaw('launcher.legacyLoginUIEnabled')
+        if (typeof settingsValue === 'boolean') {
+            return settingsValue
+        }
+    } catch {
+        // If not found in settings.toml, disabled by default
+    }
+    return false
+}
+
+/**
+ * Set whether the legacy login feature is enabled.
+ * 
+ * @param {boolean} enabled Whether legacy login should be enabled.
+ */
+exports.setlegacyLoginUIEnabled = function(enabled) {
+    config.settings.launcher.legacyLoginUIEnabled = enabled
+}
+
+/**
+ * Check if the modstore feature is enabled.
+ * 
+ * @returns {boolean} True if modstore feature is enabled.
+ */
+exports.isModStoreEnabled = function() {
+    try {
+        const settingsValue = Lang.queryRaw('launcher.modStoreEnabled')
+        if (typeof settingsValue === 'boolean') {
+            return settingsValue
+        }
+    } catch {
+        /* doop */
+    }
+    return config.settings.launcher.modStoreEnabled !== false
 }
 
 /**

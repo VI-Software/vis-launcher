@@ -1,0 +1,203 @@
+<!--
+    ____   ____.___    _________       _____  __                                 
+\   \ /   /|   |  /   _____/ _____/ ____\/  |___  _  _______ _______   ____  
+ \   Y   / |   |  \_____  \ /  _ \   __\\   __\ \/ \/ /\__  \\_  __ \_/ __ \ 
+  \     /  |   |  /        (  <_> )  |   |  |  \     /  / __ \|  | \/\  ___/ 
+   \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
+                         \/                                 \/            \/ 
+                         
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
+
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
+    https://www.gnu.org/licenses/agpl-3.0.en.html
+
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
+    Website: https://visoftware.dev
+-->
+
+<link type="text/css" rel="stylesheet" href="./assets/css/modstore.css">
+
+<div id="modStoreContainer">
+    <div id="modStoreHeader">
+        <div id="modStoreHeaderContent">
+            <div id="modStoreHeaderLeft">
+                <img id="modStoreServerIcon" src="" alt="Server Icon" class="modStoreServerIcon" style="display: none;">
+                <div id="modStoreTitle">
+                    <h1 data-lang-key="modstore.title">Mod Store</h1>
+                    <span id="modStoreGameInfo"></span>
+                </div>
+            </div>
+            <div id="modStoreHeaderRight">
+                <div id="modStoreViewOptions">
+                    <label data-lang-key="modstore.viewLabel">View:</label>
+                    <select id="modStoreViewSelect" class="modStoreSelect">
+                        <option value="20" data-lang-key="modstore.viewOption20">20</option>
+                        <option value="50" data-lang-key="modstore.viewOption50">50</option>
+                        <option value="100" data-lang-key="modstore.viewOption100">100</option>
+                    </select>
+                </div>
+                <button id="modStoreCloseBtn" class="modStoreBtn" data-lang-key="modstore.closeButton">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modStoreContent">
+        <div id="modStoreSidebar">
+            <div id="modStoreSearch">
+                <input type="text" id="modStoreSearchInput" data-lang-placeholder="modstore.searchPlaceholder" placeholder="Search mods..." autocomplete="off">
+            </div>
+
+            <div id="modStoreFilters">
+                <div class="modStoreFilterSection">
+                    <div class="modStoreFilterHeader" data-lang-key="modstore.categoriesHeader">Categories</div>
+                    <div id="modStoreCategoriesFilter" class="modStoreFilterContent">
+                        <div class="modStoreFilterLoading" data-lang-key="modstore.loadingText">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="modStoreFilterSection">
+                    <div class="modStoreFilterHeader" data-lang-key="modstore.modLoaderHeader">Mod Loader</div>
+                    <div id="modStoreLoadersFilter" class="modStoreFilterContent">
+                        <div class="modStoreFilterLoading" data-lang-key="modstore.loadingText">Loading...</div>
+                    </div>
+                </div>
+
+                <div class="modStoreFilterSection">
+                    <div class="modStoreFilterHeader" data-lang-key="modstore.gameVersionHeader">Game Version</div>
+                    <div id="modStoreVersionsFilter" class="modStoreFilterContent">
+                        <div class="modStoreFilterLoading" data-lang-key="modstore.loadingText">Loading...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="modStoreMain">
+
+            <div id="modstore-results" class="modStoreResults">
+                <div id="modStoreLoading" class="modStoreLoadingState">
+                    <div class="modStoreLoadingSpinner"></div>
+                    <p data-lang-key="modstore.loadingModsText">Loading mods...</p>
+                </div>
+            </div>
+
+            <div id="modStoreFooterNotice">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <p data-lang-key="modstore.footerNotice">VI Software does not host this content. All mods are user-generated content sourced from third-party platforms.</p>
+            </div>
+
+            <div id="modStorePagination">
+                <button id="modStorePrevBtn" class="modStoreBtn" data-lang-key="modstore.previousButton" disabled>Previous</button>
+                <div id="modStorePageInputGroup">
+                    <span id="modStorePageInfo">1 / 1</span>
+                    <div class="modStorePageJump">
+                        <label for="modStorePageInput" data-lang-key="modstore.goToPageLabel">Go to page:</label>
+                        <input type="number" id="modStorePageInput" class="modStorePageNumberInput" min="1" step="1" data-lang-placeholder="modstore.pageInputPlaceholder" placeholder="#">
+                        <button id="modStorePageJumpBtn" class="modStoreBtn modStoreBtnSecondary" data-lang-key="modstore.goButton">Go</button>
+                    </div>
+                </div>
+                <button id="modStoreNextBtn" class="modStoreBtn" data-lang-key="modstore.nextButton" disabled>Next</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mod Details Modal -->
+    <div id="modStoreModal" class="modStoreModal" style="display: none;">
+        <div class="modStoreModalOverlay"></div>
+        <div class="modStoreModalContent">
+            <div class="modStoreModalHeader">
+                <button id="modStoreModalClose" class="modStoreModalCloseBtn">&times;</button>
+            </div>
+            <div class="modStoreModalBody">
+                <div id="modStoreModalLoading" class="modStoreFilterLoading" style="display: none; justify-content: center; align-items: center; min-height: 300px;">
+                    <div class="modStoreLoadingSpinner"></div>
+                    <div class="modStoreFilterLoading" data-lang-key="modstore.modalLoadingText">Loading...</div>
+                </div>
+                <div id="modStoreInstallProgress" style="display: none; padding: 30px; text-align: center; min-height: 300px; flex-direction: column; align-items: center; justify-content: center;">
+                    <div class="modStoreLoadingSpinner" style="margin-bottom: 20px;"></div>
+                    <p id="modStoreInstallStatus" data-lang-key="modstore.installingStatus" style="margin: 10px 0; color: var(--color-text-secondary);">Installing mod...</p>
+                    <div class="modStoreProgressBar" style="width: 100%; max-width: 300px; height: 6px; background: var(--color-bg-dark); border-radius: 3px; margin: 15px 0; overflow: hidden;">
+                        <div id="modStoreInstallProgressFill" style="height: 100%; background: linear-gradient(90deg, var(--color-primary), var(--color-accent)); width: 0%; transition: width 0.3s ease;"></div>
+                    </div>
+                    <button id="modStoreInstallCancelBtn" class="modStoreBtn modStoreBtnSecondary" data-lang-key="modstore.cancelInstallButton" style="margin-top: 15px;">Cancel</button>
+                </div>
+                <div id="modStoreInstallSuccess" style="display: none; padding: 30px; text-align: center; min-height: 300px; flex-direction: column; align-items: center; justify-content: center;">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 60px; height: 60px; color: var(--color-success); margin-bottom: 20px;">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                    <p data-lang-key="modstore.installSuccessTitle" style="font-size: 18px; font-weight: 600; margin: 10px 0;">Installation Successful!</p>
+                    <p id="modStoreSuccessMessage" style="margin: 10px 0; color: var(--color-text-secondary);"></p>
+                </div>
+                <div id="modStoreModalDetails" style="display: none;">
+                    <div id="modStoreModalInfo">
+                        <img id="modStoreModalIcon" src="" alt="Mod Icon">
+                        <div id="modStoreModalMeta">
+                            <h3 id="modStoreModalTitle">Loading...</h3>
+                            <p id="modStoreModalAuthor"></p>
+                            <p id="modStoreModalDescription"></p>
+                            <div id="modStoreModalStats">
+                                <div id="modStoreModalDownloads"></div>
+                                <div id="modStoreModalFollowers"></div>
+                                <div id="modStoreModalUpdated"></div>
+                            </div>
+                            <div id="modStoreModalLinks" class="modStoreModalLinks"></div>
+                        </div>
+                    </div>
+                    <div id="modStoreModalVersions">
+                        <div class="modStoreVersionsHeader">
+                            <h4 data-lang-key="modstore.compatibleVersionsHeader">Compatible Versions</h4>
+                            <div class="modStoreVersionControls">
+                                <select id="modStoreVersionSort" class="modStoreBtn modStoreBtnSecondary">
+                                    <option value="date" data-lang-key="modstore.sortByDate">Sort by Date</option>
+                                    <option value="version" data-lang-key="modstore.sortByVersion">Sort by Version</option>
+                                </select>
+                                <select id="modStoreVersionChannel" class="modStoreBtn modStoreBtnSecondary">
+                                    <option value="all" data-lang-key="modstore.allChannels">All Channels</option>
+                                    <option value="release" data-lang-key="modstore.releaseChannel">Release</option>
+                                    <option value="beta" data-lang-key="modstore.betaChannel">Beta</option>
+                                    <option value="alpha" data-lang-key="modstore.alphaChannel">Alpha</option>
+                                </select>
+                                <button id="modStoreShowAllVersions" class="modStoreBtn modStoreBtnSecondary" data-lang-key="modstore.showAllVersionsButton" style="display: none;">Show All Versions</button>
+                            </div>
+                        </div>
+                        <div id="modStoreModalVersionList" class="modStoreVersionList">
+                            <div class="modStoreFilterLoading" data-lang-key="modstore.modalLoadingText">Loading versions...</div>
+                        </div>
+                        <div id="modStoreModalSource" class="modStoreModalSource"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modStoreModalFooter">
+                <button id="modStoreModalRemoveBtn" class="modStoreBtn modStoreBtnDanger" data-lang-key="modstore.removeModButton" style="display: none;">Remove Mod</button>
+                <button id="modStoreModalInstallBtn" class="modStoreBtn modStoreBtnPrimary" data-lang-key="modstore.installModButton" disabled>Install Mod</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Prompt Overlay -->
+    <div id="modStoreSupportPrompt" class="modStoreSupportPrompt" style="display: none;">
+        <div class="modStoreSupportOverlay"></div>
+        <div class="modStoreSupportCard">
+            <div class="modStoreSupportIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="currentColor">
+                    <path d="M47.6 300.4L228.3 469.1c7.5 7 17.4 10.9 27.7 10.9s20.2-3.9 27.7-10.9L464.4 300.4c30.4-28.3 47.6-68 47.6-109.5v-5.8c0-69.9-50.5-129.5-119.4-141C347 36.5 300.6 51.4 268 84L256 96 244 84c-32.6-32.6-79-47.5-124.6-39.9C50.5 55.6 0 115.2 0 185.1v5.8c0 41.5 17.2 81.2 47.6 109.5z"/>
+                </svg>
+            </div>
+            <h3 data-lang-key="modstore.supportPromptTitle" id="modStoreSupportTitle">Enjoying this mod?</h3>
+            <p data-lang-key="modstore.supportPromptMessage" id="modStoreSupportMessage">Consider visiting the mod page or supporting the author to help them continue development!</p>
+            <div class="modStoreSupportTimer">Please wait <span id="modStoreSupportCountdown">3</span> seconds...</div>
+            <div class="modStoreSupportButtons" style="display: none;">
+                <button id="modStoreSupportVisit" class="modStoreBtn modStoreBtnPrimary" data-lang-key="modstore.visitModPageButton">Visit Mod Page</button>
+                <button id="modStoreSupportDismiss" class="modStoreBtn modStoreBtnSecondary" data-lang-key="modstore.noThanksButton">No Thanks</button>
+            </div>
+        </div>
+    </div>
+</div>

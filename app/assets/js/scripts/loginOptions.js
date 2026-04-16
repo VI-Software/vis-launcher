@@ -6,18 +6,23 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
 
 const loginOptionsCancelContainer = document.getElementById('loginOptionCancelContainer')
 const loginOptionVISoftware = document.getElementById('loginOptionVISoftware')
+const loginOptionVISoftwareContainer = loginOptionVISoftware?.parentElement
 const loginOptionsCancelButton = document.getElementById('loginOptionCancelButton')
 const loginOptionVISWeb = document.getElementById('loginOptionVISWeb')
 const loginOptionBackContainer = document.getElementById('loginOptionBackContainer')
@@ -47,7 +52,19 @@ function initGuestModeUI() {
     }
 }
 
+/**
+ * Initialize legacy login UI visibility based on feature flag.
+ * Legacy login is hidden by default unless explicitly enabled via debug settings.
+ */
+function initLegacyLoginUI() {
+    const legacyLoginUIEnabled = ConfigManager.islegacyLoginUIEnabled()
+    if (loginOptionVISoftwareContainer) {
+        loginOptionVISoftwareContainer.style.display = legacyLoginUIEnabled ? 'block' : 'none'
+    }
+}
+
 initGuestModeUI()
+initLegacyLoginUI()
 
 function loginOptionsCancelEnabled(val){
     if(val){
@@ -75,6 +92,8 @@ function showLoginOptions(fromSettings = false) {
         $(loginOptionBackContainer).hide()
         // Show guest mode based on feature flag when not from settings
         initGuestModeUI()
+        // Show legacy login based on feature flag
+        initLegacyLoginUI()
     }
     switchView(getCurrentView(), VIEWS.loginOptions, 500, 500)
 }

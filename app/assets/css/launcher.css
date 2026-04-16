@@ -6,12 +6,17 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
@@ -1163,8 +1168,8 @@ progress::-webkit-progress-bar {
 }
 
 .loginOptionButton {
-    background: rgba(0, 0, 0, 0.25);
-    border: 1px solid rgba(126, 126, 126, 0.57);
+    background: rgba(138, 43, 226, 0.15);
+    border: 1px solid rgba(138, 43, 226, 0.4);
     border-radius: 3px;
     height: 50px;
     width: 100%;
@@ -1179,8 +1184,37 @@ progress::-webkit-progress-bar {
 }
 .loginOptionButton:hover,
 .loginOptionButton:focus {
-    background: rgba(54, 54, 54, 0.25);
-    text-shadow: 0px 0px 20px white;
+    background: rgba(138, 43, 226, 0.3);
+    border-color: rgba(138, 43, 226, 0.6);
+    text-shadow: 0px 0px 20px rgba(138, 43, 226, 0.8);
+}
+
+/* Guest Mode Divider */
+.loginOptionDivider {
+    display: flex;
+    align-items: center;
+    width: 16em;
+    margin: 10px 0;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.loginOptionDivider::before,
+.loginOptionDivider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.loginOptionDivider::before {
+    margin-right: 10px;
+}
+
+.loginOptionDivider::after {
+    margin-left: 10px;
 }
 
 /* Guest Mode Button Styles */
@@ -2217,6 +2251,33 @@ input:checked + .toggleSwitchSlider:before {
 .settingsDropinRemoveButton:active {
     color: #9b1f1f;
     text-shadow: 0px 0px 20px #9b1f1f, 0px 0px 20px #9b1f1f, 0px 0px 20px #9b1f1f;
+}
+
+/* Button to open mod store. */
+#settingsOpenModStoreButton {
+    background: rgba(103, 58, 183, 0.25);
+    border: 1px solid rgba(126, 87, 194, 0.57);
+    border-radius: 3px;
+    height: 50px;
+    width: 100%;
+    text-align: center;
+    padding: 0px 20px;
+    cursor: pointer;
+    outline: none;
+    transition: 0.25s ease;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+}
+#settingsOpenModStoreButton:hover,
+#settingsOpenModStoreButton:focus {
+    background: rgba(103, 58, 183, 0.45);
+    border-color: rgba(156, 107, 224, 0.77);
+    text-shadow: 0px 0px 20px rgba(156, 107, 224, 0.8);
+}
+#settingsOpenModStoreButton:active {
+    background: rgba(103, 58, 183, 0.65);
 }
 
 /* Shaderpack settings description. */

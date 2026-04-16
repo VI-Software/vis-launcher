@@ -6,63 +6,47 @@
    \___/   |___| /_______  /\____/|__|   |__|   \/\_/  (____  /__|    \___  >
                          \/                                 \/            \/ 
                          
-    © 2025 VI Software. All rights reserved.
+    © 2023-2026 VI Software and contributors.
+    Portions © 2017-2026 Daniel D. Scalzi. Licensed under the MIT License.
 
-    License: AGPL-3.0
+    License: GNU Affero General Public License v3.0 (AGPL-3.0)
     https://www.gnu.org/licenses/agpl-3.0.en.html
 
-    GitHub: https://github.com/VI-Software
+    This program is distributed in the hope that it will be useful, but WITHOUT 
+    ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or 
+    FITNESS FOR A PARTICULAR PURPOSE. See the license for more details.
+
+    GitHub:  https://github.com/VI-Software
     Website: https://visoftware.dev
 */
 
-const { LoggerUtil } = require('@visoftware/vis-launcher-core')
-
-const logger = LoggerUtil.getLogger('DiscordWrapper')
-
-const { Client } = require('discord-rpc-patch')
+const { ipcRenderer } = require('electron')
 
 const Lang = require('./langloader')
 
-let client
-let activity
-
+/**
+ * Initialize Discord Rich Presence via the main process.
+ * The actual RPC client runs in the main process to avoid renderer limitations.
+ */
 exports.initRPC = function(genSettings, servSettings, initialDetails = Lang.queryJS('discord.waiting')){
-    client = new Client({ transport: 'ipc' })
-
-    activity = {
-        details: initialDetails,
-        state: Lang.queryJS('discord.state', {shortId: servSettings.shortId}),
-        largeImageKey: servSettings.largeImageKey,
-        largeImageText: servSettings.largeImageText,
-        smallImageKey: genSettings.smallImageKey,
-        smallImageText: genSettings.smallImageText,
-        startTimestamp: new Date().getTime(),
-        instance: false
-    }
-
-    client.on('ready', () => {
-        logger.info('Discord RPC Connected')
-        client.setActivity(activity)
-    })
-    
-    client.login({clientId: genSettings.clientId}).catch(error => {
-        if(error.message.includes('ENOENT')) {
-            logger.info('Unable to initialize Discord Rich Presence, no client detected.')
-        } else {
-            logger.info('Unable to initialize Discord Rich Presence: ' + error.message, error)
-        }
+    ipcRenderer.send('discord-rpc-init', {
+        genSettings,
+        servSettings,
+        initialDetails,
+        state: Lang.queryJS('discord.state', {shortId: servSettings.shortId})
     })
 }
 
+/**
+ * Update the Rich Presence details.
+ */
 exports.updateDetails = function(details){
-    activity.details = details
-    client.setActivity(activity)
+    ipcRenderer.send('discord-rpc-update-details', details)
 }
 
+/**
+ * Shutdown Discord Rich Presence.
+ */
 exports.shutdownRPC = function(){
-    if(!client) return
-    client.clearActivity()
-    client.destroy()
-    client = null
-    activity = null
+    ipcRenderer.send('discord-rpc-shutdown')
 }
