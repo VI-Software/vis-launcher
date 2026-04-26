@@ -998,9 +998,8 @@ exports.getChannel = function(def = false){
             if(tag.includes('canary')) return 'canary'
             if(tag.includes('nightly')) return 'nightly'
         }
-        return 'latest'
+        return null  // Prod defaults to null
     }
-    
     if(!config.settings.launcher.channel) {
         const version = pjson.version
         const prerelease = semver.prerelease(version)
@@ -1009,10 +1008,11 @@ exports.getChannel = function(def = false){
             if(tag.includes('canary')) return 'canary'
             if(tag.includes('nightly')) return 'nightly'
         }
-        return 'latest'
+        return null  // Prod defaults to null
     }
     
-    return config.settings.launcher.channel
+    const channel = config.settings.launcher.channel
+    return channel === 'stable' ? null : channel  // stable to null
 }
 
 /**
