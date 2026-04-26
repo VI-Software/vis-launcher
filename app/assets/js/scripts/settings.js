@@ -2001,7 +2001,7 @@ function setupUpdateChannelSelector() {
     const channels = {
         'canary': 'Canary',
         'nightly': 'Nightly',
-        'latest': 'Stable'
+        'stable': 'Stable'
     }
     
     const currentChannel = ConfigManager.getChannel()
