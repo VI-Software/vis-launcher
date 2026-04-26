@@ -1997,7 +1997,6 @@ function setupLanguageSelector() {
 function setupUpdateChannelSelector() {
     const channelOptions = document.getElementById('settingsUpdateChannelOptions')
     const channelSelected = document.getElementById('settingsUpdateChannelSelected')
-    
     const channels = {
         'canary': 'Canary',
         'nightly': 'Nightly',
@@ -2005,31 +2004,28 @@ function setupUpdateChannelSelector() {
     }
     
     const currentChannel = ConfigManager.getChannel()
-    
-    channelSelected.innerHTML = channels[currentChannel] || channels['canary']
+    const displayChannel = currentChannel === null ? 'stable' : currentChannel
+    channelSelected.innerHTML = channels[displayChannel]
     
     channelOptions.innerHTML = ''
-    
     Object.entries(channels).forEach(([channelCode, channelName]) => {
         const option = document.createElement('div')
         option.classList.add('settingsSelectOption')
         option.setAttribute('value', channelCode)
         option.innerHTML = channelName
-        if (channelCode === currentChannel) {
+        
+        if (channelCode === displayChannel) {
             option.setAttribute('selected', '')
         }
         
         option.addEventListener('click', () => {
-            if (channelCode === currentChannel) return
-            
+            if (channelCode === displayChannel) return
             channelSelected.innerHTML = channelName
-            
             Array.from(channelOptions.children).forEach(child => {
                 child.removeAttribute('selected')
             })
             option.setAttribute('selected', '')
-            
-            ConfigManager.setChannel(channelCode)
+            ConfigManager.setChannel(channelCode === 'stable' ? 'stable' : channelCode)
             ConfigManager.save()
             
             // Require restart to apply channel change
@@ -2039,18 +2035,14 @@ function setupUpdateChannelSelector() {
                 Lang.queryJS('settings.updateChannel.restartNowButton'),
                 Lang.queryJS('settings.updateChannel.restartLaterButton')
             )
-            
             setOverlayHandler(() => {
                 relaunchApp()
             })
-            
             setDismissHandler(() => {
                 toggleOverlay(false)
             })
-            
             toggleOverlay(true, true)
         })
-        
         channelOptions.appendChild(option)
     })
 }
