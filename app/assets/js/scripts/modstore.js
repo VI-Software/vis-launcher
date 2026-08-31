@@ -45,9 +45,6 @@ window.lang = (key, placeholders) => {
     return window.modstoreAPI.queryLang(key, placeholders)
 }
 
-// ModStoreManager is on the main process
-// eslint-disable-next-line no-var
-var isModStoreInitialized = false
 // Web worker for async rendering
 let modStoreWorker = null
 
@@ -277,33 +274,29 @@ async function initModStore() {
         return
     }
 
-    if (isModStoreInitialized) {
-        logger.debug('Mod store already initialized, skipping')
-        return
-    }
-    isModStoreInitialized = true
-
     try {
-        const selectedServerId = await modstoreAPI.getSelectedServer()
-
         let server = null
-        if (selectedServerId != null) {
+        
+        // Try to load the selected server
+        const selectedServerId = await modstoreAPI.getSelectedServer()
+        
+        if (selectedServerId) {
             server = await modstoreAPI.getServerById(selectedServerId)
+            if (server) {
+                logger.info(`Mod store loaded with server: ${server.rawServer.name}`)
+            } else {
+                logger.warn('Selected server not found in distribution, falling back to main server')
+            }
         }
 
-        if (server == null) {
-            server = await modstoreAPI.getMainServer()
-            await modstoreAPI.setSelectedServer(server.rawServer.id)
-            logger.debug('Determinando el servidor predeterminado...')
+        if (!server) {
+            // How is this possible?
+            logger.error('Failed to load any server')
+            showError('No server available. Please select a valid server.')
+            return
         }
 
         modStoreState.currentServer = server
-
-        if (!modStoreState.currentServer) {
-            logger.error('Server not found')
-            showError('Selected server not found. Please select a valid server.')
-            return
-        }
 
         modStoreState.detectedLoader = modstoreAPI.detectLoader(
             modStoreState.currentServer,

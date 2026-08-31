@@ -47,7 +47,6 @@ const modstoreAPI = {
 
     // Server queries
     getServerById: (id) => ipcRenderer.invoke('modstore-get-server-by-id', id),
-    getMainServer: () => ipcRenderer.invoke('modstore-get-main-server'),
 
     // Mod store feature toggle
     isEnabled: () => ipcRenderer.invoke('modstore-is-modstore-enabled'),

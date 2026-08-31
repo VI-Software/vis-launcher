@@ -419,6 +419,9 @@ ipcMain.handle('modstore-is-modstore-enabled', () => {
 })
 
 ipcMain.handle('modstore-get-selected-server', () => {
+    // hacky way to refresh the config in case it was changed before sending the reply. 
+    // TODO: Make this more politically correct by adding a refresh method to the ConfigManager.
+    ConfigManager.load() 
     return ConfigManager.getSelectedServer()
 })
 
@@ -432,13 +435,6 @@ ipcMain.handle('modstore-get-server-by-id', async (event, id) => {
     DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
     const distro = await DistroAPI.getDistribution()
     return distro.getServerById(id)
-})
-
-ipcMain.handle('modstore-get-main-server', async () => {
-    DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
-    DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
-    const distro = await DistroAPI.getDistribution()
-    return distro.getMainServer()
 })
 
 ipcMain.on('modstore-log', (event, level, message) => {
