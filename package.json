@@ -29,7 +29,7 @@
     "@visoftware/discord-rpc": "^1.4.0",
     "@visoftware/distribution-types": "^1.4.0",
     "@visoftware/vis-launcher-core": "^2.14.0",
-    "adm-zip": "^0.5.16",
+    "adm-zip": "^0.6.0",
     "ejs": "^3.1.10",
     "ejs-electron": "^3.0.0",
     "electron-updater": "^6.6.8",
@@ -53,5 +53,9 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VI-Software/vis-launcher.git"
+  },
+  "allowScripts": {
+    "electron@41.10.7": true,
+    "electron-winstaller@5.4.0": true
   }
 }
