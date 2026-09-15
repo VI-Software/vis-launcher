@@ -37,9 +37,11 @@ Issues outside our scope include social engineering/phishing, physical access ex
 4. We publish a public disclosure, usually 7 to 30 days after the patch goes live.
 
 **Keeping Your Setup Safe**
+
 Stick to the LTS release channel for guaranteed security patches, download the launcher only from visoftware.dev or our official GitHub Releases page, and keep automatic updates turned on so you get fixes as soon as they drop.
 
 **Hall of Fame**
+
 We’ll list security researchers here who help us keep VIS Launcher safe through responsible disclosure.
 
 **Contact & Support**
