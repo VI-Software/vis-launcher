@@ -42,15 +42,6 @@ logger.info('GitHub: https://github.com/VI-Software')
 logger.info('Website: https://visoftware.dev')
 
 const { sendSplashProgress, sendSplashMessage, sendSplashDone } = require('./splash-utils')
-const isWaylandNative = process.argv.some(arg => arg.includes('is-wayland-native=true'))
-const isWaylandSession = process.argv.some(arg => arg.includes('session-type=wayland'))
-
-if (isWaylandSession && isWaylandNative) {
-    logger.info('Detected native Wayland without X11 bridge. Requesting relaunch...')
-    sendSplashMessage('Optimizing for Linux display server...')
-    // Request main process to relaunch with X11 compatibility
-    ipcRenderer.send('relaunch-for-x11')
-}
 
 sendSplashProgress(5, 'Starting...')
 

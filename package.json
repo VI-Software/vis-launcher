@@ -9,8 +9,8 @@
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
   "scripts": {
-    "start": "electron . --no-sandbox --ozone-platform=x11",
-    "dev": "electron . --devtools --no-sandbox --ozone-platform=x11",
+    "start": "electron",
+    "dev": "electron . --devtools",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- --win",
     "dist:mac": "npm run dist -- --mac",
