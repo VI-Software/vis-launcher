@@ -9,7 +9,7 @@
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
   "scripts": {
-    "start": "electron",
+    "start": "electron .",
     "dev": "electron . --devtools",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- --win",
