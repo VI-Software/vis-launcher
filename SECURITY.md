@@ -1,66 +1,49 @@
-# Security Policy
+We take the security of VIS Launcher seriously. Because the launcher handles your credentials and mods, keeping your system and data safe is top priority. Here is how we handle security, report handling, and what you can expect from us.
 
-## Our Commitment
-VI Software takes the security of VIS Launcher seriously. As a launcher handling authentication and mod management, we are dedicated to protecting user systems and data through a structured security framework.
+**Supported Versions**
 
-## Supported Versions
-Security support is determined by the release channel. We strongly recommend the **Annual Stability Release (ASR)** for daily use.
+* **Long-Term Support (LTS):** Recieves all security patches and critical fixes. We strongly recommend this channel for everyday use. Once a new LTS is released, the previous version reaches end-of-life and no longer receives updates.
+* **Nightly / Stable:** Receives best-effort security updates. Best for testing and early adopters.
+* **Canary:** No formal security guarantees, as fixes simply roll out through regular active development. Intended for developers only.
 
-| Release Channel | Security Support | Recommendation |
-| :--- | :--- | :--- |
-| **Annual Stability Release (ASR)** | Patches & critical fixes during support window | Production Use |
-| **Nightly / Stable** | Best-effort security fixes | Testing & Early Adopters |
-| **Canary** | No formal guarantees (fixes via development) | Developers Only |
+**Reporting a Vulnerability**
 
-*Note: Once a new ASR is released, the previous version enters end-of-life and no longer receives updates.*
+If you discover a security issue, please don't open a public GitHub issue.
 
-## Reporting a Vulnerability
-**Please do not report security vulnerabilities through public GitHub issues.**
+Instead, email us directly at **launcher-security (at) visoftware (dot) dev**. To help us understand the issue quickly, please include:
 
-If you discover a vulnerability, email **launcher-security (at) visoftware (dot) dev**. Please include a description, the potential impact, steps to reproduce, and your environment details (OS/Java version).
+* A brief description of the vulnerability and its potential impact.
+* Clear steps to reproduce it.
+* Details about your environment (like your OS and Java version).
 
-### Response Expectations
-* **Acknowledgment:** 48–72 hours.
-* **Critical Fixes:** Aimed for release within 7–14 days.
-* **High Severity:** Aimed for release within 30 days.
-* **Credit:** Contributors may be acknowledged in our release notes with permission.
+**Our Response Timeline**
 
-## Scope
+* **Acknowledgment:** We'll confirm receipt within 48 to 72 hours.
+* **Critical Fixes:** We aim to release a patch within 7 to 14 days.
+* **High Severity Fixes:** We aim to patch these within 30 days.
+* **Credit:** If you'd like, we are happy to publicly thank you in our release notes.
 
-### In Scope
-We prioritize vulnerabilities in the VIS Launcher client that could lead to:
-* Remote Code Execution (RCE) or Privilege Escalation.
-* Credential theft or authentication bypass.
-* Unauthorized file access outside the launcher directory.
-* Man-in-the-middle attacks on updates or downloads.
-* Session hijacking or OAuth token theft.
+**What Is (and Isn't) in Scope**
 
-### Out of Scope
-The following are not considered security vulnerabilities for this policy:
-* Social engineering or phishing attacks.
-* Issues requiring physical access to the machine.
-* Vulnerabilities in Minecraft servers or specific mods.
-* Theoretical issues without a practical exploit path.
-* Bugs or crashes without security implications.
+We prioritize client-side issues that pose a direct threat to your security, including remote code execution, privilege escalation, credential or session token theft, unauthorized file access outside the launcher directory, and man-in-the-middle attacks on updates or downloads.
 
-## Disclosure Process
-1. **Investigation:** We verify the report and assess severity.
-2. **Remediation:** Fixes are developed and tested on the Canary branch.
-3. **Deployment:** Validated patches are pushed to Nightly and then backported to the current ASR.
-4. **Public Disclosure:** Typically occurs 7–30 days after the patch is deployed.
+Issues outside our scope include social engineering/phishing, physical access exploits, vulnerabilities inside specific Minecraft servers or mods, theoretical issues without a practical exploit, or standard non-security bugs and crashes.
 
-## User Best Practices
-* **Use ASR:** Always use the current Annual Stability Release for stability and guaranteed security updates.
-* **Official Sources:** Only download the launcher from `visoftware.dev` or our official GitHub Releases.
-* **Stay Updated:** Enable automatic updates to ensure you receive the latest security patches immediately.
+**Our Disclosure Process**
 
-## Hall of Fame
-This section will be updated to honor researchers who have responsibly disclosed vulnerabilities to VI Software.
+1. We verify your report and assess its severity.
+2. We develop and test a fix on the Canary branch.
+3. We push validated patches to Nightly and backport them to the current LTS channel.
+4. We publish a public disclosure, usually 7 to 30 days after the patch goes live.
 
-## Contact
-* **Security:** launcher-security (at) visoftware (dot) dev
-* **General Support:** [Documentation](https://docs.visoftware.dev/vi-software/vis-launcher)
-* **Bugs:** [GitHub Issues](https://github.com/VI-Software/vis-launcher/issues)
+**Keeping Your Setup Safe**
+Stick to the LTS release channel for guaranteed security patches, download the launcher only from visoftware.dev or our official GitHub Releases page, and keep automatic updates turned on so you get fixes as soon as they drop.
 
----
-*Last Updated: February 2026*
+**Hall of Fame**
+We’ll list security researchers here who help us keep VIS Launcher safe through responsible disclosure.
+
+**Contact & Support**
+
+* Security Reports: launcher-security (at) visoftware (dot) dev
+* Documentation & General Support: [https://docs.visoftware.dev/vi-software/vis-launcher](https://docs.visoftware.dev/vi-software/vis-launcher)
+* General Bug Reports: [https://github.com/VI-Software/vis-launcher/issues](https://github.com/VI-Software/vis-launcher/issues)
