@@ -410,6 +410,10 @@ ipcMain.handle('modstore-set-selected-server', (event, id) => {
 ipcMain.handle('modstore-get-server-by-id', async (event, id) => {
     DistroAPI['commonDir'] = ConfigManager.getCommonDirectory()
     DistroAPI['instanceDir'] = ConfigManager.getInstanceDirectory()
+    const selectedAccount = ConfigManager.getSelectedAccount()
+    DistroAPI['authHeaders'] = selectedAccount?.accessToken
+        ? { 'authorization': selectedAccount.accessToken }
+        : { 'authorization': 'public-servers' }
     const distro = await DistroAPI.getDistribution()
     return distro.getServerById(id)
 })
