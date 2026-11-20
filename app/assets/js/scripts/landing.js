@@ -624,10 +624,19 @@ async function downloadJava(effectiveJavaOptions, launchAfter = true) {
 let proc
 // Is DiscordRPC enabled
 let hasRPC = false
+// True once the launch progress UI has been dismissed.
+let launchComplete = false
 // Joined server regex
 // Change this if your server uses something different.
 const GAME_JOINED_REGEX = /\[.+\]: Sound engine started/
 const GAME_LAUNCH_REGEX = /^\[.+\]: (?:MinecraftForge .+ Initialized|ModLauncher .+ starting: .+|Loading Minecraft .+ with Fabric Loader .+)$/
+
+// FML 4.x (NeoForge) and other modern console layouts emit ANSI color codes,
+// and stdout chunks do not align with log lines. Strip the escapes and test
+// each line individually so the launch/joined detection works reliably.
+function stripAnsiCodes(data){
+    return data.toString().replace(/\x1b\[[0-9;]*[A-Za-z]/g, '')
+}
 const MIN_LINGER = 5000
 
 async function dlAsync(login = true) {
@@ -662,6 +671,7 @@ async function dlAsync(login = true) {
     setLaunchDetails(Lang.queryJS('landing.dlAsync.pleaseWait'))
     toggleLaunchArea(true)
     setLaunchPercentage(0, 100)
+    launchComplete = false
 
     const authHeaders = {
         'authorization': ConfigManager.getSelectedAccount().accessToken,
@@ -752,6 +762,8 @@ async function dlAsync(login = true) {
         const SERVER_JOINED_REGEX = new RegExp(`\\[.+\\]: \\[CHAT\\] ${authUser.displayName} joined the game`)
 
         const onLoadComplete = () => {
+            if(launchComplete) return
+            launchComplete = true
             toggleLaunchArea(false)
             if(hasRPC){
                 DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.loading'))
@@ -767,24 +779,28 @@ async function dlAsync(login = true) {
         // the client application has started, and we can hide
         // the progress bar stuff.
         const tempListener = function(data){
-            if(GAME_LAUNCH_REGEX.test(data.trim())){
-                const diff = Date.now()-start
-                if(diff < MIN_LINGER) {
-                    setTimeout(onLoadComplete, MIN_LINGER-diff)
-                } else {
-                    onLoadComplete()
+            stripAnsiCodes(data).split(/\r?\n/).forEach(line => {
+                if(GAME_LAUNCH_REGEX.test(line.trim())){
+                    const diff = Date.now()-start
+                    if(diff < MIN_LINGER) {
+                        setTimeout(onLoadComplete, MIN_LINGER-diff)
+                    } else {
+                        onLoadComplete()
+                    }
                 }
-            }
+            })
         }
 
         // Listener for Discord RPC.
         const gameStateChange = function(data){
-            data = data.trim()
-            if(SERVER_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joined'))
-            } else if(GAME_JOINED_REGEX.test(data)){
-                DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joining'))
-            }
+            stripAnsiCodes(data).split(/\r?\n/).forEach(line => {
+                line = line.trim()
+                if(SERVER_JOINED_REGEX.test(line)){
+                    DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joined'))
+                } else if(GAME_JOINED_REGEX.test(line)){
+                    DiscordWrapper.updateDetails(Lang.queryJS('landing.discord.joining'))
+                }
+            })
         }
 
         const gameErrorListener = function(data){
@@ -809,13 +825,20 @@ async function dlAsync(login = true) {
             if(distro.rawDistribution.discord != null && serv.rawServer.discord != null){
                 DiscordWrapper.initRPC(distro.rawDistribution.discord, serv.rawServer.discord)
                 hasRPC = true
-                proc.on('close', (code, signal) => {
+            }
+
+            // Always restore the launch UI when the game process exits, otherwise
+            // the launcher stays stuck on the progress display and cannot relaunch.
+            proc.on('close', (code, signal) => {
+                if(hasRPC){
                     loggerLaunchSuite.info('Shutting down Discord Rich Presence..')
                     DiscordWrapper.shutdownRPC()
                     hasRPC = false
-                    proc = null
-                })
-            }
+                }
+                toggleLaunchArea(false)
+                setLaunchEnabled(true)
+                proc = null
+            })
 
         } catch(err) {
 

@@ -362,11 +362,11 @@ function populateResources(server, category = 'required') {
 
     const resources = server.rawServer.modules.filter(mod => {
         if (category === 'required') {
-            return mod.type === 'ForgeMod' && (!mod.required || mod.required.value !== false)
+            return mod.type === 'ForgeMod' || (mod.type === 'NeoForgeMod' && (!mod.required || mod.required.value !== false))
         } else if (category === 'optional') {
-            return mod.type === 'ForgeMod' && mod.required && mod.required.value === false
+            return (mod.type === 'ForgeMod' || mod.type === 'NeoForgeMod') && mod.required && mod.required.value === false
         } else {
-            return mod.type !== 'ForgeMod'
+            return mod.type !== 'ForgeMod' && mod.type !== 'NeoForgeMod'
         }
     })
 
