@@ -249,7 +249,7 @@ class ProcessBuilder {
 
         for(let mdl of mdls){
             const type = mdl.rawModule.type
-            if(type === Type.ForgeMod || type === Type.LiteMod || type === Type.LiteLoader || type === Type.FabricMod){
+            if(type === Type.ForgeMod || type === Type.NeoForgeMod || type === Type.LiteMod || type === Type.LiteLoader || type === Type.FabricMod){
                 const o = !mdl.getRequired().value
                 const e = ProcessBuilder.isModEnabled(modCfg[mdl.getVersionlessMavenIdentifier()], mdl.getRequired())
                 if(!o || (o && e)){
@@ -261,7 +261,7 @@ class ProcessBuilder {
                             continue
                         }
                     }
-                    if(type === Type.ForgeMod || type === Type.FabricMod){
+                    if(type === Type.ForgeMod || type === Type.NeoForgeMod || type === Type.FabricMod){
                         fMods.push(mdl)
                     } else {
                         lMods.push(mdl)
@@ -377,12 +377,22 @@ class ProcessBuilder {
 
         if(writeBuffer) {
             fs.writeFileSync(this.forgeModListFile, writeBuffer, 'UTF-8')
-            return this.usingFabricLoader ? [
-                '--fabric.addMods',
-                `@${this.forgeModListFile}`
-            ] : [
+            if(this.usingFabricLoader) {
+                return [
+                    '--fabric.addMods',
+                    `@${this.forgeModListFile}`
+                ]
+            }
+            // Maven roots follow the same relative convention as the legacy forge path
+            // (resolved by FML against the game directory). Forge mods live under
+            // common/modstore; NeoForge mods live under common/mods/neoforge.
+            const mavenRoots = [path.join('..', '..', 'common', 'modstore')]
+            if(mods.some(mod => mod.rawModule.type === Type.NeoForgeMod)){
+                mavenRoots.push(path.join('..', '..', 'common', 'mods', 'neoforge'))
+            }
+            return [
                 '--fml.mavenRoots',
-                path.join('..', '..', 'common', 'modstore'),
+                mavenRoots.join(','),
                 '--fml.modLists',
                 this.forgeModListFile
             ]
@@ -478,11 +488,15 @@ class ProcessBuilder {
         authLibArgs(args)
         if(this.modManifest.arguments.jvm != null) {
             for(const argStr of this.modManifest.arguments.jvm) {
-                args.push(argStr
-                    .replaceAll('${library_directory}', this.libPath)
-                    .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
-                    .replaceAll('${version_name}', this.modManifest.id)
-                )
+                if(typeof argStr === 'string') {
+                    let resolvedArg = argStr
+                        .replaceAll('${library_directory}', this.libPath)
+                        .replaceAll('${classpath_separator}', ProcessBuilder.getClasspathSeparator())
+                        .replaceAll('${version_name}', this.modManifest.id)
+                    args.push(resolvedArg)
+                } else if(argStr != null) {
+                    args.push(argStr)
+                }
             }
         }
 
@@ -766,6 +780,7 @@ class ProcessBuilder {
         const finalLibs = {...mojangLibs, ...servLibs}
         cpArgs = cpArgs.concat(Object.values(finalLibs))
 
+        cpArgs = [...new Set(cpArgs)]
         this._processClassPathList(cpArgs)
 
         return cpArgs
@@ -783,11 +798,17 @@ class ProcessBuilder {
     _resolveMojangLibraries(tempNativePath){
         const nativesRegex = /.+:natives-([^-]+)(?:-(.+))?/
         const libs = {}
+        const hasNeoForge = this.server.modules.some(mdl =>
+            mdl.rawModule.type === Type.NeoForge
+        )
 
         const libArr = this.vanillaManifest.libraries
         fs.ensureDirSync(tempNativePath)
         for(let i=0; i<libArr.length; i++){
             const lib = libArr[i]
+            if(hasNeoForge && lib.name?.startsWith('net.minecraft:client:')) {
+                continue
+            }
             if(isLibraryCompatible(lib.rules, lib.natives)){
 
                 // Pre-1.19 has a natives object.
@@ -895,7 +916,10 @@ class ProcessBuilder {
      * Resolve the libraries declared by this server in order to add them to the classpath.
      * This method will also check each enabled mod for libraries, as mods are permitted to
      * declare libraries.
-     * 
+     *
+     * Modules which declare `classpath: false` (ex. NeoForge's bootstrap/SecureJar/ASM/JarJar
+     * jars, which are loaded exclusively through the JVM -p module path) are excluded here.
+     *
      * @param {Array.<Object>} mods An array of enabled mods which will be launched with this process.
      * @returns {{[id: string]: string}} An object containing the paths of each library this server requires.
      */
@@ -903,27 +927,26 @@ class ProcessBuilder {
         const mdls = this.server.modules
         let libs = {}
 
-        // Locate Forge/Fabric/Libraries
+        // Locate Forge/NeoForge/Fabric/Libraries
         for(let mdl of mdls){
             const type = mdl.rawModule.type
-            if(type === Type.ForgeHosted || type === Type.Fabric || type === Type.Library){
-                libs[mdl.getVersionlessMavenIdentifier()] = mdl.getPath()
+            if(type === Type.ForgeHosted || type === Type.NeoForge || type === Type.Fabric || type === Type.Library){
+                // Modules declaring `classpath: false` (ex. NeoForge's universal/client jars,
+                // which FML loads itself from the library directory) are downloaded but must
+                // never be placed on the JVM classpath.
+                if(mdl.rawModule.classpath ?? true) {
+                    libs[mdl.getVersionlessMavenIdentifier()] = mdl.getPath()
+                }
                 if(mdl.subModules.length > 0){
-                    const res = this._resolveModuleLibraries(mdl)
-                    if(res.length > 0){
-                        libs = {...libs, ...res}
-                    }
+                    libs = {...libs, ...this._resolveModuleLibraries(mdl)}
                 }
             }
         }
 
         //Check for any libraries in our mod list.
         for(let i=0; i<mods.length; i++){
-            if(mods.sub_modules != null){
-                const res = this._resolveModuleLibraries(mods[i])
-                if(res.length > 0){
-                    libs = {...libs, ...res}
-                }
+            if(mods[i].subModules.length > 0){
+                libs = {...libs, ...this._resolveModuleLibraries(mods[i])}
             }
         }
 
@@ -932,29 +955,26 @@ class ProcessBuilder {
 
     /**
      * Recursively resolve the path of each library required by this module.
-     * 
+     *
      * @param {Object} mdl A module object from the server distro index.
-     * @returns {Array.<string>} An array containing the paths of each library this module requires.
+     * @returns {{[id: string]: string}} An object containing the paths of each library this module requires.
      */
     _resolveModuleLibraries(mdl){
-        if(!mdl.subModules.length > 0){
-            return []
+        if(!(mdl.subModules.length > 0)){
+            return {}
         }
-        let libs = []
+        let libs = {}
         for(let sm of mdl.subModules){
             if(sm.rawModule.type === Type.Library){
 
                 if(sm.rawModule.classpath ?? true) {
-                    libs.push(sm.getPath())
+                    libs[sm.getMavenIdentifier()] = sm.getPath()
                 }
             }
             // If this module has submodules, we need to resolve the libraries for those.
             // To avoid unnecessary recursive calls, base case is checked here.
-            if(mdl.subModules.length > 0){
-                const res = this._resolveModuleLibraries(sm)
-                if(res.length > 0){
-                    libs = libs.concat(res)
-                }
+            if(sm.subModules.length > 0){
+                libs = {...libs, ...this._resolveModuleLibraries(sm)}
             }
         }
         return libs

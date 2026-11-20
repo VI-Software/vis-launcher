@@ -1,6 +1,6 @@
 {
   "name": "vis-launcher",
-  "version": "2.2.2",
+  "version": "2.2.0-nightly.3",
   "productName": "VI Software Launcher",
   "description": "VI Software Launcher",
   "author": "VI Software",
@@ -9,8 +9,8 @@
   "homepage": "https://github.com/VI-Software/vis-launcher",
   "main": "index.js",
   "scripts": {
-    "start": "electron . --no-sandbox --ozone-platform=x11",
-    "dev": "electron . --devtools --no-sandbox --ozone-platform=x11",
+    "start": "electron .",
+    "dev": "electron . --devtools",
     "dist": "electron-builder build",
     "dist:win": "npm run dist -- --win",
     "dist:mac": "npm run dist -- --mac",
@@ -28,8 +28,8 @@
     "@electron/remote": "^2.1.3",
     "@visoftware/discord-rpc": "^1.4.0",
     "@visoftware/distribution-types": "^1.4.0",
-    "@visoftware/vis-launcher-core": "^2.14.0",
-    "adm-zip": "^0.6.0",
+    "@visoftware/vis-launcher-core": "^2.14.1",
+    "adm-zip": "^0.5.16",
     "ejs": "^3.1.10",
     "ejs-electron": "^3.0.0",
     "electron-updater": "^6.6.8",
@@ -53,9 +53,5 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/VI-Software/vis-launcher.git"
-  },
-  "allowScripts": {
-    "electron@41.10.7": true,
-    "electron-winstaller@5.4.0": true
   }
 }

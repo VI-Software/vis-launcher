@@ -221,7 +221,7 @@ async function scanInstalledMods() {
     const modules = modStoreState.currentServer.rawServer.modules
     if (modules && Array.isArray(modules)) {
         const modModules = modules.filter(
-            (mod) => mod.type === 'ForgeMod' || mod.type === 'FabricMod',
+            (mod) => mod.type === 'ForgeMod' || mod.type === 'NeoForgeMod' || mod.type === 'FabricMod',
         )
 
         for (const mod of modModules) {
