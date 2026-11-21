@@ -26,7 +26,8 @@ const child_process         = require('child_process')
 const crypto                = require('crypto')
 const fs                    = require('fs-extra')
 const { LoggerUtil }        = require('@visoftware/vis-launcher-core')
-const { getMojangOS, isLibraryCompatible, mcVersionAtLeast }  = require('@visoftware/vis-launcher-core/common')
+const { getMojangOS, isLibraryCompatible, mcVersionAtLeast, calculateHash }  = require('@visoftware/vis-launcher-core/common')
+const { InstallerProcessor, PatchStateStore }  = require('@visoftware/vis-launcher-core/dl')
 const { Type }              = require('@visoftware/distribution-types')
 const os                    = require('os')
 const path                  = require('path')
@@ -73,7 +74,7 @@ async function authLibArgs(args) {
  */
 class ProcessBuilder {
 
-    constructor(distroServer, vanillaManifest, modManifest, authUser, launcherVersion){
+    constructor(distroServer, vanillaManifest, modManifest, authUser, launcherVersion, onStage = null){
         this.gameDir = path.join(ConfigManager.getInstanceDirectory(), distroServer.rawServer.id)
         this.commonDir = ConfigManager.getCommonDirectory()
         this.server = distroServer
@@ -81,6 +82,7 @@ class ProcessBuilder {
         this.modManifest = modManifest
         this.authUser = authUser
         this.launcherVersion = launcherVersion
+        this.onStage = onStage
         this.forgeModListFile = path.join(this.gameDir, 'forgeMods.list') // 1.13+
         this.fmlDir = path.join(this.gameDir, 'forgeModList.json')
         this.llDir = path.join(this.gameDir, 'liteloaderModList.json')
@@ -90,11 +92,24 @@ class ProcessBuilder {
         this.usingFabricLoader = false
         this.llPath = null
     }
+
+    /**
+     * Report a launch stage to the UI when the ProcessBuilder was created
+     * with an onStage callback.
+     *
+     * @param {string} messageKey Language key for the stage message.
+     * @param {Object} placeHolders Optional placeholders for the message.
+     */
+    _reportStage(messageKey, placeHolders = {}){
+        if(this.onStage != null){
+            this.onStage(Lang.queryJS(messageKey, placeHolders))
+        }
+    }
     
     /**
      * Convienence method to run the functions typically used to build a process.
      */
-    build(){
+    async build(){
         fs.ensureDirSync(this.gameDir)
         const tempNativePath = path.join(os.tmpdir(), ConfigManager.getTempNativeFolder(), crypto.pseudoRandomBytes(16).toString('hex'))
         process.throwDeprecation = true
@@ -102,6 +117,12 @@ class ProcessBuilder {
         logger.info('Using liteloader:', this.usingLiteLoader)
         this.usingFabricLoader = this.server.modules.some(mdl => mdl.rawModule.type === Type.Fabric)
         logger.info('Using fabric loader:', this.usingFabricLoader)
+
+        // Apply loader installer patches (ex. Forge client jar patching)
+        // before the game process is spawned. Assets and libraries must
+        // already be validated by the launch flow.
+        await this._executeInstallerProcessorPass()
+
         const modObj = this.resolveModConfiguration(ConfigManager.getModConfiguration(this.server.rawServer.id).mods, this.server.modules)
         
         // Mod list below 1.13
@@ -638,8 +659,111 @@ class ProcessBuilder {
     }
 
     /**
+     * Apply the client patches declared by the server's installer-carrying
+     * module. Each processor declared in the installer payload runs as its
+     * own JVM, patching the vanilla client jar on the player's machine.
+     *
+     * The pass is skipped when the patch state marker matches the current
+     * launch (same loader version, Minecraft version and vanilla jar).
+     * If the marker is stale, the pass runs again; processors whose declared
+     * outputs are already valid are skipped by their own output hashes, so
+     * only outdated work is redone.
+     *
+     * A failing processor throws before the game spawn: the launch aborts and
+     * the processor's own declared outputs are removed, so a later launch can
+     * never validate a half-written patched jar.
+     *
+     */
+    async _executeInstallerProcessorPass(){
+        const installerModule = this.server.modules.find(mdl => mdl.rawModule.installer != null)
+        if(installerModule == null){
+            // Server does not require installer patching.
+            return
+        }
+        const payload = installerModule.rawModule.installer
+        const mcVersion = this.server.rawServer.minecraftVersion
+        const loader = installerModule.rawModule.type
+
+        const vanillaJar = path.join(this.commonDir, 'versions', this.vanillaManifest.id, this.vanillaManifest.id + '.jar')
+        if(!fs.existsSync(vanillaJar)){
+            throw Object.assign(
+                new Error(`Vanilla client jar not found at ${vanillaJar}, unable to apply the ${loader} loader patches.`),
+                { displayable: 'The vanilla Minecraft jar is missing, so the loader patches cannot be applied. Restart the launch to re-download it.' }
+            )
+        }
+        const vanillaJarSha1 = await calculateHash(vanillaJar, 'sha1')
+
+        const marker = {
+            loader,
+            loaderVersion: payload.loaderVersion,
+            mcVersion,
+            vanillaJarSha1
+        }
+        const patchState = new PatchStateStore(this.commonDir, marker.loader, this.server.rawServer.id)
+
+        const output = (line, stream) => {
+            const color = stream === 'stdout' ? '\x1b[35m[Forge Installer]\x1b[0m' : '\x1b[31m[Forge Installer]\x1b[0m'
+            line.trim().split('\n').forEach(x => console.log(`${color} ${x}`))
+        }
+
+        if(await patchState.isSatisfied(marker)){
+            logger.info(`Patches for ${loader} ${payload.loaderVersion} already applied, skipping installer processors.`)
+            return
+        }
+
+        // Show the patch stage in the launch UI before the first processor
+        // starts; onProcessorStart keeps the counter updated per processor.
+        const clientProcessorCount = payload.processors.filter(proc => proc.sides == null || proc.sides.includes('client')).length
+        this._reportStage('landing.dlAsync.applyingClientPatches', {
+            'current': 0,
+            'total': clientProcessorCount,
+            'processor': ''
+        })
+
+        const installerFilePaths = new Map()
+        for(const installerFile of payload.installerFiles){
+            installerFilePaths.set(installerFile.pathInInstaller, path.join(this.libPath, installerFile.artifact.path))
+        }
+
+        logger.info(`Applying ${loader} ${payload.loaderVersion} client patches for Minecraft ${mcVersion}..`)
+        output(`Applying patches for ${loader} ${payload.loaderVersion} (Minecraft ${mcVersion})`, 'stdout')
+
+        try {
+            await new InstallerProcessor({
+                mcVersion,
+                loaderVersion: payload.loaderVersion,
+                minecraftJar: vanillaJar,
+                commonDir: this.commonDir,
+                librariesDir: this.libPath,
+                installerFiles: installerFilePaths,
+                data: payload.data,
+                processors: payload.processors,
+                javaExecutable: ConfigManager.getJavaExecutable(this.server.rawServer.id),
+                onOutput: output,
+                onProcessorStart: (index, total, processorJar) => {
+                    const processorName = processorJar.split(':').slice(-2).join(':')
+                    logger.info(`Processor ${index}/${total}: ${processorName}`)
+                    this._reportStage('landing.dlAsync.applyingClientPatches', {
+                        'current': index,
+                        'total': total,
+                        'processor': processorName
+                    })
+                }
+            }).process()
+        } catch(err){
+            logger.error(`Failed to apply ${loader} client patches!`, err)
+            output(`Patch application FAILED: ${err.message}`, 'stderr')
+            throw err
+        }
+
+        await patchState.write(marker)
+        logger.info('Patch state marker written.')
+        output('Patches applied successfully.', 'stdout')
+    }
+
+    /**
      * Resolve the arguments required by forge.
-     * 
+     *
      * @returns {Array.<string>} An array containing the arguments required by forge.
      */
     _resolveForgeArgs(){
@@ -930,10 +1054,12 @@ class ProcessBuilder {
         // Locate Forge/NeoForge/Fabric/Libraries
         for(let mdl of mdls){
             const type = mdl.rawModule.type
-            if(type === Type.ForgeHosted || type === Type.NeoForge || type === Type.Fabric || type === Type.Library){
-                // Modules declaring `classpath: false` (ex. NeoForge's universal/client jars,
-                // which FML loads itself from the library directory) are downloaded but must
-                // never be placed on the JVM classpath.
+            if(type === Type.ForgeHosted || type === Type.Forge || type === Type.NeoForge || type === Type.Fabric || type === Type.Library){
+                // Modules declaring `classpath: false` (ex. the installer jar
+                // of an on-launcher-patched Forge server, NeoForge's
+                // bootstrap/SecureJar/ASM/JarJar jars, which are loaded
+                // exclusively through the loader itself) are downloaded but
+                // must never be placed on the JVM classpath.
                 if(mdl.rawModule.classpath ?? true) {
                     libs[mdl.getVersionlessMavenIdentifier()] = mdl.getPath()
                 }
